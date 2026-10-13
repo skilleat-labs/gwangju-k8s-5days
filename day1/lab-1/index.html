@@ -916,7 +916,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -2294,6 +2294,43 @@
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>&lt;title&gt;Welcome to nginx!&lt;/title&gt;
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>...
 </span></code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">hello-world 는 어디 갔을까</p>
+<p><code>docker ps</code>에는 <code>web</code>만 보입니다. 멈춘 컨테이너까지 보려면 <code>-a</code>를 붙입니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>docker<span class="w"> </span>ps<span class="w"> </span>-a
+</span></code></pre></div>
+<p><code>hello-world</code> 컨테이너는 메시지를 찍고 할 일이 끝나 <strong>Exited</strong> 상태입니다. nginx는 요청을 기다리며 계속 <strong>Up</strong>입니다. 컨테이너는 주 프로세스가 끝나면 함께 멈춥니다.</p>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docker run</code></td>
+<td>이미지로 <strong>새 컨테이너를 만들어</strong> 실행</td>
+</tr>
+<tr>
+<td><code>docker stop</code></td>
+<td>컨테이너 멈추기</td>
+</tr>
+<tr>
+<td><code>docker start</code></td>
+<td>멈춘 <strong>그 컨테이너를</strong> 다시 실행</td>
+</tr>
+<tr>
+<td><code>docker rm</code></td>
+<td>컨테이너 지우기</td>
+</tr>
+<tr>
+<td><code>docker ps -a</code></td>
+<td>멈춘 컨테이너까지 보기</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="admonition note">
 <p class="admonition-title">web 컨테이너는 지우지 마세요</p>
 <p>실습 2에서 이 <code>web</code> 컨테이너를 계속 씁니다.</p>
@@ -2301,7 +2338,7 @@
 <h2 id="_2">성공하면<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <ul>
 <li>STEP 2에서 <code>Hello from Docker!</code>가 나옵니다.</li>
-<li>STEP 4에서 <code>web</code>이 <code>Up</code> 상태입니다.</li>
+<li>STEP 4에서 <code>web</code>이 <code>Up</code> 상태이고, <code>docker ps -a</code>에서 <code>hello-world</code>는 <code>Exited</code>입니다.</li>
 <li>브라우저 <code>localhost:8080</code>에 <strong>Welcome to nginx!</strong> 가 보입니다.</li>
 </ul>
 <h2 id="_3">막히면<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
@@ -2314,16 +2351,16 @@
 <summary>Bind for 0.0.0.0:8080 failed: port is already allocated</summary>
 <p>내 PC의 8080 포트를 다른 프로그램이 쓰고 있습니다. Windows에서는 다른 개발 도구나 회사 보안 프로그램이 8080을 쓰는 경우가 있습니다.</p>
 <p>포트를 8081로 바꿔 띄웁니다. 실패한 컨테이너가 <code>web</code>이라는 이름으로 남아 있으니 먼저 지웁니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>web
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>web
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">8081</span>:80<span class="w"> </span>--name<span class="w"> </span>web<span class="w"> </span>nginx
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">8081</span>:80<span class="w"> </span>--name<span class="w"> </span>web<span class="w"> </span>nginx
 </span></code></pre></div>
 <p>브라우저는 <code>http://localhost:8081</code>로 엽니다. 이후 실습에서 8080이 나오면 8081 대신 다른 빈 포트(예: 8082)를 씁니다.</p>
 </details>
 <details class="failure">
 <summary>Conflict. The container name \"/web\" is already in use</summary>
 <p><code>web</code>이라는 컨테이너가 이미 있습니다 (멈춘 것 포함). STEP 3을 두 번 실행하면 나옵니다. <code>docker ps -a</code>로 보고, 지운 뒤 다시 실행합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>web
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>web
 </span></code></pre></div>
 </details>
 <details class="failure">

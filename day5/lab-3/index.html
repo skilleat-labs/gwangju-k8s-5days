@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -1906,10 +1906,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-14-backend-db-dns" class="md-nav__link">
+  <a href="#step-14-ip" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 14. backend → db와 DNS만 열기
+        STEP 14. 이름으로 한 번, IP로 한 번
       
     </span>
   </a>
@@ -1917,10 +1917,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-15" class="md-nav__link">
+  <a href="#step-15-backend-db-dns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 15. 누가 통하나
+        STEP 15. backend → db와 DNS만 열기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 16. 누가 통하나
       
     </span>
   </a>
@@ -2158,10 +2169,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-14-backend-db-dns" class="md-nav__link">
+  <a href="#step-14-ip" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 14. backend → db와 DNS만 열기
+        STEP 14. 이름으로 한 번, IP로 한 번
       
     </span>
   </a>
@@ -2169,10 +2180,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-15" class="md-nav__link">
+  <a href="#step-15-backend-db-dns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 15. 누가 통하나
+        STEP 15. backend → db와 DNS만 열기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 16. 누가 통하나
       
     </span>
   </a>
@@ -2234,15 +2256,37 @@
 <p class="admonition-title">이번 실습에서 할 것</p>
 <ul>
 <li>정책이 없으면 모든 Pod가 서로 통하는 것(평면 네트워크)을 눈으로 봅니다.</li>
-<li>deny-all로 전부 막은 뒤, backend → db와 DNS만 엽니다.</li>
+<li>deny-all로 전부 막은 뒤, 이름 접속과 IP 접속을 따로 확인합니다.</li>
+<li>backend → db와 DNS만 엽니다.</li>
 <li>backend만 db에 닿고 hacker는 막히는 것을 확인합니다.</li>
 </ul>
 </div>
 <p><strong>소요 시간</strong> 약 12분, <strong>교안</strong> DAY 5 섹션 3</p>
 <div class="admonition note">
-<p class="admonition-title">환경에 따라 다를 수 있음</p>
+<p class="admonition-title">환경에 따라 다를 수 있음: 진행 경로는 강사가 미리 알려 줍니다</p>
 <p>NetworkPolicy는 API 서버가 <strong>저장만</strong> 하고, 실제로 패킷을 막는 것은 클러스터의 네트워크 플러그인(CNI)입니다. CNI가 NetworkPolicy를 지원하지 않으면 <code>kubectl apply</code>는 <code>created</code>로 성공하고 <code>kubectl get networkpolicy</code>에도 보이는데, <strong>트래픽은 그대로 통과합니다.</strong></p>
-<p>STEP 13이나 STEP 15에서 hacker의 접속이 막히지 않고 HTML이 나오면, 여러분의 YAML이 틀린 것이 아니라 <strong>이 클러스터(Docker Desktop)의 CNI가 NetworkPolicy를 강제하지 않는 것</strong>입니다. 그 경우 명령은 끝까지 따라 하고, 막히는 결과는 Calico나 Cilium이 설치된 <strong>강사 시연 화면</strong>으로 확인합니다.</p>
+<p>Docker Desktop이 NetworkPolicy를 강제하는지는 강사가 수업 전에 확인해서 섹션 3 시작 때 알려 줍니다.</p>
+<table>
+<thead>
+<tr>
+<th>경로</th>
+<th>강사 사전 점검 결과</th>
+<th>여러분이 할 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>막혔다</td>
+<td>STEP 11~16을 모두 직접 하고, 차단까지 각자 화면에서 확인합니다</td>
+</tr>
+<tr>
+<td>B</td>
+<td>막히지 않았다</td>
+<td>YAML 작성, <code>apply</code>, <code>describe</code>까지 각자 합니다. 각자 화면에서 모두 통과해도 <strong>정상</strong>입니다. 차단 결과는 Calico나 Cilium이 설치된 <strong>강사 시연 화면</strong>으로 봅니다</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="_1">준비<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <p>작업 폴더로 이동합니다.</p>
@@ -2308,6 +2352,14 @@
 </span></code></pre></div>
 <a download="download" href="../../files/day5/allow-backend-db.yaml">allow-backend-db.yaml 내려받기</a></p>
 <p>통신은 양쪽 끝이 있어서 정책이 두 개입니다. 위는 db 입장에서 <code>app=backend</code>가 80 포트로 <strong>들어오는 것</strong>만 받고, 아래는 backend 입장에서 <code>app=db</code>의 80 포트로 <strong>나가는 것</strong>만 허락합니다. deny-all이 두 방향을 다 막았으니 한쪽만 열면 여전히 막힙니다.</p>
+<div class="admonition info">
+<p class="admonition-title">허용은 합쳐지고, 양쪽 끝이 모두 열어야 통한다</p>
+<ul>
+<li>연결 하나가 되려면 <strong>출발 Pod의 Egress</strong>와 <strong>도착 Pod의 Ingress</strong>가 둘 다 허용해야 합니다. 어느 한쪽이라도 허용하지 않으면 연결되지 않습니다.</li>
+<li>정책끼리는 충돌하지 않고 <strong>더해집니다</strong>. 한 Pod에 정책이 여러 개 걸리면 허용 목록의 합집합이 그 Pod의 허용 범위입니다.</li>
+<li>그래서 deny-all이 다른 정책을 "이기는" 것이 아닙니다. deny-all만 있을 때는 허용이 하나도 없어서 막혀 있던 것이고, 허용 정책을 더하면 그만큼 열립니다.</li>
+</ul>
+</div>
 <p><div class="language-yaml highlight"><span class="filename">allow-dns.yaml</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NetworkPolicy</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">metadata</span><span class="p">:</span>
@@ -2366,62 +2418,82 @@
 </span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>...
 </span></code></pre></div>
 <p><code>-T 3</code>은 3초 안에 답이 없으면 포기하라는 뜻입니다. 정책이 없으니 공격자 역할의 hacker도 db에 바로 닿습니다.</p>
+<p>db Pod의 IP를 적어 둡니다. STEP 14에서 DNS를 거치지 않고 IP로 접속해 볼 때 씁니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>db<span class="w"> </span>-n<span class="w"> </span>np-lab<span class="w"> </span>-o<span class="w"> </span>wide
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>NAME   READY   STATUS    RESTARTS   AGE   IP          NODE             ...
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>db     1/1     Running   0          2m    10.1.0.57   docker-desktop   ...
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <h2 id="step-13">STEP 13. 전부 막기<a class="headerlink" href="#step-13" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>deny-all.yaml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>deny-all.yaml
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>networkpolicy.networking.k8s.io/deny-all created
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>networkpolicy.networking.k8s.io/deny-all created
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>np-lab<span class="w"> </span>hacker<span class="w"> </span>--<span class="w"> </span>wget<span class="w"> </span>-qO-<span class="w"> </span>-T<span class="w"> </span><span class="m">3</span><span class="w"> </span>db
+<h2 id="step-14-ip">STEP 14. 이름으로 한 번, IP로 한 번<a class="headerlink" href="#step-14-ip" title="Permanent link">&para;</a></h2>
+<p>deny-all은 DNS 질문(밖으로 나가는 통신)까지 막습니다. 그래서 이름으로 접속할 때와 IP로 접속할 때를 나눠 봐야 무엇이 막혔는지 구분됩니다.</p>
+<p>이름으로 접속합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>np-lab<span class="w"> </span>hacker<span class="w"> </span>--<span class="w"> </span>wget<span class="w"> </span>-qO-<span class="w"> </span>-T<span class="w"> </span><span class="m">3</span><span class="w"> </span>db
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>wget: bad address 'db'
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>command terminated with exit code 1
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>wget: bad address 'db'
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>command terminated with exit code 1
 </span></code></pre></div>
-<small>출력은 예시입니다. DNS까지 막혀서 <code>bad address</code>가 나오거나, <code>download timed out</code>이 나올 수 있습니다. DNS 응답을 기다리느라 3초보다 오래 걸릴 수 있습니다.</small></p>
-<h2 id="step-14-backend-db-dns">STEP 14. backend → db와 DNS만 열기<a class="headerlink" href="#step-14-backend-db-dns" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>allow-backend-db.yaml
+<small>출력은 예시입니다. DNS 응답을 기다리느라 3초보다 오래 걸릴 수 있습니다.</small></p>
+<p>이름을 IP로 바꾸는 단계에서 실패했습니다. 이번에는 STEP 12에서 적어 둔 IP로 접속합니다. <code>&lt;db IP&gt;</code> 자리에 내 IP를 넣습니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>np-lab<span class="w"> </span>hacker<span class="w"> </span>--<span class="w"> </span>wget<span class="w"> </span>-qO-<span class="w"> </span>-T<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;db<span class="w"> </span>IP&gt;
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>allow-dns.yaml
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>wget: download timed out
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>command terminated with exit code 1
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>networkpolicy.networking.k8s.io/db-from-backend created
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>networkpolicy.networking.k8s.io/backend-to-db created
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>networkpolicy.networking.k8s.io/allow-dns created
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p>DNS를 거치지 않았는데도 실패합니다. db로 가는 연결 자체가 막혔다는 뜻입니다.</p>
+<div class="admonition note">
+<p class="admonition-title">경로 B라면</p>
+<p>두 명령 모두 <code>Welcome to nginx!</code>가 나옵니다. 여러분 YAML이 틀린 것이 아니라 이 클러스터의 CNI가 막지 않는 것입니다. 남은 STEP도 그대로 따라 하고, 차단 결과는 강사 시연 화면으로 봅니다.</p>
+</div>
+<h2 id="step-15-backend-db-dns">STEP 15. backend → db와 DNS만 열기<a class="headerlink" href="#step-15-backend-db-dns" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>allow-backend-db.yaml
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>allow-dns.yaml
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>networkpolicy.networking.k8s.io/db-from-backend created
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>networkpolicy.networking.k8s.io/backend-to-db created
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>networkpolicy.networking.k8s.io/allow-dns created
 </span></code></pre></div>
 <p>걸린 정책을 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicy<span class="w"> </span>-n<span class="w"> </span>np-lab
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicy<span class="w"> </span>-n<span class="w"> </span>np-lab
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>NAME              POD-SELECTOR   AGE
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>allow-dns         &lt;none&gt;         5s
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>backend-to-db     app=backend    8s
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>db-from-backend   app=db         8s
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>deny-all          &lt;none&gt;         1m
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>NAME              POD-SELECTOR   AGE
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>allow-dns         &lt;none&gt;         5s
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>backend-to-db     app=backend    8s
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>db-from-backend   app=db         8s
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>deny-all          &lt;none&gt;         1m
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p><code>&lt;none&gt;</code>은 <code>podSelector: {}</code>, 즉 모든 Pod라는 뜻입니다. 정책 하나를 자세히 읽으려면 <code>kubectl describe networkpolicy db-from-backend -n np-lab</code>을 씁니다.</p>
-<h2 id="step-15">STEP 15. 누가 통하나<a class="headerlink" href="#step-15" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>np-lab<span class="w"> </span>backend<span class="w"> </span>--<span class="w"> </span>wget<span class="w"> </span>-qO-<span class="w"> </span>-T<span class="w"> </span><span class="m">3</span><span class="w"> </span>db
+<h2 id="step-16">STEP 16. 누가 통하나<a class="headerlink" href="#step-16" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>np-lab<span class="w"> </span>backend<span class="w"> </span>--<span class="w"> </span>wget<span class="w"> </span>-qO-<span class="w"> </span>-T<span class="w"> </span><span class="m">3</span><span class="w"> </span>db
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>&lt;!DOCTYPE html&gt;
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>&lt;html&gt;
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>&lt;head&gt;
-</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>&lt;title&gt;Welcome to nginx!&lt;/title&gt;
-</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>...
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>&lt;!DOCTYPE html&gt;
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>&lt;html&gt;
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>&lt;head&gt;
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>...
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>np-lab<span class="w"> </span>hacker<span class="w"> </span>--<span class="w"> </span>wget<span class="w"> </span>-qO-<span class="w"> </span>-T<span class="w"> </span><span class="m">3</span><span class="w"> </span>db
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>np-lab<span class="w"> </span>hacker<span class="w"> </span>--<span class="w"> </span>wget<span class="w"> </span>-qO-<span class="w"> </span>-T<span class="w"> </span><span class="m">3</span><span class="w"> </span>db
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>wget: download timed out
-</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>command terminated with exit code 1
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>wget: download timed out
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>command terminated with exit code 1
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
-<p>backend만 db에 닿고, hacker는 막힙니다. 이번에는 DNS가 열려 있어서 <code>bad address</code>가 아니라 접속 시간 초과로 실패합니다. web Pod가 뚫려도 db로 곧장 건너가는 길이 끊겼습니다.</p>
-<div class="admonition note">
-<p class="admonition-title">환경에 따라 다를 수 있음</p>
-<p>STEP 13이나 STEP 15에서 hacker에게도 <code>Welcome to nginx!</code>가 나오면, 이 클러스터의 CNI가 NetworkPolicy를 지원하지 않는 것입니다. 정책은 저장됐지만 막는 주체가 없습니다. <strong>설정이 틀린 것이 아닙니다.</strong> 강사 시연 화면(Calico 또는 Cilium 클러스터)에서 같은 명령의 결과를 확인합니다. 실무 클러스터를 만들 때는 NetworkPolicy를 지원하는 CNI인지 반드시 확인하고, 정책을 건 뒤에는 이 실습처럼 <strong>실제 접속으로 검증</strong>합니다.</p>
-</div>
+<p>backend만 db에 닿고, hacker는 막힙니다. 이번에는 DNS가 열려 있어서 <code>bad address</code>가 아니라 접속 시간 초과로 실패합니다. backend는 deny-all, backend-to-db, allow-dns의 허용을 더한 만큼 나갈 수 있고, db는 db-from-backend가 허용한 backend만 받습니다. web Pod가 뚫려도 db로 곧장 건너가는 길이 끊겼습니다.</p>
+<p>실무 클러스터를 만들 때는 NetworkPolicy를 지원하는 CNI인지 반드시 확인하고, 정책을 건 뒤에는 이 실습처럼 <strong>실제 접속으로 검증</strong>합니다.</p>
 <h2 id="_2">성공하면<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <ul>
 <li>STEP 12: <code>Welcome to nginx!</code> HTML이 나온다</li>
-<li>STEP 13: hacker 타임아웃</li>
-<li>STEP 15: backend 성공, hacker 타임아웃</li>
+<li>STEP 14: 이름은 <code>bad address</code>, IP는 타임아웃 (경로 A)</li>
+<li>STEP 16: backend 성공, hacker 타임아웃 (경로 A)</li>
+<li>경로 B: 모두 통과하고, 차단은 강사 시연 화면으로 확인</li>
 </ul>
 <h2 id="_3">막히면<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <details class="failure">
@@ -2429,7 +2501,7 @@
 <p>Pod가 아직 생성 중입니다. <code>kubectl get pods -n np-lab</code>으로 셋 다 <code>Running</code>인지 보고 진행합니다.</p>
 </details>
 <details class="failure">
-<summary>STEP 15에서 backend도 실패</summary>
+<summary>STEP 16에서 backend도 실패</summary>
 <ol>
 <li>allow-dns.yaml을 적용했는지 봅니다. DNS가 막혀 있으면 <code>bad address 'db'</code>가 나옵니다.</li>
 <li><code>kubectl get pods -n np-lab --show-labels</code>로 backend 라벨이 <code>app=backend</code>, db 라벨이 <code>app=db</code>인지 봅니다.</li>
@@ -2437,8 +2509,8 @@
 </ol>
 </details>
 <details class="failure">
-<summary>STEP 13에서 hacker가 여전히 Welcome to nginx!</summary>
-<p>위의 <strong>환경에 따라 다를 수 있음</strong>을 봅니다. CNI가 NetworkPolicy를 강제하지 않는 클러스터입니다. 강사 시연으로 진행합니다.</p>
+<summary>STEP 14에서 hacker가 여전히 Welcome to nginx!</summary>
+<p>맨 위의 <strong>환경에 따라 다를 수 있음</strong> 표에서 경로 B입니다. CNI가 NetworkPolicy를 강제하지 않는 클러스터입니다. 정책 파일은 그대로 두고 강사 시연으로 차단 결과를 봅니다.</p>
 </details>
 <details class="failure">
 <summary>allow-dns를 고쳐 보다가 kube-system 전체로 열림</summary>
@@ -2450,7 +2522,7 @@
 </details>
 <h2 id="_4">정리<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>다음 실습에서 쓰지 않습니다. 네임스페이스를 지우면 Pod, Service, 정책이 함께 지워집니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>np-lab
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>np-lab
 </span></code></pre></div>
 
 

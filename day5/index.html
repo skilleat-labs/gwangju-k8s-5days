@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -1812,10 +1812,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1일차 미니 블로그 이미지
+        미니 블로그 이미지
       
     </span>
   </a>
@@ -1828,7 +1828,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         작업 폴더 만들기
@@ -1839,7 +1839,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         오늘 쓰는 파일
@@ -1850,7 +1850,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         정리
@@ -2132,10 +2132,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1일차 미니 블로그 이미지
+        미니 블로그 이미지
       
     </span>
   </a>
@@ -2148,7 +2148,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         작업 폴더 만들기
@@ -2159,7 +2159,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         오늘 쓰는 파일
@@ -2170,7 +2170,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         정리
@@ -2245,8 +2245,8 @@
 </tr>
 <tr>
 <td><a href="lab-5/">실습 5</a></td>
-<td>미니 블로그 종합 배포</td>
-<td>15분</td>
+<td>미니 블로그 종합 배포, 운영 보안 설정 붙이기</td>
+<td>23분</td>
 <td>섹션 5</td>
 </tr>
 <tr>
@@ -2257,7 +2257,7 @@
 </tr>
 </tbody>
 </table>
-<p>STEP 번호는 강의 장표와 같습니다. 실습 1의 STEP 1부터 실습 6의 STEP 27까지 하루 동안 이어집니다.</p>
+<p>STEP 번호는 강의 장표와 같습니다. 실습 1의 STEP 1부터 실습 6의 STEP 32까지 하루 동안 이어집니다.</p>
 <h2 id="_2">시작 전 확인<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <p>Docker Desktop과 Kubernetes가 켜져 있는지 봅니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
@@ -2275,34 +2275,35 @@
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p><code>envoy-gateway</code>로 시작하는 Pod가 <code>Running</code>이면 됩니다. <code>No resources found</code> 또는 <code>namespaces "envoy-gateway-system" not found</code>가 나오면 <a href="../day3/lab-5/">3일차 실습 5 Envoy Gateway 설치</a>를 먼저 다시 합니다.</p>
-<h3 id="1">1일차 미니 블로그 이미지<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
-<p>1일차 실습 5에서 쓴 <code>skilleat/backend:v3-kb5</code>, <code>skilleat/frontend:v3-kb5</code> 이미지를 오늘 다시 씁니다. 지웠어도 쿠버네티스가 Docker Hub에서 다시 받으니 괜찮습니다. 남아 있는지만 봅니다.</p>
+<p>3일차 끝에 <code>eg</code> Gateway와 GatewayClass를 지웠습니다. 남아 있는지도 봅니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>gateway<span class="w"> </span>-A
+</span></code></pre></div>
+<p><code>eg</code>가 보이면 지웁니다. 실습 5 STEP 20에서도 한 번 더 확인합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>gateway<span class="w"> </span>eg
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>gatewayclass<span class="w"> </span>eg
+</span></code></pre></div>
+<h3 id="_3">미니 블로그 이미지<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>오늘은 <code>skilleat/backend:v3-kb5</code>, <code>skilleat/frontend:v3-kb5</code>를 씁니다. 1일차(<code>v4-kb5</code>)와 태그가 다릅니다. v3는 백엔드가 <code>/app/data</code> 폴더에 글을 저장해서 PVC와 맞고, frontend가 <code>webapp</code> 네임스페이스의 백엔드를 부르도록 만들어져 있습니다. 실습 6의 <code>broken</code> 블로그만 같은 네임스페이스의 백엔드를 부르는 <code>frontend:v4-kb5</code>를 씁니다.</p>
+<p>처음 받을 때 시간이 걸리니 미리 받아 둡니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>skilleat/backend:v3-kb5
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>skilleat/frontend:v3-kb5
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Apple Silicon Mac</p>
+<p><code>v3-kb5</code>는 Intel(amd64)용만 있습니다. 실습 5에서 Pod가 <code>exec format error</code>나 <code>no match for platform</code>으로 안 뜨면 채팅으로 알려 주세요.</p>
+</div>
+<h2 id="_4">작업 폴더 만들기<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>오늘 실습은 모두 <code>k8s-labs/day5</code> 폴더에서 합니다.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Windows (PowerShell)</label><label for="__tabbed_1_2">Mac (터미널)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">docker</span> <span class="n">images</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">skilleat</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">mkdir</span> <span class="nv">$HOME</span><span class="p">\</span><span class="n">k8s-labs</span><span class="p">\</span><span class="n">day5</span><span class="p">;</span> <span class="nb">cd </span><span class="nv">$HOME</span><span class="p">\</span><span class="n">k8s-labs</span><span class="p">\</span><span class="n">day5</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker<span class="w"> </span>images<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>skilleat
-</span></code></pre></div>
-</div>
-</div>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Apple Silicon Mac</p>
-<p>1일차에 미니 블로그가 <code>exec format error</code>나 <code>no match for platform</code>으로 안 떴다면 오늘도 같은 문제가 납니다. 수업 시작 전에 채팅으로 알려 주세요.</p>
-</div>
-<h2 id="_3">작업 폴더 만들기<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<p>오늘 실습은 모두 <code>k8s-labs/day5</code> 폴더에서 합니다.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Windows (PowerShell)</label><label for="__tabbed_2_2">Mac (터미널)</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">mkdir</span> <span class="nv">$HOME</span><span class="p">\</span><span class="n">k8s-labs</span><span class="p">\</span><span class="n">day5</span><span class="p">;</span> <span class="nb">cd </span><span class="nv">$HOME</span><span class="p">\</span><span class="n">k8s-labs</span><span class="p">\</span><span class="n">day5</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/k8s-labs/day5<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/k8s-labs/day5
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/k8s-labs/day5<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/k8s-labs/day5
 </span></code></pre></div>
 </div>
 </div>
@@ -2312,7 +2313,7 @@
 <p class="admonition-title">터미널을 새로 열었다면</p>
 <p>새 터미널은 홈 폴더에서 시작합니다. <code>kubectl apply -f 파일</code> 전에는 위의 <code>cd</code> 명령으로 작업 폴더로 다시 이동합니다.</p>
 </div>
-<h2 id="_4">오늘 쓰는 파일<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<h2 id="_5">오늘 쓰는 파일<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2342,12 +2343,16 @@
 <td>실습 4, 5 (정답)</td>
 </tr>
 <tr>
+<td><a download="download" href="../files/day5/miniblog-backend-v2.yaml">miniblog-backend-v2.yaml</a>, <a download="download" href="../files/day5/miniblog-frontend-v2.yaml">miniblog-frontend-v2.yaml</a></td>
+<td>실습 5 (운영, 보안 설정)</td>
+</tr>
+<tr>
 <td><a download="download" href="../files/day5/broken-blog.yaml">broken-blog.yaml</a></td>
 <td>실습 6</td>
 </tr>
 </tbody>
 </table>
-<h2 id="_5">정리<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h2 id="_6">정리<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <p>실습마다 끝에 정리 명령이 있습니다. 과정 전체를 정리하는 방법은 <a href="lab-6/#wrap-up">실습 6의 과정 마무리</a>에 있습니다.</p>
 
 

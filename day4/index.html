@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -2186,44 +2186,44 @@
 <tbody>
 <tr>
 <td><a href="lab-1/">실습 1</a></td>
-<td>ConfigMap 만들고 환경변수, 볼륨 두 방법으로 넣기</td>
+<td>ConfigMap 만들고 두 방법으로 넣기, 값을 바꿔 환경변수와 파일 비교</td>
 <td>섹션 1</td>
-<td>1~3</td>
-<td>12분</td>
+<td>1~6</td>
+<td>15분</td>
 </tr>
 <tr>
 <td><a href="lab-2/">실습 2</a></td>
 <td>Secret 만들고 base64 풀기, 값 바꾸고 rollout restart</td>
 <td>섹션 2</td>
-<td>4~9</td>
+<td>7~12</td>
 <td>12분</td>
 </tr>
 <tr>
 <td><a href="lab-3/">실습 3</a></td>
 <td>readinessProbe 실패시키고 EndpointSlice에서 ready: false 보기</td>
 <td>섹션 3</td>
-<td>10~15</td>
+<td>13~18</td>
 <td>12분</td>
 </tr>
 <tr>
 <td><a href="lab-4/">실습 4</a></td>
-<td>메모리 한도 넘겨 OOMKilled, CrashLoopBackOff 보기</td>
+<td>메모리 한도 넘겨 OOMKilled 보기, requests가 너무 커서 Pending 보기</td>
 <td>섹션 4</td>
-<td>16~19</td>
-<td>8분</td>
+<td>19~25</td>
+<td>12분</td>
 </tr>
 <tr>
 <td><a href="lab-5/">실습 5</a></td>
 <td>MySQL에 데이터 넣고 Pod를 지우면 사라지는 것 보기 (emptyDir)</td>
 <td>섹션 5</td>
-<td>20~23</td>
+<td>26~29</td>
 <td>12분</td>
 </tr>
 <tr>
 <td><a href="lab-6/">실습 6</a></td>
 <td>PVC로 같은 실험을 다시 해서 데이터가 남는 것 보기</td>
 <td>섹션 6</td>
-<td>24~28</td>
+<td>30~34</td>
 <td>12분</td>
 </tr>
 </tbody>
@@ -2266,7 +2266,7 @@
 <pre class="mermaid"><code>flowchart LR
   A["실습 2&lt;br/&gt;mysql-secret&lt;br/&gt;(skilleat)"] --&gt; B["실습 5&lt;br/&gt;MySQL + emptyDir"]
   A --&gt; C["실습 6&lt;br/&gt;MySQL + PVC"]
-  B -- "STEP 25에서&lt;br/&gt;Deployment 삭제" --&gt; C</code></pre>
+  B -- "STEP 31에서&lt;br/&gt;Deployment 삭제" --&gt; C</code></pre>
 <h2 id="_4">오늘 쓰는 파일<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>모두 <code>day4</code> 폴더에 저장합니다. VS Code로 직접 만들거나 아래 링크로 내려받습니다.</p>
 <table>
@@ -2295,13 +2295,13 @@
 </tr>
 <tr>
 <td><code>memory-hog.yaml</code></td>
-<td>실습 4 (Windows, Intel Mac)</td>
+<td>실습 4 (Windows, Mac 공통)</td>
 <td><a download="download" href="../files/day4/memory-hog.yaml">memory-hog.yaml</a></td>
 </tr>
 <tr>
-<td><code>memory-hog-arm.yaml</code></td>
-<td>실습 4 (Apple Silicon Mac)</td>
-<td><a download="download" href="../files/day4/memory-hog-arm.yaml">memory-hog-arm.yaml</a></td>
+<td><code>big-request.yaml</code></td>
+<td>실습 4</td>
+<td><a download="download" href="../files/day4/big-request.yaml">big-request.yaml</a></td>
 </tr>
 <tr>
 <td><code>mysql-emptydir.yaml</code></td>
@@ -2369,7 +2369,7 @@
 </table>
 <h2 id="_6">하루를 마치고 한꺼번에 정리<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <p>실습마다 정리를 했다면 할 필요 없습니다. 중간에 빠뜨린 것이 있어도 아래 한 줄이면 오늘 만든 것이 모두 지워집니다 (없는 것은 건너뜁니다).</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>deploy/mysql<span class="w"> </span>deploy/secret-demo<span class="w"> </span>deploy/web-probe<span class="w"> </span>svc/web-probe<span class="w"> </span>pvc/mysql-pvc<span class="w"> </span>secret/mysql-secret<span class="w"> </span>cm/app-config<span class="w"> </span>pod/cm-pod<span class="w"> </span>pod/memory-hog<span class="w"> </span>--ignore-not-found
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>deploy/mysql<span class="w"> </span>deploy/secret-demo<span class="w"> </span>deploy/web-probe<span class="w"> </span>svc/web-probe<span class="w"> </span>pvc/mysql-pvc<span class="w"> </span>secret/mysql-secret<span class="w"> </span>cm/app-config<span class="w"> </span>pod/cm-pod<span class="w"> </span>pod/memory-hog<span class="w"> </span>pod/big-request<span class="w"> </span>--ignore-not-found
 </span></code></pre></div>
 
 

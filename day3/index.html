@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -2365,6 +2365,10 @@
 <p>세 줄 모두 <code>1/1 Running</code>이면 준비가 끝났습니다.</p>
 <h2 id="_5">오늘 끝나고 정리<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
 <p>실습 6까지 끝났으면 아래를 정리합니다. 각 실습 페이지의 <strong>정리</strong>를 따라왔다면 대부분 이미 지워져 있습니다.</p>
+<div class="admonition warning">
+<p class="admonition-title">Gateway eg는 오늘 꼭 지웁니다</p>
+<p>Gateway <code>eg</code>는 HTTP <strong>80번</strong> 문을 씁니다. 남겨 두면 5일차 미니 블로그의 Gateway <code>blog-gw</code>(역시 80번)와 겹칩니다. 첫 번째 명령이 <code>eg</code>의 Gateway와 GatewayClass를 지웁니다. Envoy Gateway <strong>설치</strong>는 지우지 않습니다.</p>
+</div>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>route.yaml<span class="w"> </span>-f<span class="w"> </span>app1.yaml<span class="w"> </span>-f<span class="w"> </span>app2.yaml<span class="w"> </span>-f<span class="w"> </span>gateway.yaml<span class="w"> </span>--ignore-not-found
 </span></code></pre></div>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>svc<span class="w"> </span>web-np<span class="w"> </span>web-lb<span class="w"> </span>--ignore-not-found
@@ -2389,7 +2393,10 @@
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>envoy-gateway-6c7f5d9b8d-x2k7p   1/1     Running   0          1h
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
-<p><code>envoy-default-eg-</code>로 시작하는 프록시 Pod는 gateway.yaml을 지우면 함께 사라집니다. 컨트롤러 <code>envoy-gateway</code> Pod 하나만 남으면 정상입니다.</p>
+<p><code>envoy-default-eg-</code>로 시작하는 프록시 Pod는 gateway.yaml을 지우면 함께 사라집니다. 컨트롤러 <code>envoy-gateway</code> Pod 하나만 남으면 정상입니다. Gateway가 하나도 안 남았는지도 봅니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>gateway<span class="w"> </span>-A
+</span></code></pre></div>
+<p><code>No resources found</code>가 나오면 됩니다.</p>
 
 
 

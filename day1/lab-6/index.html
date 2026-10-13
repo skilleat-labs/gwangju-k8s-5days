@@ -781,7 +781,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -2200,17 +2200,13 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>ps
 </span></code></pre></div>
 <p><code>frontend</code>와 <code>backend-service</code>가 <code>Up</code>이고, 브라우저 <code>http://localhost:8080</code>이 열리면 됩니다. 없으면 <a href="../lab-5/">실습 5</a>를 다시 합니다.</p>
-<div class="admonition info">
-<p class="admonition-title">이미지 태그</p>
-<p>실습 5에서 <code>v4-kb5</code>를 썼다면 아래 명령의 <code>v3-kb5</code>도 <code>v4-kb5</code>로 바꿉니다.</p>
-</div>
 <h2 id="step-1-2">STEP 1. 컨테이너를 강제로 죽인다 (한계 2)<a class="headerlink" href="#step-1-2" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span><span class="nb">kill</span><span class="w"> </span>frontend
 </span></code></pre></div>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>ps
 </span></code></pre></div>
 <p><div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>CONTAINER ID   IMAGE                     COMMAND           CREATED          STATUS          PORTS      NAMES
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>1f2e3d4c5b6a   skilleat/backend:v3-kb5   "python app.py"   10 minutes ago   Up 10 minutes   5000/tcp   backend-service
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>1f2e3d4c5b6a   skilleat/backend:v4-kb5   "python app.py"   10 minutes ago   Up 10 minutes   5000/tcp   backend-service
 </span></code></pre></div>
 <small>출력은 예시입니다.</small></p>
 <p><code>frontend</code>가 목록에서 사라졌고, 브라우저 <code>localhost:8080</code>도 열리지 않습니다. 기다려도 <strong>아무도 다시 살려 주지 않습니다.</strong> <code>docker ps -a</code>로 보면 <code>Exited</code> 상태로 남아 있습니다.</p>
@@ -2219,7 +2215,7 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span>start<span class="w"> </span>frontend
 </span></code></pre></div>
 <p>트래픽이 늘었다고 생각하고, 같은 8080 포트로 frontend를 하나 더 띄워 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>frontend2<span class="w"> </span>--network<span class="w"> </span>blog-net<span class="w"> </span>-p<span class="w"> </span><span class="m">8080</span>:80<span class="w"> </span>skilleat/frontend:v3-kb5
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>frontend2<span class="w"> </span>--network<span class="w"> </span>blog-net<span class="w"> </span>-p<span class="w"> </span><span class="m">8080</span>:80<span class="w"> </span>skilleat/frontend:v4-kb5
 </span></code></pre></div>
 <p><div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>docker: Error response from daemon: driver failed programming external connectivity on endpoint frontend2 (...): Bind for 0.0.0.0:8080 failed: port is already allocated.
 </span></code></pre></div>
@@ -2230,7 +2226,7 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>docker<span class="w"> </span>rm<span class="w"> </span>frontend2
 </span></code></pre></div>
 <p>포트를 8081로 바꿔 다시 띄웁니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>frontend2<span class="w"> </span>--network<span class="w"> </span>blog-net<span class="w"> </span>-p<span class="w"> </span><span class="m">8081</span>:80<span class="w"> </span>skilleat/frontend:v3-kb5
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>frontend2<span class="w"> </span>--network<span class="w"> </span>blog-net<span class="w"> </span>-p<span class="w"> </span><span class="m">8081</span>:80<span class="w"> </span>skilleat/frontend:v4-kb5
 </span></code></pre></div>
 <p>브라우저에서 <code>http://localhost:8080</code>과 <code>http://localhost:8081</code>을 둘 다 열어 봅니다. 둘 다 같은 블로그가 열립니다.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Windows (PowerShell)</label><label for="__tabbed_1_2">Mac (터미널)</label></div>

@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -2362,10 +2362,14 @@
 </tr>
 <tr>
 <td><code>ENDPOINTS</code></td>
-<td>지금 트래픽을 받을 Pod IP. <strong>이 칸이 핵심입니다</strong></td>
+<td>목록에 든 Pod IP. 비었는지 아닌지가 <strong>핵심</strong>입니다. 단, ready 여부는 표시하지 않습니다</td>
 </tr>
 </tbody>
 </table>
+<div class="admonition warning">
+<p class="admonition-title">주소가 보인다고 모두 트래픽을 받는 것은 아닙니다</p>
+<p><code>ENDPOINTS</code> 칸은 목록에 든 주소를 보여 줄 뿐, 그 주소가 <strong>ready인지는 표시하지 않습니다.</strong> 준비가 안 된 Pod의 주소도 이 칸에 나옵니다. 트래픽을 받는지는 아래 <code>-o yaml</code>의 <code>conditions.ready</code>로 확인합니다. 4일차 readinessProbe 실습에서 주소는 남아 있는데 <code>ready: false</code>인 경우를 직접 봅니다.</p>
+</div>
 <p><code>ENDPOINTS</code>의 IP가 실제 Pod IP와 같은지 비교해 봅니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>web<span class="w"> </span>-o<span class="w"> </span>wide
 </span></code></pre></div>
@@ -2505,14 +2509,14 @@
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>deployment.apps/web scaled
 </span></code></pre></div>
-<p>터미널 2를 봅니다. 새 Pod가 Ready가 되는 순서대로 줄이 새로 찍히며 주소가 늘어납니다.</p>
+<p>터미널 2를 봅니다. 새 Pod가 IP를 받는 대로 줄이 새로 찍히며 주소가 늘어납니다.</p>
 <p><div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>NAME        ADDRESSTYPE   PORTS   ENDPOINTS                       AGE
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>web-x7k2p   IPv4          80      10.1.0.12,10.1.0.13,10.1.0.17   25m
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>web-x7k2p   IPv4          80      10.1.0.12,10.1.0.13,10.1.0.17 + 1 more...   25m
 </span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>web-x7k2p   IPv4          80      10.1.0.12,10.1.0.13,10.1.0.17 + 2 more...   25m
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
-<p>주소가 3개를 넘으면 <code>+ 2 more...</code>처럼 줄여서 보여 줍니다. 전체를 보려면 <code>-o yaml</code>을 씁니다. 다 봤으면 터미널 2에서 <code>Ctrl + C</code>로 끝냅니다.</p>
+<p>주소가 3개를 넘으면 <code>+ 2 more...</code>처럼 줄여서 보여 줍니다. 막 생긴 Pod의 주소는 잠깐 <code>ready: false</code>였다가 true로 바뀔 수 있는데, 이 칸에서는 구분되지 않습니다. 전체와 ready 여부는 <code>-o yaml</code>로 봅니다. 다 봤으면 터미널 2에서 <code>Ctrl + C</code>로 끝냅니다.</p>
 <div class="admonition info">
 <p class="admonition-title">사람이 목록을 고치지 않았습니다</p>
 <p>replicas만 바꿨는데 목록이 저절로 바뀌었습니다. EndpointSlice 컨트롤러가 Pod 변화를 감시하다 조각을 고치고, kube-proxy가 바뀐 조각을 읽어 규칙을 갱신합니다. 어제 본 <strong>조정 루프</strong>가 여기서도 돌고 있습니다. 컨트롤러의 기준은 <strong>Service의 selector</strong> 하나뿐입니다. 다음 STEP에서 이 기준을 일부러 틀리게 만듭니다.</p>
@@ -2668,8 +2672,9 @@
 <div class="admonition tip">
 <p class="admonition-title">목록이 비었나, 찼나로 갈린다</p>
 <ul>
-<li><strong>EndpointSlice가 비었으면</strong>: selector와 Pod 라벨을 비교합니다. Pod가 Ready가 아닌 경우도 목록에서 빠집니다 (4일차).</li>
-<li><strong>차 있는데 접속이 안 되면</strong>: <code>targetPort</code>가 컨테이너가 실제로 듣는 포트와 같은지 봅니다.</li>
+<li><strong>EndpointSlice가 비었으면</strong>: selector와 Pod 라벨을 비교합니다.</li>
+<li><strong>주소는 있는데 <code>ready: false</code>면</strong>: Pod가 준비되지 않았습니다. <code>-o yaml</code>로 확인하고 Pod 상태를 봅니다 (4일차 readinessProbe).</li>
+<li><strong>주소도 있고 ready인데 접속이 안 되면</strong>: <code>targetPort</code>가 앱이 실제로 듣는 포트와 같은지 봅니다.</li>
 </ul>
 </div>
 <h2 id="step-15">STEP 15. 고치고 다시 확인<a class="headerlink" href="#step-15" title="Permanent link">&para;</a></h2>
@@ -2703,7 +2708,7 @@
 <ul>
 <li>STEP 10: 주소 3개, <code>-o yaml</code>에 <code>ready: true</code>가 보입니다.</li>
 <li>STEP 11: 결과 위에 <code>Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice</code> 한 줄이 보입니다.</li>
-<li>STEP 12: <code>-w</code> 화면에서 주소가 3개 → 5개로 늘어납니다.</li>
+<li>STEP 12: <code>-w</code> 화면에서 주소가 3개 → 5개(<code>+ 2 more...</code>)로 늘어납니다.</li>
 <li>STEP 13: apply는 성공, 접속은 실패합니다.</li>
 <li>STEP 14: <code>ENDPOINTS</code>가 비어 있고, <code>describe svc</code>의 <code>Selector</code>가 <code>app=wbe</code>입니다.</li>
 <li>STEP 15: 주소 5개가 돌아오고 접속에 성공합니다.</li>
@@ -2723,7 +2728,7 @@
 </details>
 <details class="failure">
 <summary>STEP 12에서 주소가 늘지 않음</summary>
-<p><code>kubectl get pods -l app=web</code>으로 새 Pod가 <code>Running</code>이고 READY가 <code>1/1</code>인지 봅니다. 이미지를 받는 중이면 <code>ContainerCreating</code>으로 잠시 머뭅니다. Ready가 된 Pod만 목록에 들어갑니다.</p>
+<p><code>kubectl get pods -l app=web</code>으로 새 Pod가 <code>Running</code>인지 봅니다. 이미지를 받는 중이면 <code>ContainerCreating</code>으로 잠시 머뭅니다. IP를 받은 Pod부터 목록에 들어가고, 트래픽은 <code>ready: true</code>가 된 뒤에 받습니다.</p>
 </details>
 <details class="failure">
 <summary>STEP 13에서 접속이 성공해 버림</summary>

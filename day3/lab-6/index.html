@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -2562,6 +2562,24 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition info">
+<p class="admonition-title">경로로 나누기와 경로 바꾸기는 다릅니다</p>
+<p>HTTPRoute는 <strong>어느 Service로 보낼지</strong>만 정하고 경로는 바꾸지 않습니다. <code>/app1/hello</code>로 요청하면 app1 Pod도 <code>/app1/hello</code>를 받습니다. http-echo는 경로를 보지 않고 같은 글자를 돌려줘서 오늘은 문제가 없었지만, 보통의 웹 앱은 <code>/app1</code>이라는 경로를 모르면 404를 냅니다. 이때는 <code>URLRewrite</code> 필터로 앞부분을 바꿔 보냅니다 (오늘 실습에서는 쓰지 않습니다).</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nt">rules</span><span class="p">:</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">matches</span><span class="p">:</span>
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> type</span><span class="p">:</span><span class="w"> </span><span class="nv">PathPrefix</span><span class="p p-Indicator">,</span><span class="nt"> value</span><span class="p">:</span><span class="w"> </span><span class="nv">/app1</span><span class="w"> </span><span class="p p-Indicator">}</span>
+</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="w">  </span><span class="nt">filters</span><span class="p">:</span>
+</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">URLRewrite</span>
+</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="w">    </span><span class="nt">urlRewrite</span><span class="p">:</span>
+</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="w">      </span><span class="nt">path</span><span class="p">:</span>
+</span><span id="__span-34-8"><a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReplacePrefixMatch</span>
+</span><span id="__span-34-9"><a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a><span class="w">        </span><span class="nt">replacePrefixMatch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+</span><span id="__span-34-10"><a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="w">  </span><span class="nt">backendRefs</span><span class="p">:</span>
+</span><span id="__span-34-11"><a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app1</span>
+</span><span id="__span-34-12"><a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+</span></code></pre></div>
+<p>이렇게 하면 <code>/app1/hello</code>가 백엔드에는 <code>/hello</code>로 갑니다. URLRewrite는 Gateway API의 <strong>Extended</strong> 지원 기능이라 구현체가 지원하는지 확인하고 씁니다 (Envoy Gateway는 지원). <a href="https://gateway-api.sigs.k8s.io/guides/http-redirect-rewrite/">공식 가이드</a></p>
+</div>
 <div class="admonition note">
 <p class="admonition-title">환경에 따라 다를 수 있음</p>
 <p>STEP 21에서 Envoy Service의 <code>EXTERNAL-IP</code>가 <code>localhost</code>였다면 port-forward 없이 80번으로 바로 될 수도 있습니다. 브라우저에서 <a href="http://localhost/app1">http://localhost/app1</a>을 열거나, <code>curl.exe localhost/app1</code>(Mac은 <code>curl localhost/app1</code>)을 시도해 봅니다. 안 되면(80번을 다른 프로그램이 쓰는 경우 포함) port-forward 방법을 씁니다.</p>
@@ -2594,7 +2612,7 @@
 <details class="failure">
 <summary>PowerShell에서 kubectl get pods -l 'app in (app1,app2)'가 오류</summary>
 <p>셸에 따라 따옴표와 괄호 처리가 다를 수 있습니다. 큰따옴표로 바꿔 보거나, 그냥 전체를 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
 </span></code></pre></div>
 </details>
 <details class="failure">
@@ -2618,16 +2636,20 @@
 <p><code>kubectl describe pod &lt;Pod 이름&gt;</code>의 Events를 봅니다. 이미지 이름 <code>hashicorp/http-echo:1.0</code>의 오타를 먼저 확인합니다. 네트워크 문제면 잠시 뒤 다시 시도합니다.</p>
 </details>
 <h2 id="_4">정리<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
-<p>port-forward 터미널은 <code>Ctrl + C</code>로 끝냅니다. 오늘 실습 6에서 만든 리소스를 지웁니다. 4일차에는 쓰지 않습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>route.yaml<span class="w"> </span>-f<span class="w"> </span>app1.yaml<span class="w"> </span>-f<span class="w"> </span>app2.yaml<span class="w"> </span>-f<span class="w"> </span>gateway.yaml
+<p>port-forward 터미널은 <code>Ctrl + C</code>로 끝냅니다. 오늘 실습 6에서 만든 리소스와 <strong>Gateway <code>eg</code>, GatewayClass <code>eg</code></strong>를 지웁니다. 4일차에는 쓰지 않습니다.</p>
+<div class="admonition warning">
+<p class="admonition-title">Gateway eg는 꼭 지웁니다</p>
+<p><code>eg</code>는 HTTP <strong>80번</strong> 문을 쥐고 있습니다. 남겨 두면 5일차 미니 블로그의 Gateway <code>blog-gw</code>도 80번을 열려고 해서 서로 겹칩니다. 문(Gateway, GatewayClass)만 지우고, 설치(Envoy Gateway)는 남깁니다.</p>
+</div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>route.yaml<span class="w"> </span>-f<span class="w"> </span>app1.yaml<span class="w"> </span>-f<span class="w"> </span>app2.yaml<span class="w"> </span>-f<span class="w"> </span>gateway.yaml
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>httproute.gateway.networking.k8s.io "app-route" deleted
-</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>deployment.apps "app1" deleted
-</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>service "app1" deleted
-</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>deployment.apps "app2" deleted
-</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>service "app2" deleted
-</span><span id="__span-36-6"><a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>gatewayclass.gateway.networking.k8s.io "eg" deleted
-</span><span id="__span-36-7"><a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>gateway.gateway.networking.k8s.io "eg" deleted
+<div class="language-text highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>httproute.gateway.networking.k8s.io "app-route" deleted
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>deployment.apps "app1" deleted
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>service "app1" deleted
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>deployment.apps "app2" deleted
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>service "app2" deleted
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>gatewayclass.gateway.networking.k8s.io "eg" deleted
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>gateway.gateway.networking.k8s.io "eg" deleted
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">지우지 마세요</p>

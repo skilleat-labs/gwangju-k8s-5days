@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -1303,10 +1303,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-1-deployment-apply" class="md-nav__link">
+  <a href="#step-1-deployment-unchanged" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 1. 어제 Deployment 확인 (없으면 apply)
+        STEP 1. Deployment 준비 (있으면 unchanged)
       
     </span>
   </a>
@@ -2103,10 +2103,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-1-deployment-apply" class="md-nav__link">
+  <a href="#step-1-deployment-unchanged" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 1. 어제 Deployment 확인 (없으면 apply)
+        STEP 1. Deployment 준비 (있으면 unchanged)
       
     </span>
   </a>
@@ -2191,6 +2191,7 @@
 <ul>
 <li>ClusterIP Service를 만듭니다.</li>
 <li>클러스터 안의 임시 Pod에서 Service 이름 <code>web</code>으로 접속합니다.</li>
+<li>Pod를 모두 바꿔도 같은 이름으로 접속되는 것을 확인합니다.</li>
 </ul>
 </div>
 <p><strong>소요 시간</strong> 약 12분, <strong>교안</strong> DAY 3 섹션 1</p>
@@ -2211,40 +2212,34 @@
 </div>
 </div>
 </div>
-<h2 id="step-1-deployment-apply">STEP 1. 어제 Deployment 확인 (없으면 apply)<a class="headerlink" href="#step-1-deployment-apply" title="Permanent link">&para;</a></h2>
-<p>어제 만든 <code>web</code>이 남아 있는지 봅니다. READY가 <code>3/3</code>이면 그대로 씁니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>web
-</span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>NAME   READY   UP-TO-DATE   AVAILABLE   AGE
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>web    3/3     3            3           1d
-</span></code></pre></div>
-<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
-<p><code>NotFound</code>가 나오거나 READY가 <code>3/3</code>이 아니면 아래 파일을 <code>web-deploy.yaml</code>로 저장하고 apply합니다. 강조한 두 줄의 라벨 <code>app: web</code>이 다음 STEP의 Service selector와 똑같아야 합니다.</p>
-<p><div class="language-yaml highlight"><span class="filename">web-deploy.yaml</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="hll"><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
-</span></span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="hll"><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
-</span></span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:1.27</span>
-</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<h2 id="step-1-deployment-unchanged">STEP 1. Deployment 준비 (있으면 unchanged)<a class="headerlink" href="#step-1-deployment-unchanged" title="Permanent link">&para;</a></h2>
+<p>아래 파일을 <code>web-deploy.yaml</code>로 저장하고 apply합니다. 어제 만든 <code>web</code>이 같은 내용으로 남아 있으면 <code>unchanged</code>, 없으면 <code>created</code>가 나옵니다. 어느 쪽이든 오늘 실습과 같은 상태가 됩니다. 강조한 두 줄의 라벨 <code>app: web</code>이 다음 STEP의 Service selector와 똑같아야 합니다.</p>
+<p><div class="language-yaml highlight"><span class="filename">web-deploy.yaml</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="hll"><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
+</span></span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="hll"><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
+</span></span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:1.27</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
 </span></code></pre></div>
 <a download="download" href="../../files/day3/web-deploy.yaml">web-deploy.yaml 내려받기</a></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>web-deploy.yaml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>web-deploy.yaml
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>deployment.apps/web created
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>deployment.apps/web unchanged
 </span></code></pre></div>
+<small>어제 것이 없었다면 <code>created</code>, 이미지 버전 등이 달랐다면 <code>configured</code>가 나옵니다.</small></p>
 <table>
 <thead>
 <tr>
@@ -2263,23 +2258,23 @@
 </tr>
 <tr>
 <td><code>containerPort: 80</code></td>
-<td>Service의 targetPort에 쓸 번호</td>
+<td>nginx가 듣는 포트를 적어 둔 <strong>표시</strong>입니다. 이 줄이 포트를 열지는 않습니다. 실제로 듣는 포트는 앱(nginx)이 정합니다</td>
 </tr>
 </tbody>
 </table>
 <h2 id="step-2-service">STEP 2. Service 만들고 확인<a class="headerlink" href="#step-2-service" title="Permanent link">&para;</a></h2>
 <p>Service YAML을 <code>web-svc.yaml</code>로 저장합니다. <code>apiVersion</code>이 <code>apps/v1</code>이 아니라 <strong><code>v1</code></strong>인 것에 주의합니다.</p>
-<p><div class="language-yaml highlight"><span class="filename">web-svc.yaml</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="hll"><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
-</span></span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<p><div class="language-yaml highlight"><span class="filename">web-svc.yaml</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="hll"><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
+</span></span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
 </span></code></pre></div>
 <a download="download" href="../../files/day3/web-svc.yaml">web-svc.yaml 내려받기</a></p>
 <table>
@@ -2304,16 +2299,16 @@
 </tr>
 <tr>
 <td><code>port</code>, <code>targetPort</code></td>
-<td>Service 80번으로 받아 컨테이너 80번으로 넘깁니다</td>
+<td>Service 80번으로 받아 <strong>nginx가 실제로 듣는</strong> 80번으로 넘깁니다</td>
 </tr>
 </tbody>
 </table>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>web-svc.yaml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>web-svc.yaml
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>web
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>web
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>NAME   TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>web    ClusterIP   10.96.120.5    &lt;none&gt;        80/TCP    5s
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>NAME   TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>web    ClusterIP   10.96.120.5    &lt;none&gt;        80/TCP    5s
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p><code>CLUSTER-IP</code>에 IP가 보이면 성공입니다. 이 IP는 Service를 지우기 전까지 바뀌지 않습니다.</p>
@@ -2323,18 +2318,28 @@
 </div>
 <h2 id="step-3-pod">STEP 3. 임시 Pod에서 이름으로 접속<a class="headerlink" href="#step-3-pod" title="Permanent link">&para;</a></h2>
 <p>클러스터 안에 작은 임시 Pod(busybox)를 하나 띄워 <code>web</code>이라는 이름으로 요청합니다. <code>--rm</code>이라 명령이 끝나면 Pod가 자동으로 지워집니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl<span class="w"> </span>run<span class="w"> </span>tmp<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--image<span class="o">=</span>busybox:1.36<span class="w"> </span>--<span class="w"> </span>wget<span class="w"> </span>-qO-<span class="w"> </span>web
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>run<span class="w"> </span>tmp<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--image<span class="o">=</span>busybox:1.36<span class="w"> </span>--<span class="w"> </span>wget<span class="w"> </span>-qO-<span class="w"> </span>web
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>&lt;!DOCTYPE html&gt;
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>&lt;html&gt;
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>&lt;head&gt;
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>&lt;title&gt;Welcome to nginx!&lt;/title&gt;
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>...
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>&lt;/html&gt;
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>pod "tmp" deleted
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>&lt;!DOCTYPE html&gt;
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>&lt;html&gt;
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>&lt;head&gt;
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>...
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>&lt;/html&gt;
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>pod "tmp" deleted
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p><code>Welcome to nginx!</code>가 들어 있는 HTML이 나오면 성공입니다. IP를 하나도 적지 않고 <strong>Service 이름</strong>만으로 접속했습니다. 이름을 IP로 바꿔 준 것이 누구인지는 실습 2에서 봅니다.</p>
+<p>이어서 web Pod 세 개를 <strong>모두</strong> 지웁니다. 어제 본 것처럼 ReplicaSet이 새 이름, 새 IP로 다시 만듭니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>web
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>web<span class="w"> </span>-o<span class="w"> </span>wide
+</span></code></pre></div>
+<p>새 Pod 세 개가 <code>1/1 Running</code>이 되면 위의 <code>kubectl run tmp ... wget -qO- web</code> 명령을 <strong>그대로 다시</strong> 실행합니다. 이번에도 <code>Welcome to nginx!</code>가 나옵니다. Pod는 전부 바뀌었는데 접속하는 쪽은 아무것도 바꾸지 않았습니다. 어제 남은 한계 "Pod가 바뀌면 주소도 바뀐다"가 Service로 풀렸습니다.</p>
+<div class="admonition note">
+<p class="admonition-title">번갈아 응답하는지는 여기서 보지 않습니다</p>
+<p>nginx 기본 페이지는 어느 Pod가 답해도 똑같아서 요청이 여러 Pod로 나뉘는지는 이 화면으로 알 수 없습니다. 이 실습의 성공 조건은 "Pod가 바뀌어도 같은 이름으로 접속된다"입니다.</p>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">명령은 한 줄로</p>
 <p>교안 화면에서는 이 명령이 두 줄로 나뉘어 있지만, PowerShell에서는 줄 끝 <code>\</code>가 동작하지 않습니다. 위처럼 한 줄로 복사해 입력합니다.</p>
@@ -2368,7 +2373,7 @@
 <h2 id="_2">성공하면<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <ul>
 <li>STEP 2: <code>kubectl get svc web</code>에 CLUSTER-IP가 보입니다.</li>
-<li>STEP 3: <code>Welcome to nginx!</code>가 들어 있는 HTML이 출력됩니다.</li>
+<li>STEP 3: <code>Welcome to nginx!</code>가 들어 있는 HTML이 출력됩니다. Pod를 모두 지운 뒤 다시 실행해도 똑같이 나옵니다.</li>
 </ul>
 <h2 id="_3">막히면<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <details class="failure">
@@ -2397,7 +2402,7 @@
 <summary>wget: can't connect to remote host (10.96.x.x): Connection refused</summary>
 <p>Service는 있는데 Pod까지 연결이 안 됩니다. 아래 둘을 확인합니다.</p>
 <ul>
-<li><code>targetPort</code>가 컨테이너가 실제로 듣는 포트(nginx는 80)와 같은지</li>
+<li><code>targetPort</code>가 앱이 실제로 듣는 포트(nginx는 80)와 같은지. <code>containerPort</code>를 적었다고 그 포트가 열리지는 않습니다</li>
 <li><code>selector</code>가 Deployment의 라벨 <code>app: web</code>과 글자 하나까지 같은지. selector에는 Deployment <strong>이름</strong>이 아니라 Pod <strong>라벨</strong>을 적습니다.</li>
 </ul>
 <p>이런 연결 장애를 찾는 방법은 <a href="../lab-4/">실습 4</a>에서 자세히 합니다.</p>
@@ -2405,6 +2410,10 @@
 <details class="failure">
 <summary>If you don't see a command prompt, try pressing enter. 다음에 아무것도 안 나옴</summary>
 <p>busybox 이미지를 처음 내려받는 중이거나, 출력이 붙기 전에 명령이 끝난 경우입니다. 10초쯤 기다려도 그대로면 <code>Ctrl + C</code>로 끝내고, <code>kubectl delete pod tmp</code> 후 다시 실행합니다.</p>
+</details>
+<details class="failure">
+<summary>Pod를 지운 직후 다시 접속하니 실패함</summary>
+<p>새 Pod가 아직 <code>ContainerCreating</code>이거나 준비 중입니다. <code>kubectl get pods -l app=web</code>에서 세 개 모두 <code>1/1 Running</code>이 된 뒤 다시 실행합니다.</p>
 </details>
 <details class="failure">
 <summary>Windows 메모장으로 저장했더니 web-svc.yaml.txt가 됨</summary>

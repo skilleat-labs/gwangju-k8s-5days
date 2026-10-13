@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -2217,6 +2217,10 @@
 </ul>
 </div>
 <p><strong>소요 시간</strong> 약 12분, <strong>교안</strong> DAY 5 섹션 2</p>
+<div class="admonition info">
+<p class="admonition-title">인증과 인가</p>
+<p>API 서버는 요청마다 두 가지를 차례로 묻습니다. <strong>인증</strong>은 "누구인가"로, kubeconfig의 인증서나 ServiceAccount 토큰으로 확인합니다. 실패하면 <code>401 Unauthorized</code>입니다. <strong>인가</strong>는 "무엇을 할 수 있나"로, RBAC의 Role과 RoleBinding이 정합니다. 실패하면 <code>403 Forbidden</code>입니다. 이번 실습의 <code>--as</code>는 내 계정으로 인증한 채 그 SA인 척해서(impersonation), "이 SA라면 인가가 어떻게 나는지"를 물어보는 방법입니다.</p>
+</div>
 <h2 id="_1">준비<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <p>작업 폴더로 이동합니다.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Windows (PowerShell)</label><label for="__tabbed_1_2">Mac (터미널)</label></div>

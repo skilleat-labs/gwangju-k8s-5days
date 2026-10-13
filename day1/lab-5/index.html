@@ -781,7 +781,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -2228,16 +2228,34 @@
 <li><code>frontend</code>는 글 저장 요청을 <strong><code>backend-service</code>라는 이름</strong>으로 백엔드에 넘깁니다.</li>
 <li>백엔드는 밖에 포트를 열지 않습니다.</li>
 </ul>
+<div class="admonition info">
+<p class="admonition-title">localhost 는 누구를 가리킬까</p>
+<table>
+<thead>
+<tr>
+<th>어디서</th>
+<th>localhost 는</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PC 브라우저</td>
+<td>내 PC. <code>-p 8080:80</code> 포트 전달로 frontend 컨테이너에 닿습니다</td>
+</tr>
+<tr>
+<td>frontend 컨테이너 안</td>
+<td>frontend 자신. 백엔드가 아닙니다</td>
+</tr>
+</tbody>
+</table>
+<p>그래서 frontend는 <code>localhost:5000</code>이 아니라 <strong><code>backend-service:5000</code></strong> 으로 백엔드를 부릅니다. 브라우저가 <code>backend-service</code> 이름을 직접 찾는 것이 아니라, 브라우저는 frontend에만 요청하고 frontend의 Nginx가 백엔드로 전달합니다.</p>
+</div>
 <p>실습 1의 <code>web</code> 컨테이너가 8080을 쓰고 있으니 <strong>먼저 지웁니다.</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>web
 </span></code></pre></div>
 <div class="admonition info">
-<p class="admonition-title">이미지 태그는 강사 안내를 따릅니다</p>
-<p>이 페이지는 <code>v3-kb5</code> 태그를 씁니다. 강사가 <code>v4-kb5</code>를 쓰라고 안내하면 아래 명령의 <code>v3-kb5</code>를 모두 <code>v4-kb5</code>로 바꿉니다. backend와 frontend는 <strong>같은 태그</strong>로 맞춥니다.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Apple Silicon Mac</p>
-<p><code>v3-kb5</code> 이미지는 Intel(amd64)용만 있습니다. M1~M4 Mac에서는 <code>The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8)</code> 경고가 나오지만 Docker Desktop이 변환해서 보통 그대로 실행됩니다. 컨테이너가 바로 멈추거나 <code>exec format error</code>가 나오면 <code>v4-kb5</code> 태그를 씁니다 (Apple Silicon용이 함께 들어 있습니다).</p>
+<p class="admonition-title">이미지 태그는 v4-kb5</p>
+<p>1일차 도커 실습은 <code>v4-kb5</code> 태그를 씁니다. 이 frontend는 같은 네트워크의 <code>backend-service</code>라는 짧은 이름으로 백엔드를 부르고, Windows(Intel)와 Apple Silicon Mac을 모두 지원합니다. 5일차 쿠버네티스 실습은 다른 태그(<code>v3-kb5</code>)를 씁니다.</p>
 </div>
 <h2 id="step-1">STEP 1. 전용 네트워크<a class="headerlink" href="#step-1" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>network<span class="w"> </span>create<span class="w"> </span>blog-net
@@ -2247,17 +2265,17 @@
 <small>출력은 예시입니다.</small></p>
 <h2 id="step-2-backend">STEP 2. backend 먼저 (이름 필수, 포트 공개 안 함)<a class="headerlink" href="#step-2-backend" title="Permanent link">&para;</a></h2>
 <p>이름은 반드시 <strong><code>backend-service</code></strong> 입니다. frontend가 이 이름으로 백엔드를 찾도록 만들어져 있습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>backend-service<span class="w"> </span>--network<span class="w"> </span>blog-net<span class="w"> </span>skilleat/backend:v3-kb5
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>backend-service<span class="w"> </span>--network<span class="w"> </span>blog-net<span class="w"> </span>skilleat/backend:v4-kb5
 </span></code></pre></div>
 <h2 id="step-3-frontend">STEP 3. frontend<a class="headerlink" href="#step-3-frontend" title="Permanent link">&para;</a></h2>
 <p>같은 네트워크에 붙이고 내 PC 8080을 엽니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>frontend<span class="w"> </span>--network<span class="w"> </span>blog-net<span class="w"> </span>-p<span class="w"> </span><span class="m">8080</span>:80<span class="w"> </span>skilleat/frontend:v3-kb5
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>frontend<span class="w"> </span>--network<span class="w"> </span>blog-net<span class="w"> </span>-p<span class="w"> </span><span class="m">8080</span>:80<span class="w"> </span>skilleat/frontend:v4-kb5
 </span></code></pre></div>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker<span class="w"> </span>ps
 </span></code></pre></div>
 <p><div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>CONTAINER ID   IMAGE                      COMMAND                  CREATED          STATUS          PORTS                  NAMES
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>7a6b5c4d3e2f   skilleat/frontend:v3-kb5   "/docker-entrypoint.…"   5 seconds ago    Up 4 seconds    0.0.0.0:8080-&gt;80/tcp   frontend
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>1f2e3d4c5b6a   skilleat/backend:v3-kb5    "python app.py"          20 seconds ago   Up 19 seconds   5000/tcp               backend-service
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>7a6b5c4d3e2f   skilleat/frontend:v4-kb5   "/docker-entrypoint.…"   5 seconds ago    Up 4 seconds    0.0.0.0:8080-&gt;80/tcp   frontend
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>1f2e3d4c5b6a   skilleat/backend:v4-kb5    "python app.py"          20 seconds ago   Up 19 seconds   5000/tcp               backend-service
 </span></code></pre></div>
 <small>출력은 예시입니다. ID, COMMAND, 시간은 사람마다 다릅니다.</small></p>
 <p><code>backend-service</code>의 PORTS에는 <code>0.0.0.0:...-&gt;</code>가 없습니다. 밖에서는 접근할 수 없고 같은 네트워크의 frontend만 접근합니다.</p>
@@ -2304,7 +2322,7 @@
 <details class="info">
 <summary>더 보기: 저장된 글은 어디에 있나</summary>
 <p>백엔드는 글을 컨테이너 안의 파일에 저장합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>backend-service<span class="w"> </span>cat<span class="w"> </span>/app/data/data.json
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>backend-service<span class="w"> </span>cat<span class="w"> </span>/app/data.json
 </span></code></pre></div>
 <p>방금 쓴 글이 보입니다. 이 파일은 컨테이너의 쓰기 레이어에 있어서, 컨테이너를 지우면 같이 사라집니다. 4일차 데이터 실습의 출발점입니다.</p>
 <div class="admonition note">
@@ -2318,6 +2336,16 @@
 <li><code>docker network inspect blog-net</code>의 <code>Containers</code>에 컨테이너 2개가 있습니다.</li>
 </ul>
 <h2 id="_3">막히면<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">명령을 다시 치기 전에 이 순서로 봅니다</p>
+<ol>
+<li><code>docker ps -a</code>: 두 컨테이너가 <code>Up</code>인지, <code>Exited</code>로 멈췄는지</li>
+<li><code>docker logs 이름</code>: 멈췄다면 왜 멈췄는지</li>
+<li><code>docker network inspect blog-net</code>: 두 컨테이너가 같은 네트워크에 있는지</li>
+<li><code>docker port frontend</code>: 8080이 80에 연결됐는지</li>
+</ol>
+<p>5일차 쿠버네티스 장애 찾기(get, describe, logs, events)도 같은 순서입니다.</p>
+</div>
 <details class="failure">
 <summary>Bind for 0.0.0.0:8080 failed: port is already allocated</summary>
 <p>실습 1의 <code>web</code> 컨테이너가 8080을 쓰고 있습니다. 실패한 frontend도 남아 있으니 둘 다 지우고 STEP 3을 다시 합니다.</p>
@@ -2346,8 +2374,8 @@
 <p>네트워크가 이미 있습니다. 그대로 STEP 2로 넘어가면 됩니다.</p>
 </details>
 <details class="failure">
-<summary>manifest for skilleat/backend:v3-kb5 not found / manifest unknown</summary>
-<p>태그 오타입니다. <code>skilleat/backend:v3-kb5</code>와 한 글자씩 비교합니다. 강사가 다른 태그를 안내했다면 그 태그를 씁니다.</p>
+<summary>manifest for skilleat/backend:v4-kb5 not found / manifest unknown</summary>
+<p>태그 오타입니다. <code>skilleat/backend:v4-kb5</code>와 한 글자씩 비교합니다.</p>
 </details>
 <details class="failure">
 <summary>Conflict. The container name \"/frontend\" is already in use</summary>

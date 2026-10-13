@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -1593,6 +1593,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#step-4-configmap-blue-green" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 4. ConfigMap 값 바꾸기 (blue → green)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 5. 떠 있는 Pod에서 다시 읽기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 6. Pod를 새로 만들고 다시 읽기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2136,6 +2169,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#step-4-configmap-blue-green" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 4. ConfigMap 값 바꾸기 (blue → green)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 5. 떠 있는 Pod에서 다시 읽기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 6. Pod를 새로 만들고 다시 읽기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2191,9 +2257,10 @@
 <ul>
 <li>명령 한 줄로 ConfigMap을 만들고 저장된 모습을 봅니다.</li>
 <li>같은 ConfigMap을 환경변수와 파일(볼륨) 두 길로 Pod에 넣어 읽습니다.</li>
+<li>값을 바꾼 뒤 환경변수와 파일이 다르게 바뀌는 것을 직접 확인합니다.</li>
 </ul>
 </div>
-<p><strong>소요 시간</strong> 약 12분, <strong>교안</strong> DAY 4 섹션 1</p>
+<p><strong>소요 시간</strong> 약 15분, <strong>교안</strong> DAY 4 섹션 1</p>
 <h2 id="_1">준비<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <p><code>day4</code> 폴더에서 합니다. 아직 없으면 <a href="../">오늘의 실습</a>에서 폴더를 만듭니다.</p>
 <p>이번 실습에서 쓸 파일은 <code>cm-pod.yaml</code>입니다. VS Code에서 새 파일로 만들어 아래 내용을 붙여 넣거나 내려받습니다.</p>
@@ -2293,25 +2360,58 @@
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>LOG_LEVEL
 </span></code></pre></div>
 </div>
+<h2 id="step-4-configmap-blue-green">STEP 4. ConfigMap 값 바꾸기 (blue → green)<a class="headerlink" href="#step-4-configmap-blue-green" title="Permanent link">&para;</a></h2>
+<p>같은 이름의 ConfigMap을 <code>APP_COLOR=green</code>으로 다시 만들어 덮어씁니다. <code>--dry-run=client -o yaml</code>로 YAML만 만들고, 그것을 <code>kubectl apply -f -</code>로 바로 적용합니다. 한 줄로 입력합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span>create<span class="w"> </span>configmap<span class="w"> </span>app-config<span class="w"> </span>--from-literal<span class="o">=</span><span class="nv">APP_COLOR</span><span class="o">=</span>green<span class="w"> </span>--from-literal<span class="o">=</span><span class="nv">LOG_LEVEL</span><span class="o">=</span>info<span class="w"> </span>--dry-run<span class="o">=</span>client<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Warning: resource configmaps/app-config is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. ...
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>configmap/app-config configured
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p><code>Warning</code>은 STEP 1에서 <code>create</code>로 만든 것을 <code>apply</code>로 바꿨다는 안내입니다. 자동으로 채워지니 무시합니다. 마지막 줄이 <code>configured</code>면 됩니다.</p>
+<h2 id="step-5-pod">STEP 5. 떠 있는 Pod에서 다시 읽기<a class="headerlink" href="#step-5-pod" title="Permanent link">&para;</a></h2>
+<p>환경변수와 파일을 다시 읽습니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>cm-pod<span class="w"> </span>--<span class="w"> </span>printenv<span class="w"> </span>APP_COLOR
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>blue
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>cm-pod<span class="w"> </span>--<span class="w"> </span>cat<span class="w"> </span>/etc/config/APP_COLOR
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>green
+</span></code></pre></div>
+<p>환경변수는 그대로 <code>blue</code>입니다. 컨테이너가 시작할 때 한 번만 읽기 때문입니다. 파일은 잠시 뒤 <code>green</code>으로 바뀝니다. 아직 <code>blue</code>면 1분쯤 기다렸다가 <code>cat</code> 명령을 다시 실행합니다.</p>
 <div class="admonition info">
-<p class="admonition-title">환경변수와 볼륨은 바뀌는 방식이 다릅니다</p>
-<ul>
-<li>환경변수는 Pod가 시작할 때 한 번만 읽습니다. ConfigMap을 바꿔도 떠 있는 컨테이너의 값은 그대로입니다.</li>
-<li>볼륨 파일은 ConfigMap을 바꾸면 잠시 뒤 바뀝니다. 하지만 앱이 파일을 다시 읽어야 동작이 바뀝니다. <code>subPath</code>로 파일 하나만 붙였다면 파일도 바뀌지 않습니다.</li>
-<li>확실히 반영하려면 Pod를 새로 띄웁니다. 실습 2의 rollout restart에서 합니다.</li>
-</ul>
+<p class="admonition-title">파일은 언제 바뀌나요</p>
+<p>kubelet이 주기적으로 ConfigMap을 확인해 파일을 맞춥니다. 공식 문서 기준으로 kubelet 동기화 주기(기본 1분)에 캐시 지연을 더한 시간까지 걸릴 수 있습니다. <code>subPath</code>로 파일 하나만 붙였다면 파일도 바뀌지 않습니다.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">nginx 화면은 바뀌지 않습니다</p>
+<p>이 실습의 nginx는 <code>APP_COLOR</code> 값을 쓰지 않습니다. 설정이 컨테이너까지 전달되는지 확인하는 용도입니다. 실제 앱의 동작이 바뀌는지는 앱이 값을 언제 읽는지(시작할 때 한 번, 또는 파일을 다시 읽기)에 달려 있습니다.</p>
+</div>
+<h2 id="step-6-pod">STEP 6. Pod를 새로 만들고 다시 읽기<a class="headerlink" href="#step-6-pod" title="Permanent link">&para;</a></h2>
+<p>Pod를 지우고 같은 파일로 다시 만듭니다. 새 컨테이너는 시작할 때 새 값을 읽습니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>cm-pod
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>cm-pod.yaml
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>cm-pod<span class="w"> </span>--<span class="w"> </span>printenv<span class="w"> </span>APP_COLOR
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>green
+</span></code></pre></div>
+<p>환경변수를 확실히 반영하려면 Pod를 새로 띄웁니다. Deployment라면 실습 2의 rollout restart를 씁니다.</p>
 <h2 id="_2">성공하면<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <ul>
 <li>STEP 1: <code>data</code> 아래에 <code>APP_COLOR: blue</code>, <code>LOG_LEVEL: info</code> 두 키가 보입니다.</li>
 <li>STEP 3: <code>blue</code>, <code>info</code>가 출력됩니다.</li>
+<li>STEP 5: 환경변수는 <code>blue</code> 그대로, 파일은 잠시 뒤 <code>green</code>입니다.</li>
+<li>STEP 6: 새 Pod의 환경변수는 <code>green</code>입니다.</li>
 </ul>
 <h2 id="_3">막히면<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <details class="failure">
 <summary>Pod가 CreateContainerConfigError</summary>
 <p>Pod가 찾는 ConfigMap이 없습니다. ConfigMap 이름 오타(<code>app-config</code>)를 확인합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>configmap
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>cm-pod
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>configmap
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>cm-pod
 </span></code></pre></div>
 <p><code>describe</code> 맨 아래 Events에 <code>configmap "app-config" not found</code>가 보이면 STEP 1을 다시 합니다. ConfigMap을 만들면 잠시 뒤 Pod가 스스로 풀립니다.</p>
 </details>
@@ -2329,11 +2429,19 @@
 </details>
 <details class="failure">
 <summary>줄 끝 역슬래시() 명령이 PowerShell에서 안 됨</summary>
-<p>교안 장표의 STEP 1 명령은 두 줄로 나뉘어 있습니다. 이 가이드처럼 <strong>한 줄로</strong> 붙여 입력하면 Windows, Mac 모두 됩니다.</p>
+<p>교안 장표의 STEP 1, STEP 4 명령은 여러 줄로 나뉘어 있습니다. 이 가이드처럼 <strong>한 줄로</strong> 붙여 입력하면 Windows, Mac 모두 됩니다.</p>
+</details>
+<details class="failure">
+<summary>STEP 5에서 파일이 계속 blue</summary>
+<p>kubelet이 아직 파일을 맞추지 않았습니다. 1분쯤 기다렸다가 다시 <code>cat</code>을 실행합니다. STEP 4의 마지막 줄이 <code>configured</code>였는지도 확인합니다 (<code>unchanged</code>면 값이 그대로입니다).</p>
+</details>
+<details class="failure">
+<summary>error: unable to upgrade connection: container not found (STEP 6)</summary>
+<p>새 Pod가 아직 뜨는 중입니다. <code>kubectl get pod cm-pod</code>로 <code>Running</code>을 보고 다시 실행합니다.</p>
 </details>
 <h2 id="_4">정리<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>Pod만 지웁니다. <code>app-config</code>는 남겨도 됩니다 (하루 마지막에 지웁니다).</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>cm-pod
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>cm-pod
 </span></code></pre></div>
 
 

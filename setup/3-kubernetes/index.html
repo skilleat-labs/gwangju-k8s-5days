@@ -655,6 +655,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        연결 대상 고정하기 (한 번만)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kubectl" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -666,7 +677,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         다시 시작하거나 처음부터 다시 만들기
@@ -677,7 +688,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         막히면
@@ -883,7 +894,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -2092,6 +2103,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        연결 대상 고정하기 (한 번만)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kubectl" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2103,7 +2125,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         다시 시작하거나 처음부터 다시 만들기
@@ -2114,7 +2136,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         막히면
@@ -2188,28 +2210,43 @@
 <p><strong><code>docker-desktop</code>이 <code>Ready</code>면 2일차 준비가 끝났습니다.</strong> 버전 숫자를 채팅에 올려 주시면 수업에서 함께 확인합니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>version
 </span></code></pre></div>
+<h2 id="_3">연결 대상 고정하기 (한 번만)<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>다른 도구(Rancher Desktop, minikube 등)를 쓴 적이 있으면 <code>docker</code>와 <code>kubectl</code>이 엉뚱한 곳을 볼 수 있습니다. 아래를 차례로 실행합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>docker<span class="w"> </span>context<span class="w"> </span>ls
+</span></code></pre></div>
+<p>목록에서 Docker Desktop 엔진(보통 <code>desktop-linux</code>)을 고릅니다. 줄 끝에 <code>*</code>가 붙은 것이 지금 쓰는 엔진입니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>docker<span class="w"> </span>context<span class="w"> </span>use<span class="w"> </span>desktop-linux
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>docker-desktop
+</span></code></pre></div>
+<p>기본 네임스페이스를 <code>default</code>로 맞춥니다. 실습 명령 중 <code>-n</code>이 없는 것은 모두 <code>default</code>에 만들어집니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>config<span class="w"> </span>set-context<span class="w"> </span>--current<span class="w"> </span>--namespace<span class="o">=</span>default
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
+</span></code></pre></div>
+<p><code>docker-desktop</code> 노드가 <code>Ready</code>면 됩니다.</p>
 <h2 id="kubectl">kubectl은 어디에 설치되나<a class="headerlink" href="#kubectl" title="Permanent link">&para;</a></h2>
 <p>Docker Desktop이 <code>kubectl</code>을 같이 설치합니다. 따로 설치할 필요가 없습니다.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Windows (PowerShell)</label><label for="__tabbed_1_2">Mac (터미널)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-Command</span> <span class="n">kubectl</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Get-Command</span> <span class="n">kubectl</span>
 </span></code></pre></div>
 <p><code>C:\Program Files\Docker\Docker\resources\bin\kubectl.exe</code> 또는 <code>...\AppData\Local\Programs\DockerDesktop\resources\bin\kubectl.exe</code>가 나오면 Docker Desktop이 설치한 것입니다.</p>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>which<span class="w"> </span>kubectl
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>which<span class="w"> </span>kubectl
 </span></code></pre></div>
 <p><code>/usr/local/bin/kubectl</code> 또는 <code>~/.docker/bin/kubectl</code>이 나옵니다. Homebrew로 kubectl을 따로 설치한 적이 있어서 버전이 엉키면 강사에게 알려 주세요.</p>
 </div>
 </div>
 </div>
-<h2 id="_3">다시 시작하거나 처음부터 다시 만들기<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h2 id="_4">다시 시작하거나 처음부터 다시 만들기<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>잠시 끄기</strong>: Kubernetes 화면의 <strong>Stop</strong>. 다시 켤 때 Create cluster부터 합니다.</li>
 <li><strong>고장 났을 때 초기화</strong>: Kubernetes 설정의 <strong>Reset cluster</strong>. 클러스터 안의 모든 리소스가 지워집니다.</li>
 </ul>
-<h2 id="_4">막히면<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<h2 id="_5">막히면<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
 <details class="failure">
 <summary>Kubernetes가 계속 Starting 상태에서 멈춤</summary>
 <ol>

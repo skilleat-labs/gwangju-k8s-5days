@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -2231,6 +2231,32 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition info">
+<p class="admonition-title">왜 설치가 필요한가: CRD와 컨트롤러</p>
+<p>Service, Deployment는 쿠버네티스에 처음부터 들어 있어 바로 apply할 수 있습니다. Gateway, HTTPRoute는 <strong>두 가지를 설치해야</strong> 동작합니다.</p>
+<table>
+<thead>
+<tr>
+<th>설치하는 것</th>
+<th>하는 일</th>
+<th>없으면</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CRD</strong> (Custom Resource Definition)</td>
+<td>API 서버에 <code>Gateway</code>, <code>HTTPRoute</code> 같은 새 종류(kind)를 등록</td>
+<td>apply할 때 <code>no matches for kind "Gateway"</code> 오류</td>
+</tr>
+<tr>
+<td><strong>컨트롤러</strong> (Envoy Gateway)</td>
+<td>그 YAML을 읽고 실제 Envoy 프록시를 만들어 일함</td>
+<td>apply는 되지만 아무 일도 안 일어남 (<code>Waiting for controller</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>STEP 16의 <code>install.yaml</code>에 둘 다 들어 있습니다.</p>
+</div>
 <h2 id="step-16-gateway-api-crd">STEP 16. 설치 (Gateway API CRD 포함) 후 대기<a class="headerlink" href="#step-16-gateway-api-crd" title="Permanent link">&para;</a></h2>
 <p>공식 <code>install.yaml</code>에는 Gateway API CRD와 Envoy Gateway 컨트롤러가 함께 들어 있습니다. 파일이 커서 <code>--server-side</code>로 적용합니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>--server-side<span class="w"> </span>-f<span class="w"> </span>https://github.com/envoyproxy/gateway/releases/download/v1.9.2/install.yaml
@@ -2396,16 +2422,45 @@
 <p>install.yaml을 GitHub에서 받지 못했습니다. 브라우저로 설치 주소를 열어 파일이 받아지는지 확인합니다. 회사 프록시나 방화벽이 GitHub를 막으면 강사에게 알려 주세요.</p>
 </details>
 <details class="failure">
-<summary>PROGRAMMED가 계속 False</summary>
-<ol>
-<li>GatewayClass의 <code>ACCEPTED</code>도 False거나 비어 있으면 <strong>controllerName 오타</strong>입니다. <code>gateway.envoyproxy.io/gatewayclass-controller</code>를 그대로 복사해 고치고 다시 apply합니다.</li>
-<li>
-<p>ACCEPTED는 True인데 PROGRAMMED만 False면 이유를 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>gateway<span class="w"> </span>eg
+<summary>PROGRAMMED가 계속 True가 아님 (Unknown 또는 False)</summary>
+<p>원인은 하나가 아닙니다. 아래 순서로 봅니다.</p>
+<p><strong>① GatewayClass를 맡은 컨트롤러가 있나</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>gatewayclass
 </span></code></pre></div>
-<p><code>Conditions</code>의 <code>Reason</code>이 <code>AddressNotAssigned</code>처럼 주소 관련이면, LoadBalancer 주소를 받지 못한 환경 차이입니다. 프록시 Pod가 Running이면 실습 6의 port-forward로 그대로 진행할 수 있습니다.</p>
-</li>
-</ol>
+<p><code>ACCEPTED</code>가 True가 아니면 controllerName 오타이거나 컨트롤러가 아직 안 떴습니다. 이때 Gateway의 <code>PROGRAMMED</code>는 False가 아니라 <strong>Unknown</strong>(<code>Waiting for controller</code>)으로 남습니다. <code>gateway.envoyproxy.io/gatewayclass-controller</code>를 그대로 복사해 고치고 다시 apply합니다.</p>
+<p><strong>② Gateway가 말하는 이유 읽기</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>gateway<span class="w"> </span>eg
+</span></code></pre></div>
+<p><code>Conditions</code>에서 <code>Type: Programmed</code>의 <code>Reason</code>과 <code>Message</code>를 읽습니다.</p>
+<table>
+<thead>
+<tr>
+<th>Reason / Message</th>
+<th>뜻</th>
+<th>다음에 볼 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NoResources</code> / <code>Envoy replicas unavailable</code></td>
+<td>프록시 Pod가 아직 준비 안 됨</td>
+<td>③ Pod</td>
+</tr>
+<tr>
+<td><code>AddressNotAssigned</code> / <code>No addresses have been assigned to the Gateway</code></td>
+<td>프록시 Service가 주소를 못 받음</td>
+<td>④ Service</td>
+</tr>
+</tbody>
+</table>
+<p><strong>③ 컨트롤러와 프록시 Pod</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system
+</span></code></pre></div>
+<p><code>envoy-gateway</code>와 <code>envoy-default-eg-...</code>가 Running인지 봅니다. <code>ContainerCreating</code>이면 이미지를 받는 중이니 기다립니다.</p>
+<p><strong>④ 프록시 Service 주소</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system
+</span></code></pre></div>
+<p><code>EXTERNAL-IP</code>가 <code>&lt;pending&gt;</code>이면 LoadBalancer 주소를 받지 못한 것입니다. 다른 LoadBalancer Service가 이미 80번을 쓰고 있어도 이렇게 될 수 있습니다. 프록시 Pod가 Running이면 실습 6의 port-forward로 그대로 진행할 수 있습니다.</p>
 </details>
 <details class="failure">
 <summary>envoy-default-eg-... Pod가 보이지 않음</summary>
@@ -2415,7 +2470,7 @@
 <div class="admonition warning">
 <p class="admonition-title">지우지 마세요</p>
 <ul>
-<li>Gateway <code>eg</code>와 GatewayClass <code>eg</code>는 <strong>실습 6</strong>에서 씁니다.</li>
+<li>Gateway <code>eg</code>와 GatewayClass <code>eg</code>는 <strong>실습 6</strong>에서 씁니다. 실습 6 끝에서 지웁니다 (5일차 Gateway와 80번 포트가 겹치지 않게).</li>
 <li>Envoy Gateway 설치(<code>envoy-gateway-system</code>)는 <strong>5일차 미니 블로그 종합 배포</strong>에서도 씁니다. 오늘이 끝나도 지우지 않습니다.</li>
 </ul>
 </div>

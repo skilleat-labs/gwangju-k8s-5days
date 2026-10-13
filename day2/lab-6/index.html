@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -2255,7 +2255,8 @@
 <div class="admonition abstract">
 <p class="admonition-title">이번 실습에서 할 것</p>
 <ul>
-<li>nginx 1.27을 1.28로 끊김 없이 바꾸고(롤링 업데이트), 남는 이력을 봅니다.</li>
+<li>nginx 1.27을 1.28로 Pod 하나씩 바꾸고(롤링 업데이트), 남는 이력을 봅니다.</li>
+<li>명령으로 바꾼 상태와 YAML 파일이 어긋나는 것을 알아 둡니다.</li>
 <li>명령 한 줄로 옛 버전으로 되돌립니다(롤백).</li>
 </ul>
 </div>
@@ -2309,6 +2310,10 @@
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>새 ReplicaSet(1.28)이 3개, 옛 ReplicaSet(1.27)이 0개입니다. 옛 것을 지우지 않고 0개로 남겨 두는 이유가 STEP 4의 롤백입니다.</p>
+<div class="admonition info">
+<p class="admonition-title">오늘 확인하는 것은 순차 교체 원리입니다</p>
+<p>오늘은 Pod가 한꺼번에 내려가지 않고 하나씩 교체되는 것을 확인합니다. 사용자 접속이 실제로 끊기지 않는지(무중단)는 요청을 준비된 Pod로만 보내는 Service(3일차)와 준비 상태를 판단하는 readinessProbe(4일차)를 배운 뒤에 확인합니다.</p>
+</div>
 <h2 id="step-3">STEP 3. 바꾼 이유를 기록하고 이력 보기<a class="headerlink" href="#step-3" title="Permanent link">&para;</a></h2>
 <p><code>change-cause</code> 주석을 달면 이력에 바꾼 이유가 남습니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>annotate<span class="w"> </span>deployment/web<span class="w"> </span>kubernetes.io/change-cause<span class="o">=</span><span class="s2">"nginx 1.28 업데이트"</span>
@@ -2331,8 +2336,12 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>annotate<span class="w"> </span>deployment/web<span class="w"> </span>kubernetes.io/change-cause<span class="o">=</span><span class="s2">"nginx 1.28 update"</span><span class="w"> </span>--overwrite
 </span></code></pre></div>
 </div>
+<div class="admonition warning">
+<p class="admonition-title">명령으로 바꾼 상태와 YAML 파일</p>
+<p><code>set image</code>로 클러스터는 1.28이 됐지만 <code>deployment.yaml</code> 파일에는 아직 <code>nginx:1.27</code>이 적혀 있습니다. 이 상태에서 <code>kubectl apply -f deployment.yaml</code>을 하면 파일 값으로 맞춰져 이미지가 1.27로 되돌아갑니다. 실습 5 STEP 6에서 <code>replicas</code>가 파일대로 3으로 돌아간 것과 같은 현상입니다. 운영에서는 파일의 <code>image</code>를 고쳐 apply하고, 급히 명령으로 바꿨다면 파일에도 반영합니다. 오늘은 STEP 4의 롤백으로 1.27로 돌아가므로 파일과 클러스터가 다시 같아집니다.</p>
+</div>
 <h2 id="step-4">STEP 4. 문제가 생겼다고 치고 되돌린다<a class="headerlink" href="#step-4" title="Permanent link">&para;</a></h2>
-<p><code>rollout undo</code>는 바로 직전 리비전으로 되돌립니다. 이것도 하나씩 바꿔 끼우는 방식이라 서비스가 끊기지 않습니다.</p>
+<p><code>rollout undo</code>는 바로 직전 리비전으로 되돌립니다. 이것도 Pod를 하나씩 바꿔 끼우는 방식입니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deployment/web
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>deployment.apps/web rolled back
@@ -2405,7 +2414,7 @@
 </details>
 <details class="failure">
 <summary>rollout status가 Waiting ... 에서 끝나지 않음</summary>
-<p>새 이미지를 받지 못하고 있을 가능성이 큽니다. <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-c">C</kbd></span>로 빠져나와 <code>kubectl get pods</code>를 봅니다. 새 Pod가 <code>ImagePullBackOff</code>면 이미지 태그 오타입니다. 바로 STEP 4의 <code>kubectl rollout undo deployment/web</code>으로 되돌린 뒤 올바른 태그로 다시 합니다. 롤링 업데이트라서 그동안에도 옛 Pod가 응답하고 있습니다.</p>
+<p>새 이미지를 받지 못하고 있을 가능성이 큽니다. <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-c">C</kbd></span>로 빠져나와 <code>kubectl get pods</code>를 봅니다. 새 Pod가 <code>ImagePullBackOff</code>면 이미지 태그 오타입니다. 바로 STEP 4의 <code>kubectl rollout undo deployment/web</code>으로 되돌린 뒤 올바른 태그로 다시 합니다. 롤링 업데이트라서 그동안에도 옛 Pod는 Running으로 남아 있습니다.</p>
 </details>
 <details class="failure">
 <summary>grep : The term 'grep' is not recognized as the name of a cmdlet, function, script file, or operable program.</summary>

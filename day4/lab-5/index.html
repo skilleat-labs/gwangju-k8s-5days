@@ -778,7 +778,7 @@
   <span class="md-ellipsis">
     
   
-    실습 3 내 이미지 만들기
+    실습 3 지우면 파일은? 내 이미지 만들기
   
 
     
@@ -1672,10 +1672,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-20-mysql-11-running" class="md-nav__link">
+  <a href="#step-26-mysql-ready-11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 20. MySQL 올리고 1/1 Running 기다리기
+        STEP 26. MySQL 올리고 READY 1/1 기다리기
       
     </span>
   </a>
@@ -1683,10 +1683,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-21-skilleat" class="md-nav__link">
+  <a href="#step-27-skilleat" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 21. 접속해서 데이터 넣기 (비밀번호 skilleat)
+        STEP 27. 접속해서 데이터 넣기 (비밀번호 skilleat)
       
     </span>
   </a>
@@ -1694,10 +1694,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-22-pod-deployment" class="md-nav__link">
+  <a href="#step-28-pod-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 22. Pod 지우기 (Deployment가 새로 만든다)
+        STEP 28. Pod 지우기 (Deployment가 새로 만든다)
       
     </span>
   </a>
@@ -1705,10 +1705,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-23" class="md-nav__link">
+  <a href="#step-29" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 23. 다시 접속해서 찾아보기
+        STEP 29. 다시 접속해서 찾아보기
       
     </span>
   </a>
@@ -2114,10 +2114,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-20-mysql-11-running" class="md-nav__link">
+  <a href="#step-26-mysql-ready-11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 20. MySQL 올리고 1/1 Running 기다리기
+        STEP 26. MySQL 올리고 READY 1/1 기다리기
       
     </span>
   </a>
@@ -2125,10 +2125,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-21-skilleat" class="md-nav__link">
+  <a href="#step-27-skilleat" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 21. 접속해서 데이터 넣기 (비밀번호 skilleat)
+        STEP 27. 접속해서 데이터 넣기 (비밀번호 skilleat)
       
     </span>
   </a>
@@ -2136,10 +2136,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-22-pod-deployment" class="md-nav__link">
+  <a href="#step-28-pod-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 22. Pod 지우기 (Deployment가 새로 만든다)
+        STEP 28. Pod 지우기 (Deployment가 새로 만든다)
       
     </span>
   </a>
@@ -2147,10 +2147,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-23" class="md-nav__link">
+  <a href="#step-29" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 23. 다시 접속해서 찾아보기
+        STEP 29. 다시 접속해서 찾아보기
       
     </span>
   </a>
@@ -2223,7 +2223,7 @@
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>skilleat
 </span></code></pre></div>
-<p><code>NotFound</code>가 나오면 실습 2의 STEP 7 명령으로 다시 만듭니다.</p>
+<p><code>NotFound</code>가 나오면 실습 2의 STEP 10 명령으로 다시 만듭니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>mysql-secret<span class="w"> </span>--from-literal<span class="o">=</span><span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span>skilleat
 </span></code></pre></div>
 <p>이번 실습에서 쓸 파일은 <code>mysql-emptydir.yaml</code>입니다.</p>
@@ -2239,10 +2239,12 @@
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql</span>
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql:8.0</span>
 </span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="nt">envFrom</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt"> secretRef</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> name</span><span class="p">:</span><span class="w"> </span><span class="nv">mysql-secret</span><span class="w"> </span><span class="p p-Indicator">}</span><span class="w"> </span><span class="p p-Indicator">}]</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> name</span><span class="p">:</span><span class="w"> </span><span class="nv">data</span><span class="p p-Indicator">,</span><span class="nt"> mountPath</span><span class="p">:</span><span class="w"> </span><span class="nv">/var/lib/mysql</span><span class="w"> </span><span class="p p-Indicator">}</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> name</span><span class="p">:</span><span class="w"> </span><span class="nv">data</span><span class="p p-Indicator">,</span><span class="nt"> emptyDir</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w"> </span><span class="p p-Indicator">}</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="nt">readinessProbe</span><span class="p">:</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">          </span><span class="nt">exec</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">mysqladmin</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">ping</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">-h</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">127.0.0.1</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="p p-Indicator">}</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> name</span><span class="p">:</span><span class="w"> </span><span class="nv">data</span><span class="p p-Indicator">,</span><span class="nt"> mountPath</span><span class="p">:</span><span class="w"> </span><span class="nv">/var/lib/mysql</span><span class="w"> </span><span class="p p-Indicator">}</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> name</span><span class="p">:</span><span class="w"> </span><span class="nv">data</span><span class="p p-Indicator">,</span><span class="nt"> emptyDir</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w"> </span><span class="p p-Indicator">}</span>
 </span></code></pre></div>
 <a download="download" href="../../files/day4/mysql-emptydir.yaml">mysql-emptydir.yaml 내려받기</a></p>
 <table>
@@ -2258,6 +2260,10 @@
 <td><code>mysql-secret</code>의 모든 키를 이름 그대로 환경변수로 넣습니다. MySQL 이미지는 처음 뜰 때 <code>MYSQL_ROOT_PASSWORD</code>로 root 비밀번호를 정합니다.</td>
 </tr>
 <tr>
+<td><code>readinessProbe</code></td>
+<td>섹션 3에서 배운 준비 확인입니다. <code>mysqladmin ping</code>으로 127.0.0.1에 접속이 되어야 READY가 <code>1/1</code>이 됩니다. 초기화 중에는 <code>0/1</code>입니다.</td>
+</tr>
+<tr>
 <td><code>/var/lib/mysql</code></td>
 <td>MySQL이 데이터를 쓰는 폴더입니다.</td>
 </tr>
@@ -2267,119 +2273,132 @@
 </tr>
 </tbody>
 </table>
-<h2 id="step-20-mysql-11-running">STEP 20. MySQL 올리고 1/1 Running 기다리기<a class="headerlink" href="#step-20-mysql-11-running" title="Permanent link">&para;</a></h2>
+<h2 id="step-26-mysql-ready-11">STEP 26. MySQL 올리고 READY 1/1 기다리기<a class="headerlink" href="#step-26-mysql-ready-11" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>mysql-emptydir.yaml
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>deployment.apps/mysql created
 </span></code></pre></div>
-<p><code>1/1 Running</code>이 될 때까지 지켜봅니다. 이미지가 크고 첫 기동 때 초기화를 해서 1분쯤 걸릴 수 있습니다. <code>Running</code>이 보이면 <code>Ctrl + C</code>로 멈춥니다.</p>
+<p>READY가 <code>1/1</code>이 될 때까지 지켜봅니다. 이미지가 크고 첫 기동 때 초기화를 해서 1분쯤 걸릴 수 있습니다. <code>Running</code>이 먼저 보여도 READY가 <code>0/1</code>이면 아직 초기화 중입니다. <code>1/1</code>이 보이면 <code>Ctrl + C</code>로 멈춥니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>mysql<span class="w"> </span>-w
 </span></code></pre></div>
 <p><div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>NAME                     READY   STATUS              RESTARTS   AGE
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>mysql-5c7d8f9b6d-x2k4p   0/1     ContainerCreating   0          3s
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>mysql-5c7d8f9b6d-x2k4p   1/1     Running             0          40s
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>mysql-5c7d8f9b6d-x2k4p   0/1     Running             0          20s
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>mysql-5c7d8f9b6d-x2k4p   1/1     Running             0          45s
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
-<p><strong>Pod 이름을 기억해 둡니다.</strong> STEP 22에서 새 Pod와 비교합니다.</p>
-<h2 id="step-21-skilleat">STEP 21. 접속해서 데이터 넣기 (비밀번호 skilleat)<a class="headerlink" href="#step-21-skilleat" title="Permanent link">&para;</a></h2>
-<p><code>Running</code>이 되고 30초쯤 기다린 뒤 MySQL에 접속합니다. <code>deploy/mysql</code>이라고 쓰면 Pod 이름을 몰라도 됩니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>deploy/mysql<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat
+<p>로그로도 확인합니다. 마지막 줄 근처에 <code>ready for connections</code>와 <code>port: 3306</code>이 보이면 접속을 받을 준비가 된 것입니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>deploy/mysql<span class="w"> </span>--tail<span class="w"> </span><span class="m">3</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>mysql: [Warning] Using a password on the command line interface can be insecure.
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Welcome to the MySQL monitor.  Commands end with ; or \g.
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>...
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>mysql&gt;
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>... [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>... [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.xx'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<div class="admonition note">
+<p class="admonition-title">Running과 준비 완료는 다릅니다</p>
+<p>readinessProbe가 없으면 MySQL이 초기화 중이어도 <code>1/1 Running</code>으로 보입니다. 초기화 중에는 <code>port: 0</code>인 임시 서버가 잠깐 뜨기도 하니, 로그로 볼 때는 <code>port: 3306</code> 줄을 찾습니다.</p>
+</div>
+<p><strong>Pod 이름을 기억해 둡니다.</strong> STEP 28에서 새 Pod와 비교합니다.</p>
+<h2 id="step-27-skilleat">STEP 27. 접속해서 데이터 넣기 (비밀번호 skilleat)<a class="headerlink" href="#step-27-skilleat" title="Permanent link">&para;</a></h2>
+<p>READY가 <code>1/1</code>이 된 뒤 MySQL에 접속합니다. <code>deploy/mysql</code>이라고 쓰면 Pod 이름을 몰라도 됩니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>deploy/mysql<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>mysql: [Warning] Using a password on the command line interface can be insecure.
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Welcome to the MySQL monitor.  Commands end with ; or \g.
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>...
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>mysql&gt;
 </span></code></pre></div>
 <p>첫 줄의 Warning은 비밀번호를 명령에 썼다는 경고입니다. 실습이라 무시합니다.</p>
 <p><code>mysql&gt;</code> 프롬프트가 나오면 한 줄씩 입력합니다. 데이터베이스 <code>blog</code>, 테이블 <code>post</code>를 만들고 글 한 줄을 넣습니다.</p>
-<div class="language-sql highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">blog</span><span class="p">;</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">post</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">));</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">post</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'hello'</span><span class="p">);</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">post</span><span class="p">;</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">exit</span>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">blog</span><span class="p">;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">post</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">));</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">post</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'hello'</span><span class="p">);</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">post</span><span class="p">;</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">exit</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>+------+-------+
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>| id   | title |
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>+------+-------+
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>|    1 | hello |
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>+------+-------+
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>1 row in set (0.00 sec)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>+------+-------+
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>| id   | title |
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>+------+-------+
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>|    1 | hello |
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>+------+-------+
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>1 row in set (0.00 sec)
 </span></code></pre></div>
 <details class="tip">
 <summary>mysql&gt; 프롬프트 없이 한 줄씩 실행하기</summary>
 <p><code>mysql&gt;</code> 안에서 입력하기 불편하면 <code>-e</code>로 SQL을 한 줄씩 넘겨도 됩니다. 두 OS에서 똑같이 동작합니다 (바깥은 큰따옴표, 안의 글자는 작은따옴표).</p>
 <p>먼저 Pod 이름을 확인해 복사합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>mysql
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>mysql
 </span></code></pre></div>
 <p><code>&lt;Pod 이름&gt;</code> 자리에 꺾쇠 없이 붙여 넣고 실행합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat<span class="w"> </span>-e<span class="w"> </span><span class="s2">"CREATE DATABASE blog;"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat<span class="w"> </span>-e<span class="w"> </span><span class="s2">"CREATE DATABASE blog;"</span>
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat<span class="w"> </span>-e<span class="w"> </span><span class="s2">"CREATE TABLE blog.post (id INT, title VARCHAR(50));"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat<span class="w"> </span>-e<span class="w"> </span><span class="s2">"CREATE TABLE blog.post (id INT, title VARCHAR(50));"</span>
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat<span class="w"> </span>-e<span class="w"> </span><span class="s2">"INSERT INTO blog.post VALUES (1, 'hello');"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat<span class="w"> </span>-e<span class="w"> </span><span class="s2">"INSERT INTO blog.post VALUES (1, 'hello');"</span>
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SELECT * FROM blog.post;"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SELECT * FROM blog.post;"</span>
 </span></code></pre></div>
 </details>
-<h2 id="step-22-pod-deployment">STEP 22. Pod 지우기 (Deployment가 새로 만든다)<a class="headerlink" href="#step-22-pod-deployment" title="Permanent link">&para;</a></h2>
+<h2 id="step-28-pod-deployment">STEP 28. Pod 지우기 (Deployment가 새로 만든다)<a class="headerlink" href="#step-28-pod-deployment" title="Permanent link">&para;</a></h2>
 <p>장애를 흉내 내어 MySQL Pod를 지웁니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>mysql
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>mysql
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pod "mysql-5c7d8f9b6d-x2k4p" deleted
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>pod "mysql-5c7d8f9b6d-x2k4p" deleted
 </span></code></pre></div>
-<p>Deployment가 곧바로 새 Pod를 만듭니다. <code>1/1 Running</code>이 되면 <code>Ctrl + C</code>로 멈춥니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>mysql<span class="w"> </span>-w
+<p>Deployment가 곧바로 새 Pod를 만듭니다. READY가 <code>1/1</code>이 되면 <code>Ctrl + C</code>로 멈춥니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>mysql<span class="w"> </span>-w
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>NAME                     READY   STATUS              RESTARTS   AGE
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>mysql-5c7d8f9b6d-q8w7e   0/1     ContainerCreating   0          2s
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>mysql-5c7d8f9b6d-q8w7e   1/1     Running             0          5s
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>NAME                     READY   STATUS              RESTARTS   AGE
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>mysql-5c7d8f9b6d-q8w7e   0/1     ContainerCreating   0          2s
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>mysql-5c7d8f9b6d-q8w7e   0/1     Running             0          5s
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>mysql-5c7d8f9b6d-q8w7e   1/1     Running             0          35s
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
-<p>STEP 20과 Pod 이름이 다릅니다. <strong>살아난 Pod는 같은 Pod가 아니라 새 Pod</strong>입니다.</p>
-<h2 id="step-23">STEP 23. 다시 접속해서 찾아보기<a class="headerlink" href="#step-23" title="Permanent link">&para;</a></h2>
-<p>새 Pod가 <code>Running</code>이 되고 30초쯤 기다린 뒤 접속합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>deploy/mysql<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat
+<p>STEP 26과 Pod 이름이 다릅니다. <strong>살아난 Pod는 같은 Pod가 아니라 새 Pod</strong>입니다.</p>
+<h2 id="step-29">STEP 29. 다시 접속해서 찾아보기<a class="headerlink" href="#step-29" title="Permanent link">&para;</a></h2>
+<p>새 Pod의 READY가 <code>1/1</code>이 된 뒤 접속합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>deploy/mysql<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat
 </span></code></pre></div>
-<div class="language-sql highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">DATABASES</span><span class="p">;</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">USE</span><span class="w"> </span><span class="n">blog</span><span class="p">;</span>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">DATABASES</span><span class="p">;</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="n">USE</span><span class="w"> </span><span class="n">blog</span><span class="p">;</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>+--------------------+
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>| Database           |
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>+--------------------+
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>| information_schema |
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>| mysql              |
-</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>| performance_schema |
-</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>| sys                |
-</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>+--------------------+
-</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>4 rows in set (0.00 sec)
-</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>
-</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>ERROR 1049 (42000): Unknown database 'blog'
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>+--------------------+
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>| Database           |
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>+--------------------+
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>| information_schema |
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>| mysql              |
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>| performance_schema |
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>| sys                |
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>+--------------------+
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>4 rows in set (0.00 sec)
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>
+</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>ERROR 1049 (42000): Unknown database 'blog'
 </span></code></pre></div>
 <p><code>blog</code>가 목록에 없고, <code>USE blog</code>는 <code>Unknown database</code> 오류가 납니다. <code>exit</code>로 나옵니다.</p>
 <details class="tip">
 <summary>mysql&gt; 프롬프트 없이 확인하기</summary>
 <p><code>kubectl get pods -l app=mysql</code>로 <strong>새</strong> Pod 이름을 복사해 넣습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SHOW DATABASES;"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SHOW DATABASES;"</span>
 </span></code></pre></div>
 </details>
 <p>옛 Pod의 emptyDir이 Pod와 함께 지워졌고, 새 Pod는 빈 폴더에서 MySQL을 처음부터 다시 초기화했습니다. 비밀번호는 Secret에서 다시 읽으니 접속은 됩니다. <strong>서비스는 살아났는데 데이터는 사라진</strong> 장애입니다.</p>
 <h2 id="_2">성공하면<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <ul>
-<li>STEP 21: <code>SELECT</code>에 <code>1</code>, <code>hello</code>가 나옵니다.</li>
-<li>STEP 22: 새 Pod 이름이 STEP 20과 다릅니다.</li>
-<li>STEP 23: <code>SHOW DATABASES</code>에 <code>blog</code>가 없습니다.</li>
+<li>STEP 27: <code>SELECT</code>에 <code>1</code>, <code>hello</code>가 나옵니다.</li>
+<li>STEP 28: 새 Pod 이름이 STEP 26과 다릅니다.</li>
+<li>STEP 29: <code>SHOW DATABASES</code>에 <code>blog</code>가 없습니다.</li>
 </ul>
 <h2 id="_3">막히면<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <details class="failure">
 <summary>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'</summary>
-<p>MySQL이 아직 초기화 중입니다. <code>Running</code>이 되자마자 접속하면 납니다. 30초쯤 기다렸다가 다시 접속합니다.</p>
+<p>MySQL이 아직 초기화 중입니다. READY가 <code>0/1</code>일 때 접속하면 납니다. <code>kubectl get pods -l app=mysql</code>로 <code>1/1</code>을 확인하고 다시 접속합니다.</p>
 </details>
 <details class="failure">
 <summary>ERROR 1045 (28000): Access denied for user 'root'@'localhost'</summary>
 <p>비밀번호가 다릅니다. Secret 값을 확인합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>mysql-secret<span class="w"> </span>-o<span class="w"> </span>go-template<span class="o">=</span><span class="s2">"{{.data.MYSQL_ROOT_PASSWORD | base64decode}}"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>mysql-secret<span class="w"> </span>-o<span class="w"> </span>go-template<span class="o">=</span><span class="s2">"{{.data.MYSQL_ROOT_PASSWORD | base64decode}}"</span>
 </span></code></pre></div>
-<p><code>pass1234</code>가 나오면 실습 2의 STEP 7을 하지 않은 것입니다. 이번 실습은 <code>-ppass1234</code>로 접속하거나, Secret을 <code>skilleat</code>으로 다시 만든 뒤 <code>kubectl delete pod -l app=mysql</code>로 Pod를 새로 띄웁니다 (emptyDir이라 새로 초기화되며 새 비밀번호가 적용됩니다).</p>
+<p><code>pass1234</code>가 나오면 실습 2의 STEP 10을 하지 않은 것입니다. 이번 실습은 <code>-ppass1234</code>로 접속하거나, Secret을 <code>skilleat</code>으로 다시 만든 뒤 <code>kubectl delete pod -l app=mysql</code>로 Pod를 새로 띄웁니다 (emptyDir이라 새로 초기화되며 새 비밀번호가 적용됩니다).</p>
 </details>
 <details class="failure">
 <summary>Pod가 CreateContainerConfigError</summary>
@@ -2391,14 +2410,14 @@
 </details>
 <details class="failure">
 <summary>error: unable to upgrade connection: container not found / pod is not running</summary>
-<p>STEP 22 직후 지워지는 Pod에 붙었습니다. 새 Pod가 <code>1/1 Running</code>이 된 것을 보고 30초쯤 뒤 다시 접속합니다.</p>
+<p>STEP 28 직후 지워지는 Pod에 붙었습니다. 새 Pod의 READY가 <code>1/1</code>이 된 것을 보고 다시 접속합니다.</p>
 </details>
 <details class="failure">
 <summary>'&lt;' 연산자는 나중에 사용하도록 예약되어 있습니다 (PowerShell) / zsh: no such file or directory: Pod (Mac)</summary>
 <p>꺾쇠 <code>&lt; &gt;</code>까지 입력했습니다. 실제 Pod 이름만 넣습니다.</p>
 </details>
 <h2 id="_4">정리<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
-<p><strong>지우지 마세요.</strong> 실습 6의 STEP 25에서 이 <code>mysql</code> Deployment를 지우고 PVC 버전으로 바꿉니다. <code>mysql-secret</code>도 실습 6에서 그대로 씁니다.</p>
+<p><strong>지우지 마세요.</strong> 실습 6의 STEP 31에서 이 <code>mysql</code> Deployment를 지우고 PVC 버전으로 바꿉니다. <code>mysql-secret</code>도 실습 6에서 그대로 씁니다.</p>
 
 
 
