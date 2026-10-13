@@ -1,0 +1,117 @@
+site_name: 쿠버네티스 5일 실습 가이드
+site_description: 광주전남 데이터센터 IT 인프라 전문과정 쿠버네티스 5일 실습 (Windows, Mac)
+site_author: 스킬잇 김누리
+site_url: https://skilleat-labs.github.io/gwangju-k8s-5days/
+repo_url: https://github.com/skilleat-labs/gwangju-k8s-5days
+repo_name: skilleat-labs/gwangju-k8s-5days
+edit_uri: ""
+
+theme:
+  name: material
+  language: ko
+  font:
+    text: Noto Sans KR
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: 다크 모드로 전환
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: 라이트 모드로 전환
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.tracking
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+
+nav:
+  - 홈: index.md
+  - 시작 전 준비:
+      - 1. Docker Desktop 설치: setup/1-docker-desktop.md
+      - 2. 터미널과 편집기: setup/2-terminal-editor.md
+      - 3. Kubernetes 켜기 (DAY 2 전까지): setup/3-kubernetes.md
+      - 4. 막혔을 때 (Windows, Mac): setup/4-troubleshooting.md
+  - 1일차 컨테이너:
+      - 오늘의 실습: day1/index.md
+      - 실습 1 컨테이너 처음 띄워 보기: day1/lab-1.md
+      - 실습 2 컨테이너는 프로세스다: day1/lab-2.md
+      - 실습 3 내 이미지 만들기: day1/lab-3.md
+      - 실습 4 도전 과제 guide 컨테이너: day1/lab-4.md
+      - 실습 5 미니 블로그 띄우기: day1/lab-5.md
+      - 실습 6 도커의 한계 직접 겪기: day1/lab-6.md
+  - 2일차 Pod와 Deployment:
+      - 오늘의 실습: day2/index.md
+      - 실습 1 쿠버네티스가 켜졌는지 확인: day2/lab-1.md
+      - 실습 2 클러스터 구성요소 찾기: day2/lab-2.md
+      - 실습 3 Pod 만들기 (명령형, 선언형): day2/lab-3.md
+      - 실습 4 Pod 들여다보기와 라벨: day2/lab-4.md
+      - 실습 5 Deployment와 자가복구: day2/lab-5.md
+      - 실습 6 롤링 업데이트와 롤백: day2/lab-6.md
+  - 3일차 Service와 Gateway:
+      - 오늘의 실습: day3/index.md
+      - 실습 1 Service 붙이기: day3/lab-1.md
+      - 실습 2 이름으로 찾기 (CoreDNS): day3/lab-2.md
+      - 실습 3 밖에서 접속하기: day3/lab-3.md
+      - 실습 4 EndpointSlice와 연결 장애: day3/lab-4.md
+      - 실습 5 Envoy Gateway 설치: day3/lab-5.md
+      - 실습 6 HTTPRoute 경로 나누기: day3/lab-6.md
+  - 4일차 설정과 데이터:
+      - 오늘의 실습: day4/index.md
+      - 실습 1 ConfigMap: day4/lab-1.md
+      - 실습 2 Secret: day4/lab-2.md
+      - 실습 3 readinessProbe: day4/lab-3.md
+      - 실습 4 메모리 한도와 OOMKilled: day4/lab-4.md
+      - 실습 5 데이터가 사라진다 (emptyDir): day4/lab-5.md
+      - 실습 6 PVC로 데이터 지키기: day4/lab-6.md
+  - 5일차 보안과 종합:
+      - 오늘의 실습: day5/index.md
+      - 실습 1 securityContext와 PSA: day5/lab-1.md
+      - 실습 2 RBAC: day5/lab-2.md
+      - 실습 3 NetworkPolicy: day5/lab-3.md
+      - 실습 4 미니 블로그 YAML 빈칸 채우기: day5/lab-4.md
+      - 실습 5 미니 블로그 종합 배포: day5/lab-5.md
+      - 실습 6 고장 난 미니 블로그 고치기: day5/lab-6.md
+  - 실습 파일: files.md
+
+markdown_extensions:
+  - admonition
+  - tables
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      base_path: ["docs"]
+      check_paths: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true

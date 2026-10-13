@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: web-probe }
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: web-probe } }
+  template:
+    metadata: { labels: { app: web-probe } }
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.27
+        readinessProbe:
+          httpGet: { path: /index.html, port: 80 }
+          periodSeconds: 5
+          failureThreshold: 1

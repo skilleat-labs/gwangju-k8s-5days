@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: memory-hog
+spec:
+  containers:
+  - name: stress
+    image: busybox:1.36
+    resources:
+      requests: { memory: "50Mi" }
+      limits: { memory: "100Mi" }
+    command: ["sh", "-c", "tail /dev/zero"]
