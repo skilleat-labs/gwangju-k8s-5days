@@ -1,0 +1,72 @@
+# 미니 블로그 frontend 와 입구 (빈칸 문제)
+# (7), (8) 의 밑줄을 지우고 알맞은 값을 쓴다
+# 적용 순서: miniblog-backend.yaml 다음에
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: skilleat/frontend:v3-kb5
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: webapp
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 80
+    targetPort: 80
+---
+# DAY 3 에 설치한 Envoy Gateway 가 맡는 GatewayClass
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: blog-gw-class
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: blog-gw
+  namespace: webapp
+spec:
+  gatewayClassName: blog-gw-class
+  listeners:
+  - name: http
+    port: 80
+    protocol: HTTP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: frontend-route
+  namespace: webapp
+spec:
+  parentRefs:
+  - name: (7)__________
+  rules:
+  - backendRefs:
+    - name: frontend-service
+      port: (8)____
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

@@ -1,0 +1,2858 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="광주전남 데이터센터 IT 인프라 전문과정 쿠버네티스 5일 실습 (Windows, Mac)">
+      
+      
+        <meta name="author" content="스킬잇 김누리">
+      
+      
+        <link rel="canonical" href="https://skilleat-labs.github.io/gwangju-k8s-5days/day3/lab-4/">
+      
+      
+        <link rel="prev" href="../lab-3/">
+      
+      
+        <link rel="next" href="../lab-5/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>실습 4 EndpointSlice와 연결 장애 - 쿠버네티스 5일 실습 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans KR";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#4-endpointslice" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="쿠버네티스 5일 실습 가이드" class="md-header__button md-logo" aria-label="쿠버네티스 5일 실습 가이드" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            쿠버네티스 5일 실습 가이드
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              실습 4 EndpointSlice와 연결 장애
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="다크 모드로 전환"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="다크 모드로 전환" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="라이트 모드로 전환"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="라이트 모드로 전환" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/skilleat-labs/gwangju-k8s-5days" title="저장소로 이동" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    skilleat-labs/gwangju-k8s-5days
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  홈
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../setup/1-docker-desktop/" class="md-tabs__link">
+          
+  
+  
+  시작 전 준비
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../day1/" class="md-tabs__link">
+          
+  
+  
+  1일차 컨테이너
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../day2/" class="md-tabs__link">
+          
+  
+  
+  2일차 Pod와 Deployment
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  3일차 Service와 Gateway
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../day4/" class="md-tabs__link">
+          
+  
+  
+  4일차 설정과 데이터
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../day5/" class="md-tabs__link">
+          
+  
+  
+  5일차 보안과 종합
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../files/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  실습 파일
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="쿠버네티스 5일 실습 가이드" class="md-nav__button md-logo" aria-label="쿠버네티스 5일 실습 가이드" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    쿠버네티스 5일 실습 가이드
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/skilleat-labs/gwangju-k8s-5days" title="저장소로 이동" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    skilleat-labs/gwangju-k8s-5days
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    시작 전 준비
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    시작 전 준비
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/1-docker-desktop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Docker Desktop 설치
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/2-terminal-editor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. 터미널과 편집기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/3-kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Kubernetes 켜기 (DAY 2 전까지)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/4-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. 막혔을 때 (Windows, Mac)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1일차 컨테이너
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1일차 컨테이너
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    오늘의 실습
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day1/lab-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 1 컨테이너 처음 띄워 보기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day1/lab-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 2 컨테이너는 프로세스다
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day1/lab-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 3 내 이미지 만들기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day1/lab-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 4 도전 과제 guide 컨테이너
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day1/lab-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 5 미니 블로그 띄우기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day1/lab-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 6 도커의 한계 직접 겪기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2일차 Pod와 Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2일차 Pod와 Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    오늘의 실습
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day2/lab-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 1 쿠버네티스가 켜졌는지 확인
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day2/lab-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 2 클러스터 구성요소 찾기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day2/lab-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 3 Pod 만들기 (명령형, 선언형)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day2/lab-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 4 Pod 들여다보기와 라벨
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day2/lab-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 5 Deployment와 자가복구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day2/lab-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 6 롤링 업데이트와 롤백
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3일차 Service와 Gateway
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3일차 Service와 Gateway
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    오늘의 실습
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 1 Service 붙이기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 2 이름으로 찾기 (CoreDNS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 3 밖에서 접속하기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 4 EndpointSlice와 연결 장애
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 4 EndpointSlice와 연결 장애
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        준비
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        미리 알아 둘 것
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-10-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 10. web의 조각 보기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-11-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 11. 옛 API와 비교 (경고 확인)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-12-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 12. 새 터미널에서 지켜보며 5개로
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 13. 고장 내고 접속
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 14. 순서대로 찾기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 15. 고치고 다시 확인
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        성공하면
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        막히면
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 5 Envoy Gateway 설치
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 6 HTTPRoute 경로 나누기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4일차 설정과 데이터
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4일차 설정과 데이터
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    오늘의 실습
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day4/lab-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 1 ConfigMap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day4/lab-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 2 Secret
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day4/lab-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 3 readinessProbe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day4/lab-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 4 메모리 한도와 OOMKilled
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day4/lab-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 5 데이터가 사라진다 (emptyDir)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day4/lab-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 6 PVC로 데이터 지키기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5일차 보안과 종합
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    5일차 보안과 종합
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    오늘의 실습
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day5/lab-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 1 securityContext와 PSA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day5/lab-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 2 RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day5/lab-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 3 NetworkPolicy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day5/lab-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 4 미니 블로그 YAML 빈칸 채우기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day5/lab-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 5 미니 블로그 종합 배포
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day5/lab-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 6 고장 난 미니 블로그 고치기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실습 파일
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        준비
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        미리 알아 둘 것
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-10-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 10. web의 조각 보기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-11-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 11. 옛 API와 비교 (경고 확인)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-12-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 12. 새 터미널에서 지켜보며 5개로
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 13. 고장 내고 접속
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 14. 순서대로 찾기
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 15. 고치고 다시 확인
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        성공하면
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        막히면
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정리
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="4-endpointslice">실습 4. EndpointSlice 읽고, 빈 목록으로 원인 찾기<a class="headerlink" href="#4-endpointslice" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">이번 실습에서 할 것</p>
+<ul>
+<li>Service 뒤의 실제 주소 목록 <strong>EndpointSlice</strong>를 읽습니다.</li>
+<li>Pod를 늘리면 목록이 따라 바뀌는 것을 실시간으로 봅니다.</li>
+<li>라벨 오타로 일부러 고장 낸 Service를, 빈 EndpointSlice를 보고 원인을 찾아 고칩니다.</li>
+</ul>
+</div>
+<p><strong>소요 시간</strong> 약 14분 (앞 6분 STEP 10~12, 뒤 8분 STEP 13~15), <strong>교안</strong> DAY 3 섹션 4</p>
+<div class="admonition tip">
+<p class="admonition-title">오늘 가장 중요한 실습입니다</p>
+<p>"서비스에 접속이 안 돼요"라는 문의의 상당수가 이 실습의 순서로 풀립니다. 4일차 readinessProbe 실습과 5일차 고장 난 미니 블로그 고치기에서 같은 명령을 그대로 씁니다.</p>
+</div>
+<h2 id="_1">준비<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../lab-1/">실습 1</a>의 <code>web</code> Deployment(Pod 3개)와 <code>web</code> Service가 있어야 합니다.</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>web
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>web
+</span></code></pre></div>
+<ul>
+<li>STEP 12에서 <strong>터미널을 하나 더</strong> 엽니다. 새 터미널도 작업 폴더로 이동합니다.</li>
+</ul>
+<h2 id="_2">미리 알아 둘 것<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Service는 Pod로 직접 보내지 않습니다. 컨트롤 플레인이 selector에 맞는 Pod들의 IP를 모아 **주소 목록(EndpointSlice)**을 만들어 두고, 각 노드의 kube-proxy가 이 목록을 읽어 트래픽 규칙을 만듭니다.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Service web (selector app: web)
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  └─ EndpointSlice web-xxxxx
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        10.1.0.12:80  ready
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        10.1.0.13:80  ready     ──▶  kube-proxy가 읽어 규칙을 만든다
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        10.1.0.17:80  ready
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>알아 둘 것</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>누가 만드나</td>
+<td>사람이 아니라 controller-manager 안의 EndpointSlice 컨트롤러가 자동으로 만들고 고칩니다</td>
+</tr>
+<tr>
+<td>어떻게 찾나</td>
+<td>이름 뒤에 무작위 꼬리가 붙어서, 라벨 <code>kubernetes.io/service-name=web</code>으로 찾습니다</td>
+</tr>
+<tr>
+<td>옛 방식</td>
+<td><code>Endpoints</code>는 쿠버네티스 v1.33부터 deprecated입니다. 읽기만 해도 경고가 뜹니다</td>
+</tr>
+<tr>
+<td>조각 크기</td>
+<td>조각 하나에 기본 100개 주소. 넘으면 조각이 늘어납니다</td>
+</tr>
+</tbody>
+</table>
+<h2 id="step-10-web">STEP 10. web의 조각 보기<a class="headerlink" href="#step-10-web" title="Permanent link">&para;</a></h2>
+<p><code>web</code> Service의 EndpointSlice만 라벨로 골라 봅니다. 명령이 길어 오타가 잦으니 복사해서 씁니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>web
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>NAME        ADDRESSTYPE   PORTS   ENDPOINTS                       AGE
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>web-x7k2p   IPv4          80      10.1.0.12,10.1.0.13,10.1.0.17   20m
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<table>
+<thead>
+<tr>
+<th>칸</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NAME</code></td>
+<td>Service 이름 + 무작위 꼬리</td>
+</tr>
+<tr>
+<td><code>ADDRESSTYPE</code></td>
+<td>IPv4 또는 IPv6</td>
+</tr>
+<tr>
+<td><code>PORTS</code></td>
+<td>트래픽을 보낼 포트 (targetPort)</td>
+</tr>
+<tr>
+<td><code>ENDPOINTS</code></td>
+<td>지금 트래픽을 받을 Pod IP. <strong>이 칸이 핵심입니다</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>ENDPOINTS</code>의 IP가 실제 Pod IP와 같은지 비교해 봅니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>web<span class="w"> </span>-o<span class="w"> </span>wide
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>NAME                  READY   STATUS    RESTARTS   AGE   IP          NODE             ...
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>web-7d9f8c6b5-abcde   1/1     Running   0          1d    10.1.0.12   docker-desktop   ...
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>web-7d9f8c6b5-fghij   1/1     Running   0          1d    10.1.0.13   docker-desktop   ...
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>web-7d9f8c6b5-klmno   1/1     Running   0          1d    10.1.0.17   docker-desktop   ...
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p>이번에는 <code>-o yaml</code>로 조각 안을 열어 봅니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>web<span class="w"> </span>-o<span class="w"> </span>yaml
+</span></code></pre></div>
+<p><div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">items</span><span class="p">:</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">addressType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IPv4</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">discovery.k8s.io/v1</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">addresses</span><span class="p">:</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.1.0.12</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="nt">conditions</span><span class="p">:</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">      </span><span class="nt">ready</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">      </span><span class="nt">serving</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">      </span><span class="nt">terminating</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="nt">nodeName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker-desktop</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="nt">targetRef</span><span class="p">:</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-7d9f8c6b5-abcde</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">      </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">addresses</span><span class="p">:</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.1.0.13</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">    </span><span class="nt">conditions</span><span class="p">:</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">      </span><span class="nt">ready</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">    </span><span class="c1"># ... (Pod마다 한 덩어리씩 3개)</span>
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EndpointSlice</span>
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">  </span><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">    </span><span class="nt">labels</span><span class="p">:</span>
+</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">      </span><span class="nt">endpointslice.kubernetes.io/managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">endpointslice-controller.k8s.io</span>
+</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">      </span><span class="nt">kubernetes.io/service-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
+</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-x7k2p</span>
+</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">""</span>
+</span><span id="__span-8-30"><a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+</span><span id="__span-8-31"><a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="w">    </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+</span><span id="__span-8-32"><a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">List</span>
+</span></code></pre></div>
+<small>출력은 예시이며 일부를 줄였습니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p>아래 다섯 군데만 찾아 읽으면 됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>필드</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>labels.kubernetes.io/service-name</code></td>
+<td>어느 Service의 조각인지</td>
+</tr>
+<tr>
+<td><code>addressType</code></td>
+<td>주소 종류 (IPv4)</td>
+</tr>
+<tr>
+<td><code>endpoints[].addresses</code></td>
+<td>Pod의 IP. Pod마다 한 덩어리</td>
+</tr>
+<tr>
+<td><code>endpoints[].conditions.ready</code></td>
+<td><strong>true여야 트래픽을 받습니다</strong></td>
+</tr>
+<tr>
+<td><code>ports</code></td>
+<td>조각 안의 모든 주소에 공통인 포트</td>
+</tr>
+</tbody>
+</table>
+<p><code>targetRef</code>를 보면 이 주소가 어느 Pod인지 이름까지 나옵니다. <code>managed-by</code> 라벨은 이 조각을 컨트롤러가 만들었다는 표시입니다.</p>
+<div class="admonition info">
+<p class="admonition-title">conditions 세 값</p>
+<ul>
+<li><strong>serving</strong>: Pod가 응답할 수 있는 상태인지. Pod의 Ready와 같습니다 (4일차 readinessProbe가 정합니다).</li>
+<li><strong>terminating</strong>: Pod 삭제가 시작되어 종료 중인지.</li>
+<li><strong>ready</strong>: serving이면서 terminating이 아닐 때 true. kube-proxy는 보통 ready가 true인 주소로만 보냅니다.</li>
+</ul>
+</div>
+<h2 id="step-11-api">STEP 11. 옛 API와 비교 (경고 확인)<a class="headerlink" href="#step-11-api" title="Permanent link">&para;</a></h2>
+<p>옛 주소 목록 오브젝트인 <code>Endpoints</code>로도 봅니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpoints<span class="w"> </span>web
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>NAME   ENDPOINTS                                AGE
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>web    10.1.0.12:80,10.1.0.13:80,10.1.0.17:80   20m
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p>결과는 나오지만 맨 위에 <strong>Warning 한 줄</strong>이 붙습니다. 쿠버네티스 v1.33부터 <code>Endpoints</code> API가 deprecated(쓰지 말라고 권고) 되었기 때문입니다. 바로 없어지지는 않지만 앞으로는 <code>kubectl get endpointslices</code>로 봅니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Endpoints (옛 방식)</th>
+<th>EndpointSlice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구조</td>
+<td>Service 하나에 목록 하나, 통째로</td>
+<td>기본 100개씩 조각으로 나눔</td>
+</tr>
+<tr>
+<td>Pod 1개가 바뀌면</td>
+<td>전체 목록을 모든 노드로 다시 전송</td>
+<td>바뀐 조각만 전송</td>
+</tr>
+<tr>
+<td>1000개 넘으면</td>
+<td>잘리고 <code>over-capacity: truncated</code> 주석</td>
+<td>조각을 늘리면 됨</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Warning이 안 보이면</p>
+<p>Docker Desktop의 쿠버네티스 버전이 1.33보다 낮으면 경고 없이 결과만 나옵니다. <code>kubectl version</code>의 <code>Server Version</code>을 확인합니다. 결과는 같으니 그대로 진행합니다.</p>
+</div>
+<h2 id="step-12-5">STEP 12. 새 터미널에서 지켜보며 5개로<a class="headerlink" href="#step-12-5" title="Permanent link">&para;</a></h2>
+<p><strong>터미널 두 개</strong>를 씁니다. 먼저 **새 터미널(터미널 2)**에서 <code>-w</code>(watch)로 목록을 지켜봅니다. 이 명령은 끝나지 않고 계속 떠 있습니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>web<span class="w"> </span>-w
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>NAME        ADDRESSTYPE   PORTS   ENDPOINTS                       AGE
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>web-x7k2p   IPv4          80      10.1.0.12,10.1.0.13,10.1.0.17   25m
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p>**원래 터미널(터미널 1)**에서 Pod를 5개로 늘립니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>web<span class="w"> </span>--replicas<span class="o">=</span><span class="m">5</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>deployment.apps/web scaled
+</span></code></pre></div>
+<p>터미널 2를 봅니다. 새 Pod가 Ready가 되는 순서대로 줄이 새로 찍히며 주소가 늘어납니다.</p>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>NAME        ADDRESSTYPE   PORTS   ENDPOINTS                       AGE
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>web-x7k2p   IPv4          80      10.1.0.12,10.1.0.13,10.1.0.17   25m
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>web-x7k2p   IPv4          80      10.1.0.12,10.1.0.13,10.1.0.17 + 1 more...   25m
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>web-x7k2p   IPv4          80      10.1.0.12,10.1.0.13,10.1.0.17 + 2 more...   25m
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p>주소가 3개를 넘으면 <code>+ 2 more...</code>처럼 줄여서 보여 줍니다. 전체를 보려면 <code>-o yaml</code>을 씁니다. 다 봤으면 터미널 2에서 <code>Ctrl + C</code>로 끝냅니다.</p>
+<div class="admonition info">
+<p class="admonition-title">사람이 목록을 고치지 않았습니다</p>
+<p>replicas만 바꿨는데 목록이 저절로 바뀌었습니다. EndpointSlice 컨트롤러가 Pod 변화를 감시하다 조각을 고치고, kube-proxy가 바뀐 조각을 읽어 규칙을 갱신합니다. 어제 본 <strong>조정 루프</strong>가 여기서도 돌고 있습니다. 컨트롤러의 기준은 <strong>Service의 selector</strong> 하나뿐입니다. 다음 STEP에서 이 기준을 일부러 틀리게 만듭니다.</p>
+</div>
+<h2 id="step-13">STEP 13. 고장 내고 접속<a class="headerlink" href="#step-13" title="Permanent link">&para;</a></h2>
+<p>이제 일부러 고장을 냅니다. <code>web-svc.yaml</code>을 복사해 <code>web-svc-broken.yaml</code>로 저장하고, selector의 <code>web</code>을 <strong><code>wbe</code></strong>로 한 글자 바꿉니다. (아래 파일을 그대로 내려받아도 됩니다.)</p>
+<p><div class="language-yaml highlight"><span class="filename">web-svc-broken.yaml</span><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="hll"><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wbe</span><span class="w">      </span><span class="c1"># 오타</span>
+</span></span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+</span></code></pre></div>
+<a download="download" href="../../files/day3/web-svc-broken.yaml">web-svc-broken.yaml 내려받기</a></p>
+<table>
+<thead>
+<tr>
+<th>줄</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name: web</code></td>
+<td>이름이 같아서 <strong>기존 web Service를 덮어씁니다</strong> (새 Service가 생기지 않음)</td>
+</tr>
+<tr>
+<td><code>app: wbe</code></td>
+<td><code>web</code>을 <code>wbe</code>로 한 글자 바꿈</td>
+</tr>
+<tr>
+<td>예상</td>
+<td>apply는 성공, 접속은 실패</td>
+</tr>
+</tbody>
+</table>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>web-svc-broken.yaml
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>service/web configured
+</span></code></pre></div>
+<p>오류 없이 성공합니다. YAML 문법은 맞기 때문입니다. 이제 실습 1처럼 임시 Pod에서 접속합니다. <code>-T 3</code>이라 3초 뒤 포기합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>kubectl<span class="w"> </span>run<span class="w"> </span>tmp<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--image<span class="o">=</span>busybox:1.36<span class="w"> </span>--<span class="w"> </span>wget<span class="w"> </span>-qO-<span class="w"> </span>-T<span class="w"> </span><span class="m">3</span><span class="w"> </span>web
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>wget: can't connect to remote host (10.96.120.5): Connection refused
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>pod "tmp" deleted
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>pod default/tmp terminated (Error)
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<div class="admonition note">
+<p class="admonition-title">환경에 따라 다를 수 있음</p>
+<p>주소 목록이 빈 Service로 접속하면 <code>Connection refused</code>가 나오는 환경도 있고, 3초 동안 기다리다 <code>wget: download timed out</code>이 나오는 환경도 있습니다. 둘 다 <strong>접속 실패</strong>이고, 이 실습에서는 같은 증상으로 봅니다.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">여기가 이 장애가 어려운 이유입니다</p>
+<ul>
+<li><code>apply</code>는 성공했습니다.</li>
+<li><code>kubectl get svc</code>를 보면 Service가 있고 ClusterIP도 있습니다.</li>
+<li><code>kubectl get pods</code>를 보면 Pod 5개가 모두 Running입니다.</li>
+<li>Pod 로그에도 아무것도 없습니다. 요청이 Pod까지 오지 않았으니까요.</li>
+</ul>
+<p><strong>다 정상인데 접속만 안 됩니다.</strong> Service와 Pod만 봐서는 원인을 못 찾고, 그 <strong>사이</strong>의 EndpointSlice를 봐야 합니다.</p>
+</div>
+<p>원인을 미리 알고 있지만, 모르는 척하고 아래 디버깅 순서대로 찾아봅니다.</p>
+<h2 id="step-14">STEP 14. 순서대로 찾기<a class="headerlink" href="#step-14" title="Permanent link">&para;</a></h2>
+<p>연결이 안 될 때 보는 순서입니다.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>① Service  →  ② EndpointSlice  →  ③ Pod  →  ④ 라벨
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>   있나?         비었나?             Running?     selector와 같나?
+</span></code></pre></div>
+<p><strong>① Service가 있나, 포트는 맞나</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>web
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>NAME   TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>web    ClusterIP   10.96.120.5    &lt;none&gt;        80/TCP    40m
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p>정상입니다. Service도 있고 포트도 80입니다.</p>
+<p><strong>② EndpointSlice가 비었나</strong> (가장 중요)</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>web
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>NAME        ADDRESSTYPE   PORTS     ENDPOINTS   AGE
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>web-x7k2p   IPv4          &lt;unset&gt;   &lt;unset&gt;     40m
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p><strong><code>ENDPOINTS</code>가 비어 있습니다</strong> (<code>&lt;unset&gt;</code>). 조각은 남아 있지만 안에 주소가 하나도 없습니다. Service는 있는데 요청을 보낼 Pod가 없다는 뜻입니다. 여기서 원인이 "Service와 Pod의 <strong>연결</strong>"이라는 것을 압니다.</p>
+<div class="admonition note">
+<p class="admonition-title">환경에 따라 다를 수 있음</p>
+<p>빈 칸이 <code>&lt;unset&gt;</code> 대신 <code>&lt;none&gt;</code>이나 빈칸으로 보일 수 있습니다. 어느 쪽이든 <strong>IP가 하나도 없으면 빈 목록</strong>입니다.</p>
+</div>
+<p><strong>③ Pod는 Running이고 Ready인가</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--show-labels
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>NAME                  READY   STATUS    RESTARTS   AGE   LABELS
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>web-7d9f8c6b5-abcde   1/1     Running   0          1d    app=web,pod-template-hash=7d9f8c6b5
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>web-7d9f8c6b5-fghij   1/1     Running   0          1d    app=web,pod-template-hash=7d9f8c6b5
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>web-7d9f8c6b5-klmno   1/1     Running   0          1d    app=web,pod-template-hash=7d9f8c6b5
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>web-7d9f8c6b5-pqrst   1/1     Running   0          10m   app=web,pod-template-hash=7d9f8c6b5
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>web-7d9f8c6b5-uvwxy   1/1     Running   0          10m   app=web,pod-template-hash=7d9f8c6b5
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p>Pod 5개 모두 <code>1/1 Running</code>입니다. Pod 쪽은 정상입니다. <strong><code>LABELS</code> 칸의 <code>app=web</code></strong>을 기억합니다.</p>
+<p><strong>④ 라벨과 selector가 같은가</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>svc<span class="w"> </span>web
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Name:              web
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>Namespace:         default
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>Labels:            &lt;none&gt;
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>Annotations:       &lt;none&gt;
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>Selector:          app=wbe
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>Type:              ClusterIP
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>IP:                10.96.120.5
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>Port:              &lt;unset&gt;  80/TCP
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>TargetPort:        80/TCP
+</span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>Endpoints:
+</span><span id="__span-29-11"><a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>...
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p><strong><code>Selector: app=wbe</code></strong> 인데 Pod 라벨은 <strong><code>app=web</code></strong> 입니다. 글자 하나가 다릅니다. 이것이 원인입니다. <code>Endpoints:</code> 줄이 비어 있는 것도 ②와 같은 정보입니다.</p>
+<table>
+<thead>
+<tr>
+<th>본 것</th>
+<th>결과</th>
+<th>판단</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① <code>get svc web</code></td>
+<td>있음, 80/TCP</td>
+<td>정상</td>
+</tr>
+<tr>
+<td>② <code>get endpointslices</code></td>
+<td>ENDPOINTS 비어 있음</td>
+<td><strong>연결이 끊김</strong></td>
+</tr>
+<tr>
+<td>③ <code>get pods --show-labels</code></td>
+<td>5개 Running, 라벨 <code>app=web</code></td>
+<td>정상</td>
+</tr>
+<tr>
+<td>④ <code>describe svc web</code></td>
+<td>Selector <code>app=wbe</code></td>
+<td><strong>원인: selector 오타</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">목록이 비었나, 찼나로 갈린다</p>
+<ul>
+<li><strong>EndpointSlice가 비었으면</strong>: selector와 Pod 라벨을 비교합니다. Pod가 Ready가 아닌 경우도 목록에서 빠집니다 (4일차).</li>
+<li><strong>차 있는데 접속이 안 되면</strong>: <code>targetPort</code>가 컨테이너가 실제로 듣는 포트와 같은지 봅니다.</li>
+</ul>
+</div>
+<h2 id="step-15">STEP 15. 고치고 다시 확인<a class="headerlink" href="#step-15" title="Permanent link">&para;</a></h2>
+<p>원래 YAML(<code>selector: app: web</code>)을 다시 apply합니다. 이름이 같으니 selector만 다시 바뀝니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>web-svc.yaml
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>service/web configured
+</span></code></pre></div>
+<p>곧바로 목록이 다시 채워집니다. STEP 12에서 5개로 늘렸으니 주소가 5개입니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>web
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>NAME        ADDRESSTYPE   PORTS   ENDPOINTS                                   AGE
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>web-x7k2p   IPv4          80      10.1.0.12,10.1.0.13,10.1.0.17 + 2 more...   45m
+</span></code></pre></div>
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p>다시 접속합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>kubectl<span class="w"> </span>run<span class="w"> </span>tmp<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--image<span class="o">=</span>busybox:1.36<span class="w"> </span>--<span class="w"> </span>wget<span class="w"> </span>-qO-<span class="w"> </span>-T<span class="w"> </span><span class="m">3</span><span class="w"> </span>web
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>&lt;!DOCTYPE html&gt;
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>&lt;html&gt;
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>&lt;head&gt;
+</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>...
+</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>pod "tmp" deleted
+</span></code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">짝 실습으로 해 보기 (선택)</p>
+<p>시간이 남으면 짝과 함께 해 봅니다. 한 사람이 몰래 selector나 targetPort를 바꿔 apply하고, 다른 사람이 STEP 14 순서로 원인을 찾습니다.</p>
+</div>
+<h2 id="_3">성공하면<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<ul>
+<li>STEP 10: 주소 3개, <code>-o yaml</code>에 <code>ready: true</code>가 보입니다.</li>
+<li>STEP 11: 결과 위에 <code>Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice</code> 한 줄이 보입니다.</li>
+<li>STEP 12: <code>-w</code> 화면에서 주소가 3개 → 5개로 늘어납니다.</li>
+<li>STEP 13: apply는 성공, 접속은 실패합니다.</li>
+<li>STEP 14: <code>ENDPOINTS</code>가 비어 있고, <code>describe svc</code>의 <code>Selector</code>가 <code>app=wbe</code>입니다.</li>
+<li>STEP 15: 주소 5개가 돌아오고 접속에 성공합니다.</li>
+</ul>
+<h2 id="_4">막히면<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<details class="failure">
+<summary>No resources found in default namespace.</summary>
+<p>라벨 이름에 오타가 있습니다. <code>kubernetes.io/service-name=web</code>을 그대로 복사해 다시 실행합니다. 단수 <code>endpointslice</code>로 써도 됩니다.</p>
+</details>
+<details class="failure">
+<summary>error: the server doesn't have a resource type \"endpointslice\"</summary>
+<p>리소스 이름 철자를 확인합니다. <code>endpointslices</code> (또는 <code>endpointslice</code>)입니다. <code>endpointsslice</code>처럼 s가 하나 더 들어가기 쉽습니다.</p>
+</details>
+<details class="failure">
+<summary>-w 명령이 끝나지 않음</summary>
+<p>정상입니다. <code>-w</code>는 바뀔 때마다 줄을 새로 찍으며 계속 지켜봅니다. 다 봤으면 <code>Ctrl + C</code>로 끝냅니다. Windows에는 <code>watch</code> 명령이 없으니 항상 <code>-w</code>를 씁니다.</p>
+</details>
+<details class="failure">
+<summary>STEP 12에서 주소가 늘지 않음</summary>
+<p><code>kubectl get pods -l app=web</code>으로 새 Pod가 <code>Running</code>이고 READY가 <code>1/1</code>인지 봅니다. 이미지를 받는 중이면 <code>ContainerCreating</code>으로 잠시 머뭅니다. Ready가 된 Pod만 목록에 들어갑니다.</p>
+</details>
+<details class="failure">
+<summary>STEP 13에서 접속이 성공해 버림</summary>
+<p>고장 난 파일이 적용되지 않았습니다.</p>
+<ol>
+<li><code>kubectl describe svc web</code>의 <code>Selector</code>가 <code>app=wbe</code>인지 봅니다.</li>
+<li><code>app=web</code> 그대로면 <code>web-svc-broken.yaml</code>을 저장했는지(VS Code 탭의 동그라미 표시), 정말 <code>wbe</code>로 바꿨는지 확인하고 다시 apply합니다.</li>
+</ol>
+</details>
+<details class="failure">
+<summary>STEP 15 뒤에도 ENDPOINTS가 비어 있음</summary>
+<p><code>web-svc.yaml</code>의 selector가 <code>app: web</code>인지 다시 봅니다. 실수로 원본 파일을 고쳤다면 <a download="download" href="../../files/day3/web-svc.yaml">web-svc.yaml 내려받기</a>로 원본을 다시 받아 apply합니다.</p>
+</details>
+<details class="failure">
+<summary>Error from server (AlreadyExists): pods \"tmp\" already exists</summary>
+<p>남아 있는 임시 Pod를 지우고 다시 실행합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>tmp
+</span></code></pre></div>
+</details>
+<h2 id="_5">정리<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>replicas를 원래대로 3으로 돌립니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>web<span class="w"> </span>--replicas<span class="o">=</span><span class="m">3</span>
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">지우지 마세요</p>
+<p><code>web</code> Deployment와 <code>web</code> Service는 오늘 끝까지 남겨 둡니다. <code>web-svc-broken.yaml</code> 파일은 지워도 됩니다.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../lab-3/" class="md-footer__link md-footer__link--prev" aria-label="이전: 실습 3 밖에서 접속하기">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                실습 3 밖에서 접속하기
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../lab-5/" class="md-footer__link md-footer__link--next" aria-label="다음: 실습 5 Envoy Gateway 설치">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                실습 5 Envoy Gateway 설치
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

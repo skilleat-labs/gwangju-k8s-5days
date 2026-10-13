@@ -1,0 +1,59 @@
+# 미니 블로그 backend (빈칸 문제)
+# (1) ~ (6) 의 밑줄을 지우고 알맞은 값을 쓴다
+# 적용 순서: 이 파일을 먼저 (Namespace 가 들어 있다)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webapp
+---
+apiVersion: v1
+kind: (1)____________________
+metadata:
+  name: blog-pvc
+  namespace: webapp
+spec:
+  # storageClassName 을 생략하면 기본 StorageClass (Docker Desktop 은 hostpath) 를 쓴다
+  accessModes: ["(2)______________"]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: skilleat/backend:v3-kb5
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: data
+          mountPath: (3)______________
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: (4)____________
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: (5)____________________
+  namespace: webapp
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: (6)______
+    targetPort: 5000

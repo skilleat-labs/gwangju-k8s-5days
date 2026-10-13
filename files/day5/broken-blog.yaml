@@ -1,0 +1,90 @@
+# 고장 난 미니 블로그 (DAY 5 실습 6)
+# 세 군데가 틀렸다. YAML 을 눈으로 훑지 말고, get, describe, logs, events 순서로 증상부터 찾는다.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: broken
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: blog-pvc
+  namespace: broken
+spec:
+  storageClassName: fast-ssd
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: broken
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: skilleat/backend:v3-kb55
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: blog-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: broken
+spec:
+  selector: {app: backnd}
+  ports:
+  - port: 5000
+    targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: broken
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: skilleat/frontend:v3-kb5
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: broken
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 80
+    targetPort: 80

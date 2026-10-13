@@ -1,0 +1,33 @@
+# db 로 들어오는 것 (Ingress): app=backend 에서 80 포트만
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-from-backend
+  namespace: np-lab
+spec:
+  podSelector:
+    matchLabels: {app: db}
+  policyTypes: [Ingress]
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels: {app: backend}
+    ports:
+    - port: 80
+---
+# backend 에서 나가는 것 (Egress): app=db 의 80 포트만
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-to-db
+  namespace: np-lab
+spec:
+  podSelector:
+    matchLabels: {app: backend}
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - podSelector:
+        matchLabels: {app: db}
+    ports:
+    - port: 80
