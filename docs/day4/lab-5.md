@@ -20,7 +20,7 @@ kubectl get secret mysql-secret -o go-template="{{.data.MYSQL_ROOT_PASSWORD | ba
 skilleat
 ```
 
-`NotFound`가 나오면 실습 2의 STEP 7 명령으로 다시 만듭니다.
+`NotFound`가 나오면 실습 2의 STEP 10 명령으로 다시 만듭니다.
 
 ```bash
 kubectl create secret generic mysql-secret --from-literal=MYSQL_ROOT_PASSWORD=skilleat
@@ -36,10 +36,11 @@ kubectl create secret generic mysql-secret --from-literal=MYSQL_ROOT_PASSWORD=sk
 | 부분 | 뜻 |
 |---|---|
 | `envFrom` | `mysql-secret`의 모든 키를 이름 그대로 환경변수로 넣습니다. MySQL 이미지는 처음 뜰 때 `MYSQL_ROOT_PASSWORD`로 root 비밀번호를 정합니다. |
+| `readinessProbe` | 섹션 3에서 배운 준비 확인입니다. `mysqladmin ping`으로 127.0.0.1에 접속이 되어야 READY가 `1/1`이 됩니다. 초기화 중에는 `0/1`입니다. |
 | `/var/lib/mysql` | MySQL이 데이터를 쓰는 폴더입니다. |
 | `emptyDir: {}` | Pod가 지워지면 함께 사라지는 폴더입니다. |
 
-## STEP 20. MySQL 올리고 1/1 Running 기다리기
+## STEP 26. MySQL 올리고 READY 1/1 기다리기
 
 ```bash
 kubectl apply -f mysql-emptydir.yaml
@@ -49,7 +50,7 @@ kubectl apply -f mysql-emptydir.yaml
 deployment.apps/mysql created
 ```
 
-`1/1 Running`이 될 때까지 지켜봅니다. 이미지가 크고 첫 기동 때 초기화를 해서 1분쯤 걸릴 수 있습니다. `Running`이 보이면 `Ctrl + C`로 멈춥니다.
+READY가 `1/1`이 될 때까지 지켜봅니다. 이미지가 크고 첫 기동 때 초기화를 해서 1분쯤 걸릴 수 있습니다. `Running`이 먼저 보여도 READY가 `0/1`이면 아직 초기화 중입니다. `1/1`이 보이면 `Ctrl + C`로 멈춥니다.
 
 ```bash
 kubectl get pods -l app=mysql -w
@@ -58,15 +59,31 @@ kubectl get pods -l app=mysql -w
 ```text
 NAME                     READY   STATUS              RESTARTS   AGE
 mysql-5c7d8f9b6d-x2k4p   0/1     ContainerCreating   0          3s
-mysql-5c7d8f9b6d-x2k4p   1/1     Running             0          40s
+mysql-5c7d8f9b6d-x2k4p   0/1     Running             0          20s
+mysql-5c7d8f9b6d-x2k4p   1/1     Running             0          45s
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
 
-**Pod 이름을 기억해 둡니다.** STEP 22에서 새 Pod와 비교합니다.
+로그로도 확인합니다. 마지막 줄 근처에 `ready for connections`와 `port: 3306`이 보이면 접속을 받을 준비가 된 것입니다.
 
-## STEP 21. 접속해서 데이터 넣기 (비밀번호 skilleat)
+```bash
+kubectl logs deploy/mysql --tail 3
+```
 
-`Running`이 되고 30초쯤 기다린 뒤 MySQL에 접속합니다. `deploy/mysql`이라고 쓰면 Pod 이름을 몰라도 됩니다.
+```text
+... [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+... [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.xx'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+```
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
+
+!!! note "Running과 준비 완료는 다릅니다"
+    readinessProbe가 없으면 MySQL이 초기화 중이어도 `1/1 Running`으로 보입니다. 초기화 중에는 `port: 0`인 임시 서버가 잠깐 뜨기도 하니, 로그로 볼 때는 `port: 3306` 줄을 찾습니다.
+
+**Pod 이름을 기억해 둡니다.** STEP 28에서 새 Pod와 비교합니다.
+
+## STEP 27. 접속해서 데이터 넣기 (비밀번호 skilleat)
+
+READY가 `1/1`이 된 뒤 MySQL에 접속합니다. `deploy/mysql`이라고 쓰면 Pod 이름을 몰라도 됩니다.
 
 ```bash
 kubectl exec -it deploy/mysql -- mysql -uroot -pskilleat
@@ -127,7 +144,7 @@ exit
     kubectl exec -it <Pod 이름> -- mysql -uroot -pskilleat -e "SELECT * FROM blog.post;"
     ```
 
-## STEP 22. Pod 지우기 (Deployment가 새로 만든다)
+## STEP 28. Pod 지우기 (Deployment가 새로 만든다)
 
 장애를 흉내 내어 MySQL Pod를 지웁니다.
 
@@ -139,7 +156,7 @@ kubectl delete pod -l app=mysql
 pod "mysql-5c7d8f9b6d-x2k4p" deleted
 ```
 
-Deployment가 곧바로 새 Pod를 만듭니다. `1/1 Running`이 되면 `Ctrl + C`로 멈춥니다.
+Deployment가 곧바로 새 Pod를 만듭니다. READY가 `1/1`이 되면 `Ctrl + C`로 멈춥니다.
 
 ```bash
 kubectl get pods -l app=mysql -w
@@ -148,15 +165,16 @@ kubectl get pods -l app=mysql -w
 ```text
 NAME                     READY   STATUS              RESTARTS   AGE
 mysql-5c7d8f9b6d-q8w7e   0/1     ContainerCreating   0          2s
-mysql-5c7d8f9b6d-q8w7e   1/1     Running             0          5s
+mysql-5c7d8f9b6d-q8w7e   0/1     Running             0          5s
+mysql-5c7d8f9b6d-q8w7e   1/1     Running             0          35s
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
 
-STEP 20과 Pod 이름이 다릅니다. **살아난 Pod는 같은 Pod가 아니라 새 Pod**입니다.
+STEP 26과 Pod 이름이 다릅니다. **살아난 Pod는 같은 Pod가 아니라 새 Pod**입니다.
 
-## STEP 23. 다시 접속해서 찾아보기
+## STEP 29. 다시 접속해서 찾아보기
 
-새 Pod가 `Running`이 되고 30초쯤 기다린 뒤 접속합니다.
+새 Pod의 READY가 `1/1`이 된 뒤 접속합니다.
 
 ```bash
 kubectl exec -it deploy/mysql -- mysql -uroot -pskilleat
@@ -194,14 +212,14 @@ ERROR 1049 (42000): Unknown database 'blog'
 
 ## 성공하면
 
-- STEP 21: `SELECT`에 `1`, `hello`가 나옵니다.
-- STEP 22: 새 Pod 이름이 STEP 20과 다릅니다.
-- STEP 23: `SHOW DATABASES`에 `blog`가 없습니다.
+- STEP 27: `SELECT`에 `1`, `hello`가 나옵니다.
+- STEP 28: 새 Pod 이름이 STEP 26과 다릅니다.
+- STEP 29: `SHOW DATABASES`에 `blog`가 없습니다.
 
 ## 막히면
 
 ??? failure "ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'"
-    MySQL이 아직 초기화 중입니다. `Running`이 되자마자 접속하면 납니다. 30초쯤 기다렸다가 다시 접속합니다.
+    MySQL이 아직 초기화 중입니다. READY가 `0/1`일 때 접속하면 납니다. `kubectl get pods -l app=mysql`로 `1/1`을 확인하고 다시 접속합니다.
 
 ??? failure "ERROR 1045 (28000): Access denied for user 'root'@'localhost'"
     비밀번호가 다릅니다. Secret 값을 확인합니다.
@@ -210,7 +228,7 @@ ERROR 1049 (42000): Unknown database 'blog'
     kubectl get secret mysql-secret -o go-template="{{.data.MYSQL_ROOT_PASSWORD | base64decode}}"
     ```
 
-    `pass1234`가 나오면 실습 2의 STEP 7을 하지 않은 것입니다. 이번 실습은 `-ppass1234`로 접속하거나, Secret을 `skilleat`으로 다시 만든 뒤 `kubectl delete pod -l app=mysql`로 Pod를 새로 띄웁니다 (emptyDir이라 새로 초기화되며 새 비밀번호가 적용됩니다).
+    `pass1234`가 나오면 실습 2의 STEP 10을 하지 않은 것입니다. 이번 실습은 `-ppass1234`로 접속하거나, Secret을 `skilleat`으로 다시 만든 뒤 `kubectl delete pod -l app=mysql`로 Pod를 새로 띄웁니다 (emptyDir이라 새로 초기화되며 새 비밀번호가 적용됩니다).
 
 ??? failure "Pod가 CreateContainerConfigError"
     `mysql-secret`이 없습니다. 준비의 `kubectl create secret generic ...` 명령으로 만들면 잠시 뒤 스스로 풀립니다.
@@ -219,11 +237,11 @@ ERROR 1049 (42000): Unknown database 'blog'
     `mysql:8.0` 이미지를 받는 중입니다. 수백 MB라 몇 분 걸릴 수 있습니다. `kubectl describe pod -l app=mysql`의 Events에서 `Pulling image`를 확인하고 기다립니다.
 
 ??? failure "error: unable to upgrade connection: container not found / pod is not running"
-    STEP 22 직후 지워지는 Pod에 붙었습니다. 새 Pod가 `1/1 Running`이 된 것을 보고 30초쯤 뒤 다시 접속합니다.
+    STEP 28 직후 지워지는 Pod에 붙었습니다. 새 Pod의 READY가 `1/1`이 된 것을 보고 다시 접속합니다.
 
 ??? failure "'<' 연산자는 나중에 사용하도록 예약되어 있습니다 (PowerShell) / zsh: no such file or directory: Pod (Mac)"
     꺾쇠 `< >`까지 입력했습니다. 실제 Pod 이름만 넣습니다.
 
 ## 정리
 
-**지우지 마세요.** 실습 6의 STEP 25에서 이 `mysql` Deployment를 지우고 PVC 버전으로 바꿉니다. `mysql-secret`도 실습 6에서 그대로 씁니다.
+**지우지 마세요.** 실습 6의 STEP 31에서 이 `mysql` Deployment를 지우고 PVC 버전으로 바꿉니다. `mysql-secret`도 실습 6에서 그대로 씁니다.

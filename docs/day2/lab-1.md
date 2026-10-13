@@ -59,6 +59,14 @@ CURRENT   NAME             CLUSTER          AUTHINFO         NAMESPACE
 kubectl config use-context docker-desktop
 ```
 
+!!! info "컨텍스트와 네임스페이스"
+    - **컨텍스트**: 어느 클러스터에 접속할지. 내 PC의 kubeconfig 파일에 적혀 있고, `kubectl config get-contexts`의 별표가 지금 접속 대상입니다.
+    - **네임스페이스**: 접속한 클러스터 안을 나눈 칸. `-n`을 안 쓰면 `default` 칸을 봅니다. 오늘 실습은 모두 `default`에 만들고, 클러스터 두뇌 부품은 `kube-system` 칸에 있습니다(실습 2).
+
+    ```bash
+    kubectl get ns
+    ```
+
 ## STEP 3. 노드가 Ready인지
 
 ```bash

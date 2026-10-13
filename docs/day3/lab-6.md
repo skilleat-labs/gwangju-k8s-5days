@@ -272,6 +272,26 @@ content-length: 0
 | `/app10` | **안 맞음 → 404** | 글자가 아니라 `/`로 나뉜 **조각 단위**로 비교 |
 | `/` | 안 맞음 → 404 | 어느 규칙에도 없음 |
 
+!!! info "경로로 나누기와 경로 바꾸기는 다릅니다"
+    HTTPRoute는 **어느 Service로 보낼지**만 정하고 경로는 바꾸지 않습니다. `/app1/hello`로 요청하면 app1 Pod도 `/app1/hello`를 받습니다. http-echo는 경로를 보지 않고 같은 글자를 돌려줘서 오늘은 문제가 없었지만, 보통의 웹 앱은 `/app1`이라는 경로를 모르면 404를 냅니다. 이때는 `URLRewrite` 필터로 앞부분을 바꿔 보냅니다 (오늘 실습에서는 쓰지 않습니다).
+
+    ```yaml
+    rules:
+    - matches:
+      - path: { type: PathPrefix, value: /app1 }
+      filters:
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            type: ReplacePrefixMatch
+            replacePrefixMatch: /
+      backendRefs:
+      - name: app1
+        port: 80
+    ```
+
+    이렇게 하면 `/app1/hello`가 백엔드에는 `/hello`로 갑니다. URLRewrite는 Gateway API의 **Extended** 지원 기능이라 구현체가 지원하는지 확인하고 씁니다 (Envoy Gateway는 지원). [공식 가이드](https://gateway-api.sigs.k8s.io/guides/http-redirect-rewrite/)
+
 !!! note "환경에 따라 다를 수 있음"
     STEP 21에서 Envoy Service의 `EXTERNAL-IP`가 `localhost`였다면 port-forward 없이 80번으로 바로 될 수도 있습니다. 브라우저에서 [http://localhost/app1](http://localhost/app1)을 열거나, `curl.exe localhost/app1`(Mac은 `curl localhost/app1`)을 시도해 봅니다. 안 되면(80번을 다른 프로그램이 쓰는 경우 포함) port-forward 방법을 씁니다.
 
@@ -322,7 +342,10 @@ content-length: 0
 
 ## 정리
 
-port-forward 터미널은 `Ctrl + C`로 끝냅니다. 오늘 실습 6에서 만든 리소스를 지웁니다. 4일차에는 쓰지 않습니다.
+port-forward 터미널은 `Ctrl + C`로 끝냅니다. 오늘 실습 6에서 만든 리소스와 **Gateway `eg`, GatewayClass `eg`**를 지웁니다. 4일차에는 쓰지 않습니다.
+
+!!! warning "Gateway eg는 꼭 지웁니다"
+    `eg`는 HTTP **80번** 문을 쥐고 있습니다. 남겨 두면 5일차 미니 블로그의 Gateway `blog-gw`도 80번을 열려고 해서 서로 겹칩니다. 문(Gateway, GatewayClass)만 지우고, 설치(Envoy Gateway)는 남깁니다.
 
 ```bash
 kubectl delete -f route.yaml -f app1.yaml -f app2.yaml -f gateway.yaml

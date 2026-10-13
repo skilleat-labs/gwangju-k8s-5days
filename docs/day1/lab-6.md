@@ -17,9 +17,6 @@ docker ps
 
 `frontend`와 `backend-service`가 `Up`이고, 브라우저 `http://localhost:8080`이 열리면 됩니다. 없으면 [실습 5](lab-5.md)를 다시 합니다.
 
-!!! info "이미지 태그"
-    실습 5에서 `v4-kb5`를 썼다면 아래 명령의 `v3-kb5`도 `v4-kb5`로 바꿉니다.
-
 ## STEP 1. 컨테이너를 강제로 죽인다 (한계 2)
 
 ```bash
@@ -32,7 +29,7 @@ docker ps
 
 ```text
 CONTAINER ID   IMAGE                     COMMAND           CREATED          STATUS          PORTS      NAMES
-1f2e3d4c5b6a   skilleat/backend:v3-kb5   "python app.py"   10 minutes ago   Up 10 minutes   5000/tcp   backend-service
+1f2e3d4c5b6a   skilleat/backend:v4-kb5   "python app.py"   10 minutes ago   Up 10 minutes   5000/tcp   backend-service
 ```
 <small>출력은 예시입니다.</small>
 
@@ -49,7 +46,7 @@ docker start frontend
 트래픽이 늘었다고 생각하고, 같은 8080 포트로 frontend를 하나 더 띄워 봅니다.
 
 ```bash
-docker run -d --name frontend2 --network blog-net -p 8080:80 skilleat/frontend:v3-kb5
+docker run -d --name frontend2 --network blog-net -p 8080:80 skilleat/frontend:v4-kb5
 ```
 
 ```text
@@ -70,7 +67,7 @@ docker rm frontend2
 포트를 8081로 바꿔 다시 띄웁니다.
 
 ```bash
-docker run -d --name frontend2 --network blog-net -p 8081:80 skilleat/frontend:v3-kb5
+docker run -d --name frontend2 --network blog-net -p 8081:80 skilleat/frontend:v4-kb5
 ```
 
 브라우저에서 `http://localhost:8080`과 `http://localhost:8081`을 둘 다 열어 봅니다. 둘 다 같은 블로그가 열립니다.

@@ -10,6 +10,8 @@ spec:
       - name: mysql
         image: mysql:8.0
         envFrom: [{ secretRef: { name: mysql-secret } }]
+        readinessProbe:
+          exec: { command: [mysqladmin, ping, -h, 127.0.0.1] }
         volumeMounts:
         - { name: data, mountPath: /var/lib/mysql }
       volumes:

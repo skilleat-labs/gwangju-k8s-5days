@@ -52,7 +52,7 @@ nav:
       - 오늘의 실습: day1/index.md
       - 실습 1 컨테이너 처음 띄워 보기: day1/lab-1.md
       - 실습 2 컨테이너는 프로세스다: day1/lab-2.md
-      - 실습 3 내 이미지 만들기: day1/lab-3.md
+      - 실습 3 지우면 파일은? 내 이미지 만들기: day1/lab-3.md
       - 실습 4 도전 과제 guide 컨테이너: day1/lab-4.md
       - 실습 5 미니 블로그 띄우기: day1/lab-5.md
       - 실습 6 도커의 한계 직접 겪기: day1/lab-6.md

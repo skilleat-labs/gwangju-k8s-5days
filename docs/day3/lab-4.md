@@ -62,7 +62,10 @@ web-x7k2p   IPv4          80      10.1.0.12,10.1.0.13,10.1.0.17   20m
 | `NAME` | Service 이름 + 무작위 꼬리 |
 | `ADDRESSTYPE` | IPv4 또는 IPv6 |
 | `PORTS` | 트래픽을 보낼 포트 (targetPort) |
-| `ENDPOINTS` | 지금 트래픽을 받을 Pod IP. **이 칸이 핵심입니다** |
+| `ENDPOINTS` | 목록에 든 Pod IP. 비었는지 아닌지가 **핵심**입니다. 단, ready 여부는 표시하지 않습니다 |
+
+!!! warning "주소가 보인다고 모두 트래픽을 받는 것은 아닙니다"
+    `ENDPOINTS` 칸은 목록에 든 주소를 보여 줄 뿐, 그 주소가 **ready인지는 표시하지 않습니다.** 준비가 안 된 Pod의 주소도 이 칸에 나옵니다. 트래픽을 받는지는 아래 `-o yaml`의 `conditions.ready`로 확인합니다. 4일차 readinessProbe 실습에서 주소는 남아 있는데 `ready: false`인 경우를 직접 봅니다.
 
 `ENDPOINTS`의 IP가 실제 Pod IP와 같은지 비교해 봅니다.
 
@@ -187,7 +190,7 @@ kubectl scale deployment web --replicas=5
 deployment.apps/web scaled
 ```
 
-터미널 2를 봅니다. 새 Pod가 Ready가 되는 순서대로 줄이 새로 찍히며 주소가 늘어납니다.
+터미널 2를 봅니다. 새 Pod가 IP를 받는 대로 줄이 새로 찍히며 주소가 늘어납니다.
 
 ```text
 NAME        ADDRESSTYPE   PORTS   ENDPOINTS                       AGE
@@ -197,7 +200,7 @@ web-x7k2p   IPv4          80      10.1.0.12,10.1.0.13,10.1.0.17 + 2 more...   25
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
 
-주소가 3개를 넘으면 `+ 2 more...`처럼 줄여서 보여 줍니다. 전체를 보려면 `-o yaml`을 씁니다. 다 봤으면 터미널 2에서 `Ctrl + C`로 끝냅니다.
+주소가 3개를 넘으면 `+ 2 more...`처럼 줄여서 보여 줍니다. 막 생긴 Pod의 주소는 잠깐 `ready: false`였다가 true로 바뀔 수 있는데, 이 칸에서는 구분되지 않습니다. 전체와 ready 여부는 `-o yaml`로 봅니다. 다 봤으면 터미널 2에서 `Ctrl + C`로 끝냅니다.
 
 !!! info "사람이 목록을 고치지 않았습니다"
     replicas만 바꿨는데 목록이 저절로 바뀌었습니다. EndpointSlice 컨트롤러가 Pod 변화를 감시하다 조각을 고치고, kube-proxy가 바뀐 조각을 읽어 규칙을 갱신합니다. 어제 본 **조정 루프**가 여기서도 돌고 있습니다. 컨트롤러의 기준은 **Service의 selector** 하나뿐입니다. 다음 STEP에서 이 기준을 일부러 틀리게 만듭니다.
@@ -340,8 +343,9 @@ Endpoints:
 | ④ `describe svc web` | Selector `app=wbe` | **원인: selector 오타** |
 
 !!! tip "목록이 비었나, 찼나로 갈린다"
-    - **EndpointSlice가 비었으면**: selector와 Pod 라벨을 비교합니다. Pod가 Ready가 아닌 경우도 목록에서 빠집니다 (4일차).
-    - **차 있는데 접속이 안 되면**: `targetPort`가 컨테이너가 실제로 듣는 포트와 같은지 봅니다.
+    - **EndpointSlice가 비었으면**: selector와 Pod 라벨을 비교합니다.
+    - **주소는 있는데 `ready: false`면**: Pod가 준비되지 않았습니다. `-o yaml`로 확인하고 Pod 상태를 봅니다 (4일차 readinessProbe).
+    - **주소도 있고 ready인데 접속이 안 되면**: `targetPort`가 앱이 실제로 듣는 포트와 같은지 봅니다.
 
 ## STEP 15. 고치고 다시 확인
 
@@ -389,7 +393,7 @@ pod "tmp" deleted
 
 - STEP 10: 주소 3개, `-o yaml`에 `ready: true`가 보입니다.
 - STEP 11: 결과 위에 `Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice` 한 줄이 보입니다.
-- STEP 12: `-w` 화면에서 주소가 3개 → 5개로 늘어납니다.
+- STEP 12: `-w` 화면에서 주소가 3개 → 5개(`+ 2 more...`)로 늘어납니다.
 - STEP 13: apply는 성공, 접속은 실패합니다.
 - STEP 14: `ENDPOINTS`가 비어 있고, `describe svc`의 `Selector`가 `app=wbe`입니다.
 - STEP 15: 주소 5개가 돌아오고 접속에 성공합니다.
@@ -406,7 +410,7 @@ pod "tmp" deleted
     정상입니다. `-w`는 바뀔 때마다 줄을 새로 찍으며 계속 지켜봅니다. 다 봤으면 `Ctrl + C`로 끝냅니다. Windows에는 `watch` 명령이 없으니 항상 `-w`를 씁니다.
 
 ??? failure "STEP 12에서 주소가 늘지 않음"
-    `kubectl get pods -l app=web`으로 새 Pod가 `Running`이고 READY가 `1/1`인지 봅니다. 이미지를 받는 중이면 `ContainerCreating`으로 잠시 머뭅니다. Ready가 된 Pod만 목록에 들어갑니다.
+    `kubectl get pods -l app=web`으로 새 Pod가 `Running`인지 봅니다. 이미지를 받는 중이면 `ContainerCreating`으로 잠시 머뭅니다. IP를 받은 Pod부터 목록에 들어가고, 트래픽은 `ready: true`가 된 뒤에 받습니다.
 
 ??? failure "STEP 13에서 접속이 성공해 버림"
     고장 난 파일이 적용되지 않았습니다.

@@ -1,10 +1,11 @@
+# memory-hog.yaml 과 같은 내용입니다 (busybox 는 amd64, arm64 모두 지원). 예전 링크 호환용으로 남겨 둡니다.
 apiVersion: v1
 kind: Pod
 metadata:
   name: memory-hog
 spec:
   containers:
-  - name: stress
+  - name: hog
     image: busybox:1.36
     resources:
       requests: { memory: "50Mi" }

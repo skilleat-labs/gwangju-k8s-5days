@@ -24,7 +24,7 @@
 
 EndpointSlice가 무엇인지 기억나지 않으면 [3일차 실습 4 EndpointSlice와 연결 장애](../day3/lab-4.md)를 먼저 봅니다.
 
-## STEP 10. 배포하고 Service 붙이기
+## STEP 13. 배포하고 Service 붙이기
 
 ```bash
 kubectl apply -f probe-web.yaml
@@ -41,9 +41,9 @@ deployment.apps/web-probe created
 service/web-probe exposed
 ```
 
-## STEP 11. 두 Pod 모두 ready인지 (DAY 3)
+## STEP 14. 두 Pod 모두 ready인지 (DAY 3)
 
-Pod 두 개의 이름과 IP를 봅니다. 이 출력은 STEP 12, 14, 15에서 다시 보니 창에 남겨 둡니다.
+Pod 두 개의 이름과 IP를 봅니다. 이 출력은 STEP 15, 14, 15에서 다시 보니 창에 남겨 둡니다.
 
 ```bash
 kubectl get pods -l app=web-probe -o wide
@@ -81,9 +81,9 @@ endpoints:
 
 주소 두 개 모두 `ready: true`입니다.
 
-## STEP 12. Pod 하나의 점검 파일 지우기
+## STEP 15. Pod 하나의 점검 파일 지우기
 
-STEP 11 목록에서 Pod 이름 하나를 복사해 `<Pod 이름>` 자리에 넣습니다. 꺾쇠 `< >`는 지우고 이름만 넣습니다.
+STEP 14 목록에서 Pod 이름 하나를 복사해 `<Pod 이름>` 자리에 넣습니다. 꺾쇠 `< >`는 지우고 이름만 넣습니다.
 
 ```bash
 kubectl exec <Pod 이름> -- rm /usr/share/nginx/html/index.html
@@ -97,7 +97,7 @@ kubectl exec web-probe-6d8f7c9b5d-fghij -- rm /usr/share/nginx/html/index.html
 
 이제 이 Pod에 `/index.html`을 요청하면 404가 나서 readinessProbe가 실패합니다. 지운 Pod 이름과 IP를 기억해 둡니다.
 
-## STEP 13. READY 0/1, RESTARTS는 0 그대로
+## STEP 16. READY 0/1, RESTARTS는 0 그대로
 
 5초쯤 기다린 뒤 봅니다.
 
@@ -114,7 +114,7 @@ web-probe-6d8f7c9b5d-fghij   0/1     Running   0          2m
 
 파일을 지운 Pod는 READY가 `0/1`입니다. STATUS는 `Running`, RESTARTS는 `0`입니다. **살아 있지만 준비가 안 된** 상태입니다.
 
-## STEP 14. 주소 목록에서 ready: false 확인
+## STEP 17. 주소 목록에서 ready: false 확인
 
 ```bash
 kubectl get endpointslices -l kubernetes.io/service-name=web-probe -o yaml
@@ -145,7 +145,7 @@ ports:
 | `ready: true` 주소 | 파일이 있는 Pod. 트래픽을 받습니다. |
 | `ready: false` 주소 | 파일을 지운 Pod. Service가 트래픽을 보내지 않습니다. |
 
-STEP 11의 `get pods -o wide` IP와 맞춰 봅니다. `ready: false`인 IP가 STEP 12에서 파일을 지운 Pod의 IP입니다. 주소가 목록에서 사라지는 것이 아니라, **남아 있되 `ready`만 `false`**가 됩니다.
+STEP 14의 `get pods -o wide` IP와 맞춰 봅니다. `ready: false`인 IP가 STEP 15에서 파일을 지운 Pod의 IP입니다. 주소가 목록에서 사라지는 것이 아니라, **남아 있되 `ready`만 `false`**가 됩니다.
 
 !!! note "환경에 따라 다를 수 있음"
     Docker Desktop 버전에 따라 주소 순서, `serving` 값, 출력 모양이 조금 다를 수 있습니다. 확인할 것은 **파일을 지운 Pod의 IP에서 `ready: false`** 한 가지입니다. YAML이 길어 찾기 어려우면 describe로 봅니다. 주소마다 `Conditions` 아래 `Ready:` 값이 나옵니다.
@@ -154,9 +154,9 @@ STEP 11의 `get pods -o wide` IP와 맞춰 봅니다. `ready: false`인 IP가 ST
     kubectl describe endpointslices -l kubernetes.io/service-name=web-probe
     ```
 
-## STEP 15. 되돌리기: 그 Pod를 지우면 새로 뜬다
+## STEP 18. 되돌리기: 그 Pod를 지우면 새로 뜬다
 
-STEP 12에서 파일을 지운 Pod를 지웁니다.
+STEP 15에서 파일을 지운 Pod를 지웁니다.
 
 ```bash
 kubectl delete pod <Pod 이름>
@@ -175,12 +175,15 @@ web-probe-6d8f7c9b5d-klmno   1/1     Running   0          8s
 
 Deployment가 새 Pod를 만들었고, 새 Pod에는 `index.html`이 있으니 다시 `1/1`입니다.
 
+!!! warning "livenessProbe로 외부 DB를 검사하지 않습니다"
+    livenessProbe가 DB 연결까지 검사하면, DB가 잠깐 멈췄을 때 모든 Pod가 함께 재시작됩니다. 재시작해도 DB는 고쳐지지 않고 부하만 커집니다. liveness는 교착 상태처럼 재시작하면 낫는 것만 보고, 외부 서비스 확인은 readiness 쪽에 둡니다 (교안 probe 7).
+
 ## 성공하면
 
-- STEP 11: endpoints에 주소 2개, 둘 다 `ready: true`
-- STEP 13: 파일을 지운 Pod만 `0/1 Running`, RESTARTS `0`
-- STEP 14: 그 IP만 `ready: false`
-- STEP 15: 다시 2개 모두 `1/1`
+- STEP 14: endpoints에 주소 2개, 둘 다 `ready: true`
+- STEP 16: 파일을 지운 Pod만 `0/1 Running`, RESTARTS `0`
+- STEP 17: 그 IP만 `ready: false`
+- STEP 18: 다시 2개 모두 `1/1`
 
 ## 막히면
 
@@ -188,13 +191,13 @@ Deployment가 새 Pod를 만들었고, 새 Pod에는 `index.html`이 있으니 �
     리소스 이름 오타입니다. `endpointslices`(또는 단수 `endpointslice`)를 정확히 입력합니다.
 
 ??? failure "'<' 연산자는 나중에 사용하도록 예약되어 있습니다 (PowerShell) / zsh: no such file or directory: Pod (Mac)"
-    `<Pod 이름>`을 꺾쇠까지 그대로 입력했습니다. STEP 11 목록에서 실제 이름을 복사해 꺾쇠 없이 넣습니다.
+    `<Pod 이름>`을 꺾쇠까지 그대로 입력했습니다. STEP 14 목록에서 실제 이름을 복사해 꺾쇠 없이 넣습니다.
 
-??? failure "STEP 14에서 두 주소 모두 ready: true"
-    파일을 지우고 아직 5초가 안 지났거나, 다른 Pod의 파일을 지웠습니다. 5초쯤 뒤 STEP 13에서 `0/1` Pod가 있는지 먼저 확인합니다.
+??? failure "STEP 17에서 두 주소 모두 ready: true"
+    파일을 지우고 아직 5초가 안 지났거나, 다른 Pod의 파일을 지웠습니다. 5초쯤 뒤 STEP 16에서 `0/1` Pod가 있는지 먼저 확인합니다.
 
 ??? failure "Error from server (AlreadyExists): services \"web-probe\" already exists"
-    Service를 이미 만들었습니다. 그대로 STEP 11로 갑니다.
+    Service를 이미 만들었습니다. 그대로 STEP 14로 갑니다.
 
 ??? failure "교안 장표처럼 줄 끝 역슬래시(\)로 나눠 쳤더니 PowerShell에서 오류"
     이 가이드처럼 **한 줄로** 입력합니다.

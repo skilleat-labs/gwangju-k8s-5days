@@ -1,10 +1,11 @@
-# 실습 3. 내 이미지 만들기
+# 실습 3. 컨테이너를 지우면 파일은? / 내 이미지 만들기
 
 !!! abstract "이번 실습에서 할 것"
+    - 컨테이너를 멈췄다 켤 때와 지울 때 파일이 어떻게 다른지 확인합니다.
     - Dockerfile로 내 이미지를 만들고 실행합니다.
     - `docker history`로 내 이미지가 nginx 레이어 위에 얇은 층 하나를 얹은 것임을 확인합니다.
 
-**소요 시간** 약 10분, **교안** DAY 1 섹션 3
+**소요 시간** 약 15분, **교안** DAY 1 섹션 3
 
 ## 준비
 
@@ -22,7 +23,69 @@
     cd ~/k8s-labs/day1
     ```
 
-## STEP 1. 작업 폴더 만들고 이동
+## STEP 1. 컨테이너 안에 파일 만들기
+
+```bash
+docker run -d --name note nginx
+```
+
+```bash
+docker exec note sh -c "echo hello > /tmp/memo.txt"
+```
+
+```bash
+docker exec note cat /tmp/memo.txt
+```
+
+```text
+hello
+```
+
+## STEP 2. 멈췄다 켜면?
+
+```bash
+docker stop note
+```
+
+```bash
+docker start note
+```
+
+```bash
+docker exec note cat /tmp/memo.txt
+```
+
+```text
+hello
+```
+
+멈췄다 켠 것은 **같은 컨테이너**라서 쓰기 레이어가 그대로 남아 있습니다.
+
+## STEP 3. 지우고 새로 만들면?
+
+```bash
+docker rm -f note
+```
+
+```bash
+docker run -d --name note nginx
+```
+
+```bash
+docker exec note cat /tmp/memo.txt
+```
+
+```text
+cat: /tmp/memo.txt: No such file or directory
+```
+
+쓰기 레이어는 컨테이너와 함께 지워졌고, 이미지에는 그 파일이 없습니다. **같은 이미지로 다시 만들었다고 이전 컨테이너의 데이터가 돌아오지는 않습니다.** 컨테이너 밖에 데이터를 두는 방법(볼륨, PVC)은 4일차에 다룹니다.
+
+```bash
+docker rm -f note
+```
+
+## STEP 4. 작업 폴더 만들고 이동
 
 `day1` 안에 `myweb` 폴더를 만들고 들어갑니다.
 
@@ -34,7 +97,7 @@ mkdir myweb
 cd myweb
 ```
 
-## STEP 2. 편집기로 파일 2개 만들기
+## STEP 5. 편집기로 파일 2개 만들기
 
 VS Code에서 `day1/myweb` 폴더를 우클릭 → **새 파일**로 아래 두 파일을 만듭니다. 이름을 **정확히** 똑같이 씁니다. `Dockerfile`은 확장자가 없고 D가 대문자입니다.
 
@@ -64,7 +127,7 @@ Dockerfile  index.html
 
 `Dockerfile.txt`나 `index.html.txt`가 보이면 아래 막히면을 봅니다.
 
-## STEP 3. 빌드하고 실행
+## STEP 6. 빌드하고 실행
 
 `-t`는 이미지 이름과 태그, **맨 끝의 점(`.`)은 "지금 폴더의 Dockerfile을 써라"** 는 뜻입니다. 점을 빠뜨리지 않습니다.
 
@@ -107,9 +170,9 @@ docker run -d -p 8081:80 --name myweb myweb:v1
 <h1>Hello, Gwangju!</h1>
 ```
 
-## docker history로 레이어 보기
+## STEP 7. 레이어 보고 정리
 
-교안의 STEP 3 다음 장표입니다. 내 이미지가 어떤 레이어로 되어 있는지 위에서부터 봅니다.
+내 이미지가 어떤 레이어로 되어 있는지 위에서부터 봅니다.
 
 ```bash
 docker history myweb:v1
@@ -134,8 +197,15 @@ a1b2c3d4e5f6   1 minute ago    COPY index.html /usr/share/nginx/html/inde…   2
 
 내 이미지는 nginx 이미지 전체를 복사한 것이 아니라, **nginx 층 위에 얇은 층 하나를 얹은 것**입니다.
 
+확인했으면 `myweb` 컨테이너를 지웁니다. **실습 6에서 8081 포트를 다시 쓰기 때문입니다.** 이미지 `myweb:v1`은 남겨 둡니다.
+
+```bash
+docker rm -f myweb
+```
+
 ## 성공하면
 
+- STEP 2에서는 `hello`가 남아 있고, STEP 3에서는 `No such file or directory`가 나옵니다.
 - 브라우저 `localhost:8081`에 **Hello, Gwangju!** 가 보입니다.
 - `docker history myweb:v1` 맨 위 줄이 `COPY index.html ...`입니다.
 
@@ -168,7 +238,7 @@ a1b2c3d4e5f6   1 minute ago    COPY index.html /usr/share/nginx/html/inde…   2
     docker rm -f myweb
     ```
 
-    그다음 STEP 3을 다시 합니다.
+    그다음 STEP 6을 다시 합니다.
 
 ??? failure "Bind for 0.0.0.0:8081 failed: port is already allocated"
     8081을 다른 프로그램이나 컨테이너가 쓰고 있습니다. `docker rm -f myweb` 후 `-p 8082:80`처럼 다른 포트로 실행하고 `localhost:8082`로 접속합니다.

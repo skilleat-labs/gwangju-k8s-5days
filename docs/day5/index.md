@@ -16,10 +16,10 @@
 | [실습 2](lab-2.md) | RBAC | 12분 | 섹션 2 |
 | [실습 3](lab-3.md) | NetworkPolicy | 12분 | 섹션 3 |
 | [실습 4](lab-4.md) | 미니 블로그 YAML 빈칸 채우기 | 10분 | 섹션 4 |
-| [실습 5](lab-5.md) | 미니 블로그 종합 배포 | 15분 | 섹션 5 |
+| [실습 5](lab-5.md) | 미니 블로그 종합 배포, 운영 보안 설정 붙이기 | 23분 | 섹션 5 |
 | [실습 6](lab-6.md) | 고장 난 미니 블로그 고치기, 과정 마무리 | 12분 | 섹션 6 |
 
-STEP 번호는 강의 장표와 같습니다. 실습 1의 STEP 1부터 실습 6의 STEP 27까지 하루 동안 이어집니다.
+STEP 번호는 강의 장표와 같습니다. 실습 1의 STEP 1부터 실습 6의 STEP 32까지 하루 동안 이어집니다.
 
 ## 시작 전 확인
 
@@ -51,24 +51,38 @@ envoy-gateway-6b8f7d9c4-abcde    1/1     Running   0          2d
 
 `envoy-gateway`로 시작하는 Pod가 `Running`이면 됩니다. `No resources found` 또는 `namespaces "envoy-gateway-system" not found`가 나오면 [3일차 실습 5 Envoy Gateway 설치](../day3/lab-5.md)를 먼저 다시 합니다.
 
-### 1일차 미니 블로그 이미지
+3일차 끝에 `eg` Gateway와 GatewayClass를 지웠습니다. 남아 있는지도 봅니다.
 
-1일차 실습 5에서 쓴 `skilleat/backend:v3-kb5`, `skilleat/frontend:v3-kb5` 이미지를 오늘 다시 씁니다. 지웠어도 쿠버네티스가 Docker Hub에서 다시 받으니 괜찮습니다. 남아 있는지만 봅니다.
+```bash
+kubectl get gateway -A
+```
 
-=== "Windows (PowerShell)"
+`eg`가 보이면 지웁니다. 실습 5 STEP 20에서도 한 번 더 확인합니다.
 
-    ```powershell
-    docker images | Select-String skilleat
-    ```
+```bash
+kubectl delete gateway eg
+```
 
-=== "Mac (터미널)"
+```bash
+kubectl delete gatewayclass eg
+```
 
-    ```bash
-    docker images | grep skilleat
-    ```
+### 미니 블로그 이미지
+
+오늘은 `skilleat/backend:v3-kb5`, `skilleat/frontend:v3-kb5`를 씁니다. 1일차(`v4-kb5`)와 태그가 다릅니다. v3는 백엔드가 `/app/data` 폴더에 글을 저장해서 PVC와 맞고, frontend가 `webapp` 네임스페이스의 백엔드를 부르도록 만들어져 있습니다. 실습 6의 `broken` 블로그만 같은 네임스페이스의 백엔드를 부르는 `frontend:v4-kb5`를 씁니다.
+
+처음 받을 때 시간이 걸리니 미리 받아 둡니다.
+
+```bash
+docker pull skilleat/backend:v3-kb5
+```
+
+```bash
+docker pull skilleat/frontend:v3-kb5
+```
 
 !!! warning "Apple Silicon Mac"
-    1일차에 미니 블로그가 `exec format error`나 `no match for platform`으로 안 떴다면 오늘도 같은 문제가 납니다. 수업 시작 전에 채팅으로 알려 주세요.
+    `v3-kb5`는 Intel(amd64)용만 있습니다. 실습 5에서 Pod가 `exec format error`나 `no match for platform`으로 안 뜨면 채팅으로 알려 주세요.
 
 ## 작업 폴더 만들기
 
@@ -100,6 +114,7 @@ envoy-gateway-6b8f7d9c4-abcde    1/1     Running   0          2d
 | [deny-all.yaml](../files/day5/deny-all.yaml){ download }, [allow-backend-db.yaml](../files/day5/allow-backend-db.yaml){ download }, [allow-dns.yaml](../files/day5/allow-dns.yaml){ download } | 실습 3 |
 | [miniblog-backend-blank.yaml](../files/day5/miniblog-backend-blank.yaml){ download }, [miniblog-frontend-blank.yaml](../files/day5/miniblog-frontend-blank.yaml){ download } | 실습 4 |
 | [miniblog-backend-answer.yaml](../files/day5/miniblog-backend-answer.yaml){ download }, [miniblog-frontend-answer.yaml](../files/day5/miniblog-frontend-answer.yaml){ download } | 실습 4, 5 (정답) |
+| [miniblog-backend-v2.yaml](../files/day5/miniblog-backend-v2.yaml){ download }, [miniblog-frontend-v2.yaml](../files/day5/miniblog-frontend-v2.yaml){ download } | 실습 5 (운영, 보안 설정) |
 | [broken-blog.yaml](../files/day5/broken-blog.yaml){ download } | 실습 6 |
 
 ## 정리

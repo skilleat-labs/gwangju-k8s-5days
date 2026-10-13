@@ -29,5 +29,5 @@ ITSA 광주전남 데이터센터 인력양성 전문과정 (과정1) IT 인프�
 - NetworkPolicy가 실제로 막는지 (5일차 실습 3). 안 막히면 강사 시연
 - LoadBalancer, Envoy Gateway 주소가 localhost로 열리는지 (3일차 실습 3, 5)
 - 기본 StorageClass `hostpath`로 PVC가 바로 묶이는지 (4일차 실습 6)
-- 미니 블로그 이미지 `skilleat/*:v3-kb5`는 amd64 전용. Apple Silicon 수강생이 많으면 `v4-kb5`로 통일 검토
+- 미니 블로그 태그: 1일차 도커는 `v4-kb5`(짧은 이름 backend-service, amd64+arm64), 5일차 webapp은 `v3-kb5`(webapp FQDN, /app/data 저장, amd64 전용), 5일차 broken은 frontend `v4-kb5` + backend `v3-kb5`. Apple Silicon에서 v3가 쿠버네티스로 뜨는지 확인
 - `polinux/stress`는 amd64 전용 (Apple Silicon은 `memory-hog-arm.yaml`)

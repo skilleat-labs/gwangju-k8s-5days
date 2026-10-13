@@ -1,10 +1,11 @@
 # 실습 5. Deployment와 자가복구
 
 !!! abstract "이번 실습에서 할 것"
-    - Deployment로 Pod 3개를 띄우고, 하나를 지워도 다시 생기는 것(자가복구)을 봅니다.
+    - Deployment로 Pod 3개를 띄우고, 하나를 지워도 새 Pod가 생기는 것(재생성)을 봅니다.
+    - Pod는 두고 컨테이너만 멈추면 같은 Pod에서 다시 시작되는 것(재시작)을 봅니다.
     - 포트 충돌 없이 숫자 하나로 Pod를 늘리고 줄입니다(스케일링).
 
-**소요 시간** 약 12분 (STEP 1~3 7분, STEP 4~6 5분), **교안** DAY 2 섹션 5
+**소요 시간** 약 13분 (STEP 1~3 8분, STEP 4~6 5분), **교안** DAY 2 섹션 5
 
 ## 준비
 
@@ -101,8 +102,6 @@ web-7c5b8d9f6d-wq8rt   1/1     Running   0          2m
 
 AGE가 몇 초짜리인 **새 이름의 Pod**가 생겨 다시 3개입니다. 아무도 손대지 않았는데 돌아왔습니다. 1일차 도커의 한계 2번이 풀렸습니다.
 
-## STEP 3. 기록 보기
-
 ReplicaSet의 Events에 누가 Pod를 만들었는지 기록이 남습니다.
 
 ```bash
@@ -121,7 +120,40 @@ Events:
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
 
-맨 아래 줄이 STEP 2에서 지운 자리를 채운 새 Pod입니다. ReplicaSet이 "원하는 3, 지금 2"를 보고 하나를 더 만들었습니다.
+맨 아래 줄이 지운 자리를 채운 새 Pod입니다. ReplicaSet이 "원하는 3, 지금 2"를 보고 하나를 더 만들었습니다. 지운 Pod가 되살아난 것이 아니라 **이름과 UID가 다른 새 Pod**입니다.
+
+## STEP 3. 컨테이너만 멈춘다 (Pod는 그대로)
+
+이번에는 Pod는 지우지 않고 안의 nginx 프로세스만 멈춥니다. `kubectl get pods`에서 Pod 이름 하나를 골라 넣습니다.
+
+```bash
+kubectl exec <Pod 이름> -- nginx -s stop
+```
+
+예를 들면 `kubectl exec web-7c5b8d9f6d-9qz7m -- nginx -s stop`입니다. 바로 목록을 봅니다.
+
+```bash
+kubectl get pods
+```
+
+```text
+NAME                   READY   STATUS    RESTARTS     AGE
+web-7c5b8d9f6d-9qz7m   1/1     Running   1 (5s ago)   3m
+web-7c5b8d9f6d-h2lwn   1/1     Running   0            1m
+web-7c5b8d9f6d-wq8rt   1/1     Running   0            3m
+```
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
+
+이번에는 Pod **이름이 그대로**이고 `RESTARTS`가 1이 됐습니다. 컨테이너가 끝나자 그 노드의 kubelet이 같은 Pod 안에서 컨테이너를 다시 시작했습니다. STEP 2와 비교합니다.
+
+| 한 일 | 누가 대응 | 보이는 변화 |
+|---|---|---|
+| STEP 2 Pod 삭제 | ReplicaSet 컨트롤러 | 새 이름의 Pod |
+| STEP 3 컨테이너만 멈춤 | kubelet | 같은 Pod의 RESTARTS 증가 |
+| 실습 4 직접 만든 Pod 삭제 | 없음 | 지워진 채로 끝 |
+
+!!! note "환경에 따라 다를 수 있음"
+    멈춘 직후 잠깐 `STATUS`가 `Completed`로 보였다가 `Running`으로 돌아올 수 있습니다. `-w`로 지켜보고 있었다면 그 순간이 보입니다. 몇 초 뒤 다시 보면 `Running`, `RESTARTS 1`입니다.
 
 ## STEP 4. 5개로
 
@@ -202,8 +234,8 @@ web-7c5b8d9f6d-wq8rt   1/1     Running   0          7m
 ## 성공하면
 
 - STEP 1: Deployment 1개, ReplicaSet 1개, Pod 3개
-- STEP 2: 새 이름 Pod가 생겨 다시 3개
-- STEP 3: `Created pod` 기록
+- STEP 2: 새 이름 Pod가 생겨 다시 3개, Events에 `Created pod` 기록
+- STEP 3: 같은 이름 Pod의 `RESTARTS`가 1
 - STEP 4: Pod 5개 Running
 - STEP 5: 3개가 Terminating
 - STEP 6: 파일대로 3개
@@ -227,6 +259,9 @@ web-7c5b8d9f6d-wq8rt   1/1     Running   0          7m
 
 ??? failure "Error from server (NotFound): deployments.apps \"web-7c5b8d9f6d-9qz7m\" not found"
     `kubectl scale`에 Pod 이름을 넣었습니다. scale 대상은 Deployment 이름 `web`입니다: `kubectl scale deployment web --replicas=5`
+
+??? failure "STEP 3 뒤에도 RESTARTS가 0 그대로"
+    `kubectl get pods`를 너무 빨리 봤거나 다른 Pod를 보고 있습니다. 몇 초 뒤 다시 보고, `exec`에 넣은 이름과 같은 줄을 봅니다. STEP 3은 한 번만 하면 됩니다. 여러 번 반복하면 다시 시작 간격이 길어지며 `CrashLoopBackOff`가 보일 수 있습니다.
 
 ??? failure "STEP 2에서 Pod 이름을 넣었는데 Error from server (NotFound): pods \"...\" not found"
     이름을 잘못 옮겨 적었거나 꺾쇠(`< >`)까지 같이 넣었습니다. `kubectl get pods`로 이름을 다시 보고 꺾쇠 없이 이름만 넣습니다.

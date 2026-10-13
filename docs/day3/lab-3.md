@@ -25,9 +25,9 @@ kubectl get deploy,svc
 
 ## STEP 7. NodePort → 브라우저 localhost:30080
 
-NodePort Service YAML을 `web-np.yaml`로 저장합니다. 실습 1의 `web-svc.yaml`에서 강조한 두 줄만 다릅니다. 이름은 `web`과 겹치지 않게 `web-np`로 했습니다.
+NodePort Service YAML을 `web-np.yaml`로 저장합니다. 실습 1의 `web-svc.yaml`에서 강조한 세 줄이 다릅니다. 이름은 `web`과 겹치지 않게 `web-np`로 했습니다. 이번에는 일부러 **포트 번호 세 개를 모두 다르게** 했습니다.
 
-```yaml title="web-np.yaml" hl_lines="6 12"
+```yaml title="web-np.yaml" hl_lines="6 10 12"
 --8<-- "files/day3/web-np.yaml"
 ```
 [web-np.yaml 내려받기](../files/day3/web-np.yaml){ download }
@@ -36,7 +36,8 @@ NodePort Service YAML을 `web-np.yaml`로 저장합니다. 실습 1의 `web-svc.
 |---|---|
 | `type: NodePort` | ClusterIP 위에 노드 포트를 더합니다 |
 | `nodePort: 30080` | 노드가 밖에 여는 문. 생략하면 30000~32767 중 자동 배정 |
-| 나머지 | ClusterIP YAML과 같습니다 |
+| `port: 8080` | Service가 받는 문. 클러스터 안에서는 `web-np:8080` |
+| `targetPort: 80` | nginx가 **실제로 듣는** 포트. 그대로 80 |
 
 ```bash
 kubectl apply -f web-np.yaml
@@ -48,11 +49,15 @@ kubectl get svc web-np
 
 ```text
 NAME     TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
-web-np   NodePort   10.104.33.21    <none>        80:30080/TCP   5s
+web-np   NodePort   10.104.33.21    <none>        8080:30080/TCP   5s
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
 
-`PORT(S)`의 `80:30080`에서 콜론 앞이 Service의 `port`, 뒤가 `nodePort`입니다. 요청은 **nodePort 30080 → port 80 → targetPort 80** 순서로 들어갑니다.
+`PORT(S)`의 `8080:30080`에서 콜론 앞이 Service의 `port`, 뒤가 `nodePort`입니다. 요청은 **nodePort 30080 → port 8080 → targetPort 80** 순서로 들어갑니다.
+
+```text
+내 PC 브라우저 localhost:30080 ─▶ 노드 30080 ─▶ Service web-np 8080 ─▶ nginx 컨테이너 80
+```
 
 브라우저에서 [http://localhost:30080](http://localhost:30080)을 엽니다. 터미널로 확인하려면 아래처럼 합니다.
 
@@ -77,6 +82,15 @@ web-np   NodePort   10.104.33.21    <none>        80:30080/TCP   5s
 <title>Welcome to nginx!</title>
 ...
 ```
+
+??? tip "(선택) 클러스터 안에서는 web-np:8080"
+    NodePort Service도 ClusterIP를 함께 받습니다. 클러스터 안의 Pod는 nodePort가 아니라 Service의 `port` 8080으로 부릅니다.
+
+    ```bash
+    kubectl run tmp --rm -it --restart=Never --image=busybox:1.36 -- wget -qO- web-np:8080
+    ```
+
+    `web-np:80`으로 부르면 Service가 그 포트를 받지 않으므로 접속이 실패합니다.
 
 !!! note "환경에 따라 다를 수 있음"
     Docker Desktop의 kubeadm 방식에서 NodePort가 `localhost:30080`으로 열리지 않는 경우가 있습니다. 브라우저가 연결하지 못하면 이 STEP은 강사 화면으로 확인하고, STEP 9의 port-forward로 같은 페이지를 열어 봅니다.
@@ -157,7 +171,7 @@ Forwarding from [::1]:8082 -> 80
 
 ## 성공하면
 
-- STEP 7: `kubectl get svc web-np`에 `80:30080/TCP`가 보이고 `localhost:30080`이 열립니다.
+- STEP 7: `kubectl get svc web-np`에 `8080:30080/TCP`가 보이고 `localhost:30080`이 열립니다.
 - STEP 8: `EXTERNAL-IP`가 `localhost`이고 `localhost:8081`이 열립니다.
 - STEP 9: `Forwarding from 127.0.0.1:8082 -> 80`이 나오고 `localhost:8082`가 열립니다.
 - 세 주소 모두 같은 `Welcome to nginx!` 페이지입니다.
@@ -180,7 +194,7 @@ Forwarding from [::1]:8082 -> 80
     PowerShell의 `curl`은 Invoke-WebRequest의 별칭입니다. `curl.exe`로 입력하거나 브라우저로 확인합니다.
 
 ??? failure "브라우저에서 localhost:30080이 연결할 수 없음"
-    1. `kubectl get svc web-np`의 `PORT(S)`가 `80:30080/TCP`인지 봅니다.
+    1. `kubectl get svc web-np`의 `PORT(S)`가 `8080:30080/TCP`인지 봅니다.
     2. `kubectl get pods -l app=web`이 모두 `Running`인지 봅니다.
     3. 그래도 안 되면 환경 차이일 수 있습니다. STEP 9의 port-forward로 확인하고 넘어갑니다.
 

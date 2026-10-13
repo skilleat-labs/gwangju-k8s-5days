@@ -132,10 +132,13 @@ pod "tmp" deleted
 
 같은 동네(네임스페이스)면 이름만, 다른 동네면 동네 이름까지 씁니다. 어디서 실행해도 같은 뜻이 되게 하려면 전체 이름 `web.default.svc.cluster.local`을 씁니다.
 
+!!! warning "네임스페이스는 통신을 막지 않습니다"
+    첫째 명령이 실패한 이유는 **이름을 못 찾아서**이지, 막혀서가 아닙니다. 둘째 명령처럼 이름만 맞게 쓰면 `other`에서 `default`의 Pod까지 그대로 통합니다. 네임스페이스는 리소스와 이름을 나누는 공간이고 네트워크를 격리하지 않습니다. 통신을 제한하려면 5일차에 배우는 **NetworkPolicy**를 따로 씁니다.
+
 ## 성공하면
 
 - STEP 4: `Name`에 `web.default.svc.cluster.local`, `Address`에 web Service의 ClusterIP가 나옵니다.
-- STEP 6: 첫째 명령(`web`)은 실패, 둘째 명령(`web.default`)은 nginx HTML이 나옵니다.
+- STEP 6: 첫째 명령(`web`)은 실패, 둘째 명령(`web.default`)은 nginx HTML이 나옵니다. 네임스페이스가 달라도 통신은 됩니다.
 
 ## 막히면
 

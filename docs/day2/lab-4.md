@@ -3,7 +3,7 @@
 !!! abstract "이번 실습에서 할 것"
     - `describe`의 Events를 읽고, 로그를 보고, Pod 안으로 들어가 봅니다.
     - 라벨로 Pod를 골라냅니다.
-    - Pod는 지우면 끝이고, 다시 만들면 IP가 바뀐다는 것을 직접 봅니다.
+    - Pod는 지우면 끝이고, 같은 이름으로 다시 만들면 UID가 다른 새 Pod라는 것을 직접 봅니다.
 
 **소요 시간** 약 12분 (STEP 1~2 7분, STEP 3~5 5분), **교안** DAY 2 섹션 4
 
@@ -22,7 +22,14 @@ web2   1/1     Running   0          3m
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
 
-없으면 실습 3의 STEP 1, STEP 2를 다시 합니다. 1일차 도커 명령과 짝을 지어 보면 쉽습니다.
+없으면 실습 3의 STEP 1, STEP 2를 다시 합니다.
+
+!!! tip "get pods 읽는 법"
+    - `READY`: 준비된 컨테이너 수 / 전체 컨테이너 수. `1/1`이면 정상, `0/1`이면 아직 요청을 받을 준비가 안 됐습니다.
+    - `STATUS`: 지금 단계나 멈춘 이유. `ContainerCreating`(이미지 받는 중), `ImagePullBackOff`(이미지 이름, 태그 오류), `CrashLoopBackOff`(떴다가 계속 죽음). Running이어도 READY를 함께 봅니다.
+    - `RESTARTS`: Pod는 그대로인데 안의 컨테이너가 다시 시작된 횟수. 숫자가 오르면 `kubectl logs POD이름 --previous`로 원인을 봅니다.
+
+ 1일차 도커 명령과 짝을 지어 보면 쉽습니다.
 
 | 하는 일 | DAY 1 docker | DAY 2 kubectl |
 |---|---|---|
@@ -125,7 +132,7 @@ web    1/1     Running   0          8m
 
 라벨과 셀렉터는 지금은 조회에만 쓰지만, 실습 5의 Deployment와 3일차의 Service가 자기 Pod를 찾을 때 바로 이 방법을 씁니다.
 
-## STEP 3. 지금 IP를 적어 둔다
+## STEP 3. 지금 IP와 UID를 적어 둔다
 
 `-o wide`로 Pod의 IP와 NODE를 봅니다. **IP를 메모해 둡니다.**
 
@@ -138,6 +145,17 @@ NAME   READY   STATUS    RESTARTS   AGE   IP          NODE             NOMINATED
 web    1/1     Running   0          9m    10.1.0.12   docker-desktop   <none>           <none>
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
+
+UID도 봅니다. UID는 쿠버네티스가 오브젝트마다 붙이는 고유 번호입니다. **UID도 메모해 둡니다.**
+
+```bash
+kubectl get pod web -o jsonpath="{.metadata.uid}"
+```
+
+```text
+3f6c2a1e-8b7d-4c1a-9e2f-0a1b2c3d4e5f
+```
+<small>출력은 예시입니다. UID는 사람마다 다릅니다.</small>
 
 ## STEP 4. 지우고 같은 이름으로 다시
 
@@ -164,7 +182,7 @@ web2   1/1     Running   0          8m
 kubectl run web --image=nginx:1.27
 ```
 
-## STEP 5. IP가 같은가?
+## STEP 5. UID와 IP를 다시 본다
 
 ```bash
 kubectl get pod web -o wide
@@ -176,17 +194,26 @@ web    1/1     Running   0          5s    10.1.0.15   docker-desktop   <none>   
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
 
-STEP 3에서 적어 둔 IP와 비교합니다. 이름도 이미지도 같은데 IP는 새로 받았습니다. Pod IP는 Pod가 살아 있는 동안만 쓰는 임시 주소입니다. 1일차 도커의 한계 5번 "주소가 바뀐다"와 같은 문제이고, 3일차 Service가 이 문제를 풉니다.
+```bash
+kubectl get pod web -o jsonpath="{.metadata.uid}"
+```
+
+```text
+9a7d1c3b-2e4f-4b6a-8c0d-1e2f3a4b5c6d
+```
+<small>출력은 예시입니다. UID는 사람마다 다릅니다.</small>
+
+STEP 3에서 적어 둔 값과 비교합니다. **UID가 다르면 성공입니다.** 이름도 이미지도 같지만 지운 Pod가 돌아온 것이 아니라 새 Pod입니다. IP도 대개 새로 받습니다. Pod IP는 Pod가 살아 있는 동안만 쓰는 임시 주소라서, 다른 앱이 Pod IP를 적어 두고 쓰면 안 됩니다. 1일차 도커의 한계 5번 "주소가 바뀐다"와 같은 문제이고, 3일차 Service가 이 문제를 풉니다.
 
 !!! note "환경에 따라 다를 수 있음"
-    노드가 한 대뿐이라 IP가 우연히 같은 번호로 다시 잡힐 수 있습니다. 같게 나오면 STEP 4와 STEP 5를 한 번 더 해서 비교합니다.
+    노드가 한 대뿐이라 IP가 우연히 같은 번호로 다시 잡힐 수 있습니다. 그래도 UID가 다르면 새 Pod이고, "IP는 유지된다는 보장이 없다"는 것이 핵심입니다.
 
 ## 성공하면
 
 - STEP 1: Events에 Scheduled → Pulled → Created → Started
 - STEP 2: `-l run=web` 결과에 `web` 하나만
 - STEP 4: 지운 `web`은 아무도 다시 안 만든다
-- STEP 5: IP가 다르다
+- STEP 5: UID가 다르다. IP는 같을 수도 있다
 
 ## 막히면
 

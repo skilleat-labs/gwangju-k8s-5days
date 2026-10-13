@@ -3,8 +3,9 @@
 !!! abstract "이번 실습에서 할 것"
     - 명령 한 줄로 ConfigMap을 만들고 저장된 모습을 봅니다.
     - 같은 ConfigMap을 환경변수와 파일(볼륨) 두 길로 Pod에 넣어 읽습니다.
+    - 값을 바꾼 뒤 환경변수와 파일이 다르게 바뀌는 것을 직접 확인합니다.
 
-**소요 시간** 약 12분, **교안** DAY 4 섹션 1
+**소요 시간** 약 15분, **교안** DAY 4 섹션 1
 
 ## 준비
 
@@ -118,15 +119,78 @@ info
     LOG_LEVEL
     ```
 
-!!! info "환경변수와 볼륨은 바뀌는 방식이 다릅니다"
-    - 환경변수는 Pod가 시작할 때 한 번만 읽습니다. ConfigMap을 바꿔도 떠 있는 컨테이너의 값은 그대로입니다.
-    - 볼륨 파일은 ConfigMap을 바꾸면 잠시 뒤 바뀝니다. 하지만 앱이 파일을 다시 읽어야 동작이 바뀝니다. `subPath`로 파일 하나만 붙였다면 파일도 바뀌지 않습니다.
-    - 확실히 반영하려면 Pod를 새로 띄웁니다. 실습 2의 rollout restart에서 합니다.
+## STEP 4. ConfigMap 값 바꾸기 (blue → green)
+
+같은 이름의 ConfigMap을 `APP_COLOR=green`으로 다시 만들어 덮어씁니다. `--dry-run=client -o yaml`로 YAML만 만들고, 그것을 `kubectl apply -f -`로 바로 적용합니다. 한 줄로 입력합니다.
+
+```bash
+kubectl create configmap app-config --from-literal=APP_COLOR=green --from-literal=LOG_LEVEL=info --dry-run=client -o yaml | kubectl apply -f -
+```
+
+```text
+Warning: resource configmaps/app-config is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. ...
+configmap/app-config configured
+```
+<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
+
+`Warning`은 STEP 1에서 `create`로 만든 것을 `apply`로 바꿨다는 안내입니다. 자동으로 채워지니 무시합니다. 마지막 줄이 `configured`면 됩니다.
+
+## STEP 5. 떠 있는 Pod에서 다시 읽기
+
+환경변수와 파일을 다시 읽습니다.
+
+```bash
+kubectl exec cm-pod -- printenv APP_COLOR
+```
+
+```text
+blue
+```
+
+```bash
+kubectl exec cm-pod -- cat /etc/config/APP_COLOR
+```
+
+```text
+green
+```
+
+환경변수는 그대로 `blue`입니다. 컨테이너가 시작할 때 한 번만 읽기 때문입니다. 파일은 잠시 뒤 `green`으로 바뀝니다. 아직 `blue`면 1분쯤 기다렸다가 `cat` 명령을 다시 실행합니다.
+
+!!! info "파일은 언제 바뀌나요"
+    kubelet이 주기적으로 ConfigMap을 확인해 파일을 맞춥니다. 공식 문서 기준으로 kubelet 동기화 주기(기본 1분)에 캐시 지연을 더한 시간까지 걸릴 수 있습니다. `subPath`로 파일 하나만 붙였다면 파일도 바뀌지 않습니다.
+
+!!! note "nginx 화면은 바뀌지 않습니다"
+    이 실습의 nginx는 `APP_COLOR` 값을 쓰지 않습니다. 설정이 컨테이너까지 전달되는지 확인하는 용도입니다. 실제 앱의 동작이 바뀌는지는 앱이 값을 언제 읽는지(시작할 때 한 번, 또는 파일을 다시 읽기)에 달려 있습니다.
+
+## STEP 6. Pod를 새로 만들고 다시 읽기
+
+Pod를 지우고 같은 파일로 다시 만듭니다. 새 컨테이너는 시작할 때 새 값을 읽습니다.
+
+```bash
+kubectl delete pod cm-pod
+```
+
+```bash
+kubectl apply -f cm-pod.yaml
+```
+
+```bash
+kubectl exec cm-pod -- printenv APP_COLOR
+```
+
+```text
+green
+```
+
+환경변수를 확실히 반영하려면 Pod를 새로 띄웁니다. Deployment라면 실습 2의 rollout restart를 씁니다.
 
 ## 성공하면
 
 - STEP 1: `data` 아래에 `APP_COLOR: blue`, `LOG_LEVEL: info` 두 키가 보입니다.
 - STEP 3: `blue`, `info`가 출력됩니다.
+- STEP 5: 환경변수는 `blue` 그대로, 파일은 잠시 뒤 `green`입니다.
+- STEP 6: 새 Pod의 환경변수는 `green`입니다.
 
 ## 막히면
 
@@ -150,7 +214,13 @@ info
     지금 폴더에 파일이 없거나 이름이 다릅니다. `ls`로 확인합니다. Windows 메모장으로 저장했다면 `cm-pod.yaml.txt`로 저장됐을 수 있습니다. 메모장에서 저장할 때 **파일 형식을 "모든 파일"**로 바꾸거나 VS Code로 만듭니다.
 
 ??? failure "줄 끝 역슬래시(\) 명령이 PowerShell에서 안 됨"
-    교안 장표의 STEP 1 명령은 두 줄로 나뉘어 있습니다. 이 가이드처럼 **한 줄로** 붙여 입력하면 Windows, Mac 모두 됩니다.
+    교안 장표의 STEP 1, STEP 4 명령은 여러 줄로 나뉘어 있습니다. 이 가이드처럼 **한 줄로** 붙여 입력하면 Windows, Mac 모두 됩니다.
+
+??? failure "STEP 5에서 파일이 계속 blue"
+    kubelet이 아직 파일을 맞추지 않았습니다. 1분쯤 기다렸다가 다시 `cat`을 실행합니다. STEP 4의 마지막 줄이 `configured`였는지도 확인합니다 (`unchanged`면 값이 그대로입니다).
+
+??? failure "error: unable to upgrade connection: container not found (STEP 6)"
+    새 Pod가 아직 뜨는 중입니다. `kubectl get pod cm-pod`로 `Running`을 보고 다시 실행합니다.
 
 ## 정리
 

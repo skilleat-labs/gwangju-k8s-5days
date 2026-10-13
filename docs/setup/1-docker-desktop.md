@@ -99,7 +99,7 @@ Server: Docker Desktop 4.xx.x
 ```
 <small>출력은 예시입니다. 버전 숫자는 사람마다 다릅니다.</small>
 
-**Client와 Server가 둘 다 나오면 성공**입니다. Server 부분이 없고 오류가 나오면 Docker Desktop이 아직 켜지는 중이거나 꺼져 있는 것입니다.
+**Client와 Server가 둘 다 나오면 성공**입니다. Server 줄의 이름이 `Docker Desktop`이 아니면 다른 엔진을 보고 있는 것입니다. `docker context ls`로 목록을 보고 `docker context use desktop-linux`로 바꿉니다. Server 부분이 없고 오류가 나오면 Docker Desktop이 아직 켜지는 중이거나 꺼져 있는 것입니다.
 
 ```bash
 docker run hello-world

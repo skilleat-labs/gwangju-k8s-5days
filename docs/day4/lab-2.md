@@ -20,10 +20,21 @@
 | `kind: Deployment` | rollout restart는 Deployment에 쓰는 명령이라 Pod 대신 Deployment로 만듭니다. |
 | `secretKeyRef` | `mysql-secret`에서 키 `MYSQL_ROOT_PASSWORD`를 골라 같은 이름의 환경변수로 넣습니다. 실습 1의 `configMapKeyRef`와 모양이 같습니다. |
 
+!!! warning "이 실습을 두 번째 하는 경우"
+    처음 하는 사람은 건너뜁니다. 예전에 이 실습을 해서 `mysql-secret`이 `skilleat`으로 남아 있으면 STEP 8, 9의 비교가 재현되지 않습니다. 먼저 처음 상태로 되돌립니다.
+
+    ```bash
+    kubectl delete deployment secret-demo --ignore-not-found
+    ```
+
+    ```bash
+    kubectl delete secret mysql-secret --ignore-not-found
+    ```
+
 !!! warning "mysql-secret은 실습 5, 6에서 다시 씁니다"
     MySQL 공식 이미지는 `MYSQL_ROOT_PASSWORD` 환경변수로 root 비밀번호를 정합니다. 오늘 만드는 `mysql-secret`을 3교시 MySQL이 그대로 씁니다. 실습이 끝나도 **지우지 마세요.**
 
-## STEP 4. Secret 만들기 (3교시 MySQL에서 다시 씀)
+## STEP 7. Secret 만들기 (3교시 MySQL에서 다시 씀)
 
 ```bash
 kubectl create secret generic mysql-secret --from-literal=MYSQL_ROOT_PASSWORD=pass1234
@@ -56,7 +67,7 @@ type: Opaque
 
 `pass1234`가 `cGFzczEyMzQ=`로 바뀌어 저장됐습니다. 암호처럼 보이지만 base64 **인코딩**일 뿐입니다.
 
-## STEP 5. base64 풀기
+## STEP 8. base64 풀기
 
 키 없이 명령 한 줄로 원래 값이 나옵니다. OS마다 명령이 다릅니다.
 
@@ -101,7 +112,7 @@ pass1234
 !!! danger "Secret이라는 이름에 속지 마세요"
     base64는 암호화가 아닙니다. `get secret` 권한이 있으면 누구나 비밀번호를 봅니다. 진짜 보호는 etcd 저장 암호화와 RBAC로 읽을 사람을 제한하는 것입니다. RBAC는 5일차에 합니다.
 
-## STEP 6. Secret 쓰는 Deployment 올리기
+## STEP 9. Secret 쓰는 Deployment 올리기
 
 ```bash
 kubectl apply -f secret-demo.yaml
@@ -123,7 +134,7 @@ pass1234
 
 컨테이너 안에서는 평문입니다. 앱이 써야 하니 당연합니다.
 
-## STEP 7. 값 바꾸기 (지우고 다시 만들기)
+## STEP 10. 값 바꾸기 (지우고 다시 만들기)
 
 Secret을 지우고 같은 이름으로 새 값 `skilleat`을 넣어 다시 만듭니다.
 
@@ -140,7 +151,7 @@ secret "mysql-secret" deleted
 secret/mysql-secret created
 ```
 
-## STEP 8. 떠 있는 Pod는 아직 옛 값
+## STEP 11. 떠 있는 Pod는 아직 옛 값
 
 ```bash
 kubectl exec deploy/secret-demo -- printenv MYSQL_ROOT_PASSWORD
@@ -152,7 +163,7 @@ pass1234
 
 Secret은 바뀌었지만 컨테이너는 모릅니다. 환경변수는 컨테이너가 **시작할 때 한 번만** 읽기 때문입니다.
 
-## STEP 9. Pod를 새로 교체하고 다시 확인
+## STEP 12. Pod를 새로 교체하고 다시 확인
 
 rollout restart로 Pod를 새로 띄웁니다. 이미지나 설정은 그대로 두고, 2일차의 롤링 업데이트 방식으로 Pod만 교체합니다.
 
@@ -191,23 +202,23 @@ skilleat
 
 ## 성공하면
 
-- STEP 4: `data`에 `MYSQL_ROOT_PASSWORD: cGFzczEyMzQ=`가 보입니다.
-- STEP 5, 6: `pass1234`가 나옵니다.
-- STEP 8: 값을 바꿨는데도 `pass1234` 그대로입니다.
-- STEP 9: `skilleat`으로 바뀝니다.
+- STEP 7: `data`에 `MYSQL_ROOT_PASSWORD: cGFzczEyMzQ=`가 보입니다.
+- STEP 8, 6: `pass1234`가 나옵니다.
+- STEP 11: 값을 바꿨는데도 `pass1234` 그대로입니다.
+- STEP 12: `skilleat`으로 바뀝니다.
 
 ## 막히면
 
 ??? failure "error: failed to create secret secrets \"mysql-secret\" already exists"
-    이미 만든 Secret입니다. STEP 4라면 그대로 다음 STEP으로 갑니다. STEP 7이라면 앞의 `kubectl delete secret mysql-secret`을 먼저 했는지 확인합니다.
+    이미 만든 Secret입니다. 처음 하는 실습인데 이 오류가 났다면 위 "두 번째 하는 경우"의 두 명령으로 지우고 STEP 7부터 다시 합니다. STEP 10이라면 앞의 `kubectl delete secret mysql-secret`을 먼저 했는지 확인합니다.
 
 ??? failure "base64 : 'base64' 용어가 cmdlet, 함수... 의 이름으로 인식되지 않습니다 (PowerShell)"
-    PowerShell에는 `base64` 명령이 없습니다. STEP 5의 **Windows (PowerShell)** 탭 명령이나 두 OS 공통 go-template 명령을 씁니다.
+    PowerShell에는 `base64` 명령이 없습니다. STEP 8의 **Windows (PowerShell)** 탭 명령이나 두 OS 공통 go-template 명령을 씁니다.
 
 ??? failure "Mac에서 base64 -d 결과가 이상하거나 invalid input"
     값을 복사할 때 앞뒤 글자가 빠졌거나 더 붙었습니다. 끝의 `=`까지 정확히 복사합니다. 직접 인코딩해 볼 때는 `echo -n`을 씁니다. `-n`을 빼면 줄바꿈까지 인코딩되어 `cGFzczEyMzQK`처럼 끝이 달라집니다.
 
-??? failure "STEP 9에서 아직 pass1234가 나옴"
+??? failure "STEP 12에서 아직 pass1234가 나옴"
     rollout이 끝나기 전에 exec를 하면 지워지는 옛 Pod에 붙어 옛 값이 나올 수 있습니다. `kubectl rollout status deployment/secret-demo`에서 `successfully rolled out`을 본 뒤 다시 확인합니다.
 
 ??? failure "error: unable to upgrade connection: container not found / pod not found"

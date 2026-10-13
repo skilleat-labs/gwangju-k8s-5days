@@ -59,6 +59,36 @@ docker-desktop   Ready    control-plane   2m    v1.3x.x
 kubectl version
 ```
 
+## 연결 대상 고정하기 (한 번만)
+
+다른 도구(Rancher Desktop, minikube 등)를 쓴 적이 있으면 `docker`와 `kubectl`이 엉뚱한 곳을 볼 수 있습니다. 아래를 차례로 실행합니다.
+
+```bash
+docker context ls
+```
+
+목록에서 Docker Desktop 엔진(보통 `desktop-linux`)을 고릅니다. 줄 끝에 `*`가 붙은 것이 지금 쓰는 엔진입니다.
+
+```bash
+docker context use desktop-linux
+```
+
+```bash
+kubectl config use-context docker-desktop
+```
+
+기본 네임스페이스를 `default`로 맞춥니다. 실습 명령 중 `-n`이 없는 것은 모두 `default`에 만들어집니다.
+
+```bash
+kubectl config set-context --current --namespace=default
+```
+
+```bash
+kubectl get nodes -o wide
+```
+
+`docker-desktop` 노드가 `Ready`면 됩니다.
+
 ## kubectl은 어디에 설치되나
 
 Docker Desktop이 `kubectl`을 같이 설치합니다. 따로 설치할 필요가 없습니다.

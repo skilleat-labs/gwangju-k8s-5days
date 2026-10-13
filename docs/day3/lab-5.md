@@ -20,6 +20,16 @@
 | Gateway | 어떤 문을 여나? | HTTP 80번 (`eg`) | 인프라팀 |
 | HTTPRoute | 어디로 보내나? | `/app1` → app1, `/app2` → app2 | 앱팀 (실습 6) |
 
+!!! info "왜 설치가 필요한가: CRD와 컨트롤러"
+    Service, Deployment는 쿠버네티스에 처음부터 들어 있어 바로 apply할 수 있습니다. Gateway, HTTPRoute는 **두 가지를 설치해야** 동작합니다.
+
+    | 설치하는 것 | 하는 일 | 없으면 |
+    |---|---|---|
+    | **CRD** (Custom Resource Definition) | API 서버에 `Gateway`, `HTTPRoute` 같은 새 종류(kind)를 등록 | apply할 때 `no matches for kind "Gateway"` 오류 |
+    | **컨트롤러** (Envoy Gateway) | 그 YAML을 읽고 실제 Envoy 프록시를 만들어 일함 | apply는 되지만 아무 일도 안 일어남 (`Waiting for controller`) |
+
+    STEP 16의 `install.yaml`에 둘 다 들어 있습니다.
+
 ## STEP 16. 설치 (Gateway API CRD 포함) 후 대기
 
 공식 `install.yaml`에는 Gateway API CRD와 Envoy Gateway 컨트롤러가 함께 들어 있습니다. 파일이 커서 `--server-side`로 적용합니다.
@@ -152,15 +162,45 @@ service/envoy-gateway               ClusterIP      10.106.53.88    <none>       
 ??? failure "Unable to connect to the server ... github.com (또는 설치 주소 다운로드 실패)"
     install.yaml을 GitHub에서 받지 못했습니다. 브라우저로 설치 주소를 열어 파일이 받아지는지 확인합니다. 회사 프록시나 방화벽이 GitHub를 막으면 강사에게 알려 주세요.
 
-??? failure "PROGRAMMED가 계속 False"
-    1. GatewayClass의 `ACCEPTED`도 False거나 비어 있으면 **controllerName 오타**입니다. `gateway.envoyproxy.io/gatewayclass-controller`를 그대로 복사해 고치고 다시 apply합니다.
-    2. ACCEPTED는 True인데 PROGRAMMED만 False면 이유를 봅니다.
+??? failure "PROGRAMMED가 계속 True가 아님 (Unknown 또는 False)"
+    원인은 하나가 아닙니다. 아래 순서로 봅니다.
 
-        ```bash
-        kubectl describe gateway eg
-        ```
+    **① GatewayClass를 맡은 컨트롤러가 있나**
 
-        `Conditions`의 `Reason`이 `AddressNotAssigned`처럼 주소 관련이면, LoadBalancer 주소를 받지 못한 환경 차이입니다. 프록시 Pod가 Running이면 실습 6의 port-forward로 그대로 진행할 수 있습니다.
+    ```bash
+    kubectl get gatewayclass
+    ```
+
+    `ACCEPTED`가 True가 아니면 controllerName 오타이거나 컨트롤러가 아직 안 떴습니다. 이때 Gateway의 `PROGRAMMED`는 False가 아니라 **Unknown**(`Waiting for controller`)으로 남습니다. `gateway.envoyproxy.io/gatewayclass-controller`를 그대로 복사해 고치고 다시 apply합니다.
+
+    **② Gateway가 말하는 이유 읽기**
+
+    ```bash
+    kubectl describe gateway eg
+    ```
+
+    `Conditions`에서 `Type: Programmed`의 `Reason`과 `Message`를 읽습니다.
+
+    | Reason / Message | 뜻 | 다음에 볼 것 |
+    |---|---|---|
+    | `NoResources` / `Envoy replicas unavailable` | 프록시 Pod가 아직 준비 안 됨 | ③ Pod |
+    | `AddressNotAssigned` / `No addresses have been assigned to the Gateway` | 프록시 Service가 주소를 못 받음 | ④ Service |
+
+    **③ 컨트롤러와 프록시 Pod**
+
+    ```bash
+    kubectl get pods -n envoy-gateway-system
+    ```
+
+    `envoy-gateway`와 `envoy-default-eg-...`가 Running인지 봅니다. `ContainerCreating`이면 이미지를 받는 중이니 기다립니다.
+
+    **④ 프록시 Service 주소**
+
+    ```bash
+    kubectl get svc -n envoy-gateway-system
+    ```
+
+    `EXTERNAL-IP`가 `<pending>`이면 LoadBalancer 주소를 받지 못한 것입니다. 다른 LoadBalancer Service가 이미 80번을 쓰고 있어도 이렇게 될 수 있습니다. 프록시 Pod가 Running이면 실습 6의 port-forward로 그대로 진행할 수 있습니다.
 
 ??? failure "envoy-default-eg-... Pod가 보이지 않음"
     Gateway가 아직 처리되지 않았습니다. 30초쯤 뒤 다시 봅니다. 계속 없으면 위 PROGRAMMED False 항목을 확인합니다.
@@ -168,5 +208,5 @@ service/envoy-gateway               ClusterIP      10.106.53.88    <none>       
 ## 정리
 
 !!! warning "지우지 마세요"
-    - Gateway `eg`와 GatewayClass `eg`는 **실습 6**에서 씁니다.
+    - Gateway `eg`와 GatewayClass `eg`는 **실습 6**에서 씁니다. 실습 6 끝에서 지웁니다 (5일차 Gateway와 80번 포트가 겹치지 않게).
     - Envoy Gateway 설치(`envoy-gateway-system`)는 **5일차 미니 블로그 종합 배포**에서도 씁니다. 오늘이 끝나도 지우지 않습니다.

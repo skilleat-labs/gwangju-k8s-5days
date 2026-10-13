@@ -125,6 +125,9 @@ web-7d9f8c6b5-klmno    1/1     Running   0          20s
 
 실습 6까지 끝났으면 아래를 정리합니다. 각 실습 페이지의 **정리**를 따라왔다면 대부분 이미 지워져 있습니다.
 
+!!! warning "Gateway eg는 오늘 꼭 지웁니다"
+    Gateway `eg`는 HTTP **80번** 문을 씁니다. 남겨 두면 5일차 미니 블로그의 Gateway `blog-gw`(역시 80번)와 겹칩니다. 첫 번째 명령이 `eg`의 Gateway와 GatewayClass를 지웁니다. Envoy Gateway **설치**는 지우지 않습니다.
+
 ```bash
 kubectl delete -f route.yaml -f app1.yaml -f app2.yaml -f gateway.yaml --ignore-not-found
 ```
@@ -161,4 +164,10 @@ envoy-gateway-6c7f5d9b8d-x2k7p   1/1     Running   0          1h
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
 
-`envoy-default-eg-`로 시작하는 프록시 Pod는 gateway.yaml을 지우면 함께 사라집니다. 컨트롤러 `envoy-gateway` Pod 하나만 남으면 정상입니다.
+`envoy-default-eg-`로 시작하는 프록시 Pod는 gateway.yaml을 지우면 함께 사라집니다. 컨트롤러 `envoy-gateway` Pod 하나만 남으면 정상입니다. Gateway가 하나도 안 남았는지도 봅니다.
+
+```bash
+kubectl get gateway -A
+```
+
+`No resources found`가 나오면 됩니다.

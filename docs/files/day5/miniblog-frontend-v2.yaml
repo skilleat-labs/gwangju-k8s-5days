@@ -1,0 +1,40 @@
+# 미니 블로그 frontend v2: 운영, 보안 설정을 붙인 Deployment (DAY 5 실습 5 STEP 28)
+# miniblog-frontend.yaml 을 적용한 뒤에 적용한다. Deployment 만 바뀐다 (롤링 업데이트).
+# runAsNonRoot 는 넣지 않았다. 기본 nginx 계열 이미지는 root 로 시작하도록 만들어져 있다.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      # API 서버를 쓰지 않는 앱이라 토큰을 꽂지 않는다 (DAY 5 섹션 2)
+      automountServiceAccountToken: false
+      containers:
+      - name: frontend
+        image: skilleat/frontend:v3-kb5
+        ports:
+        - containerPort: 80
+        # / 가 200 을 주면 요청을 받는다 (DAY 4)
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          periodSeconds: 5
+        # 배치 기준과 메모리 한도 (DAY 4)
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false

@@ -1,7 +1,8 @@
 # 실습 6. 롤링 업데이트와 롤백
 
 !!! abstract "이번 실습에서 할 것"
-    - nginx 1.27을 1.28로 끊김 없이 바꾸고(롤링 업데이트), 남는 이력을 봅니다.
+    - nginx 1.27을 1.28로 Pod 하나씩 바꾸고(롤링 업데이트), 남는 이력을 봅니다.
+    - 명령으로 바꾼 상태와 YAML 파일이 어긋나는 것을 알아 둡니다.
     - 명령 한 줄로 옛 버전으로 되돌립니다(롤백).
 
 **소요 시간** 약 12분 (STEP 1~3 7분, STEP 4~6 5분), **교안** DAY 2 섹션 6
@@ -78,6 +79,9 @@ web-7c5b8d9f6d   0         0         0       12m
 
 새 ReplicaSet(1.28)이 3개, 옛 ReplicaSet(1.27)이 0개입니다. 옛 것을 지우지 않고 0개로 남겨 두는 이유가 STEP 4의 롤백입니다.
 
+!!! info "오늘 확인하는 것은 순차 교체 원리입니다"
+    오늘은 Pod가 한꺼번에 내려가지 않고 하나씩 교체되는 것을 확인합니다. 사용자 접속이 실제로 끊기지 않는지(무중단)는 요청을 준비된 Pod로만 보내는 Service(3일차)와 준비 상태를 판단하는 readinessProbe(4일차)를 배운 뒤에 확인합니다.
+
 ## STEP 3. 바꾼 이유를 기록하고 이력 보기
 
 `change-cause` 주석을 달면 이력에 바꾼 이유가 남습니다.
@@ -113,9 +117,12 @@ REVISION  CHANGE-CAUSE
     kubectl annotate deployment/web kubernetes.io/change-cause="nginx 1.28 update" --overwrite
     ```
 
+!!! warning "명령으로 바꾼 상태와 YAML 파일"
+    `set image`로 클러스터는 1.28이 됐지만 `deployment.yaml` 파일에는 아직 `nginx:1.27`이 적혀 있습니다. 이 상태에서 `kubectl apply -f deployment.yaml`을 하면 파일 값으로 맞춰져 이미지가 1.27로 되돌아갑니다. 실습 5 STEP 6에서 `replicas`가 파일대로 3으로 돌아간 것과 같은 현상입니다. 운영에서는 파일의 `image`를 고쳐 apply하고, 급히 명령으로 바꿨다면 파일에도 반영합니다. 오늘은 STEP 4의 롤백으로 1.27로 돌아가므로 파일과 클러스터가 다시 같아집니다.
+
 ## STEP 4. 문제가 생겼다고 치고 되돌린다
 
-`rollout undo`는 바로 직전 리비전으로 되돌립니다. 이것도 하나씩 바꿔 끼우는 방식이라 서비스가 끊기지 않습니다.
+`rollout undo`는 바로 직전 리비전으로 되돌립니다. 이것도 Pod를 하나씩 바꿔 끼우는 방식입니다.
 
 ```bash
 kubectl rollout undo deployment/web
@@ -211,7 +218,7 @@ replicaset.apps/web-7c5b8d9f6d   3         3         3       15m
     `kubectl set image deployment/web web=nginx:1.28`처럼 등호 왼쪽에 Deployment 이름을 썼습니다. 등호 왼쪽은 **컨테이너 이름** `nginx`입니다. `kubectl set image deployment/web nginx=nginx:1.28`
 
 ??? failure "rollout status가 Waiting ... 에서 끝나지 않음"
-    새 이미지를 받지 못하고 있을 가능성이 큽니다. ++ctrl+c++로 빠져나와 `kubectl get pods`를 봅니다. 새 Pod가 `ImagePullBackOff`면 이미지 태그 오타입니다. 바로 STEP 4의 `kubectl rollout undo deployment/web`으로 되돌린 뒤 올바른 태그로 다시 합니다. 롤링 업데이트라서 그동안에도 옛 Pod가 응답하고 있습니다.
+    새 이미지를 받지 못하고 있을 가능성이 큽니다. ++ctrl+c++로 빠져나와 `kubectl get pods`를 봅니다. 새 Pod가 `ImagePullBackOff`면 이미지 태그 오타입니다. 바로 STEP 4의 `kubectl rollout undo deployment/web`으로 되돌린 뒤 올바른 태그로 다시 합니다. 롤링 업데이트라서 그동안에도 옛 Pod는 Running으로 남아 있습니다.
 
 ??? failure "grep : The term 'grep' is not recognized as the name of a cmdlet, function, script file, or operable program."
     Windows PowerShell에는 grep이 없습니다. Windows 탭의 `Select-String`을 씁니다. `findstr Image`도 됩니다.

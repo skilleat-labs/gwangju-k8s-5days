@@ -114,13 +114,30 @@ CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS       
 ...
 ```
 
+!!! info "hello-world 는 어디 갔을까"
+    `docker ps`에는 `web`만 보입니다. 멈춘 컨테이너까지 보려면 `-a`를 붙입니다.
+
+    ```bash
+    docker ps -a
+    ```
+
+    `hello-world` 컨테이너는 메시지를 찍고 할 일이 끝나 **Exited** 상태입니다. nginx는 요청을 기다리며 계속 **Up**입니다. 컨테이너는 주 프로세스가 끝나면 함께 멈춥니다.
+
+    | 명령 | 뜻 |
+    |---|---|
+    | `docker run` | 이미지로 **새 컨테이너를 만들어** 실행 |
+    | `docker stop` | 컨테이너 멈추기 |
+    | `docker start` | 멈춘 **그 컨테이너를** 다시 실행 |
+    | `docker rm` | 컨테이너 지우기 |
+    | `docker ps -a` | 멈춘 컨테이너까지 보기 |
+
 !!! note "web 컨테이너는 지우지 마세요"
     실습 2에서 이 `web` 컨테이너를 계속 씁니다.
 
 ## 성공하면
 
 - STEP 2에서 `Hello from Docker!`가 나옵니다.
-- STEP 4에서 `web`이 `Up` 상태입니다.
+- STEP 4에서 `web`이 `Up` 상태이고, `docker ps -a`에서 `hello-world`는 `Exited`입니다.
 - 브라우저 `localhost:8080`에 **Welcome to nginx!** 가 보입니다.
 
 ## 막히면

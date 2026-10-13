@@ -39,8 +39,9 @@
 | 파일 | 쓰는 곳 |
 |---|---|
 | [cm-pod.yaml](files/day4/cm-pod.yaml){ download } | 실습 1 ConfigMap |
-| [memory-hog-arm.yaml](files/day4/memory-hog-arm.yaml){ download } | 실습 4 OOMKilled (Apple Silicon Mac) |
-| [memory-hog.yaml](files/day4/memory-hog.yaml){ download } | 실습 4 OOMKilled (Windows, Intel Mac) |
+| [memory-hog-arm.yaml](files/day4/memory-hog-arm.yaml){ download } | 실습 4 OOMKilled (memory-hog.yaml 과 같은 내용, 예전 링크용) |
+| [memory-hog.yaml](files/day4/memory-hog.yaml){ download } | 실습 4 OOMKilled (Windows, Mac 공통) |
+| [big-request.yaml](files/day4/big-request.yaml){ download } | 실습 4 requests 가 커서 Pending |
 | [mysql-emptydir.yaml](files/day4/mysql-emptydir.yaml){ download } | 실습 5 MySQL emptyDir |
 | [mysql-pvc-deploy.yaml](files/day4/mysql-pvc-deploy.yaml){ download } | 실습 6 MySQL + PVC |
 | [mysql-pvc.yaml](files/day4/mysql-pvc.yaml){ download } | 실습 6 PVC |

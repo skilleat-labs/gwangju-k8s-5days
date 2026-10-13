@@ -9,12 +9,12 @@
 
 | 실습 | 내용 | 교안 | STEP | 시간 |
 |---|---|---|---|---|
-| [실습 1](lab-1.md) | ConfigMap 만들고 환경변수, 볼륨 두 방법으로 넣기 | 섹션 1 | 1~3 | 12분 |
-| [실습 2](lab-2.md) | Secret 만들고 base64 풀기, 값 바꾸고 rollout restart | 섹션 2 | 4~9 | 12분 |
-| [실습 3](lab-3.md) | readinessProbe 실패시키고 EndpointSlice에서 ready: false 보기 | 섹션 3 | 10~15 | 12분 |
-| [실습 4](lab-4.md) | 메모리 한도 넘겨 OOMKilled, CrashLoopBackOff 보기 | 섹션 4 | 16~19 | 8분 |
-| [실습 5](lab-5.md) | MySQL에 데이터 넣고 Pod를 지우면 사라지는 것 보기 (emptyDir) | 섹션 5 | 20~23 | 12분 |
-| [실습 6](lab-6.md) | PVC로 같은 실험을 다시 해서 데이터가 남는 것 보기 | 섹션 6 | 24~28 | 12분 |
+| [실습 1](lab-1.md) | ConfigMap 만들고 두 방법으로 넣기, 값을 바꿔 환경변수와 파일 비교 | 섹션 1 | 1~6 | 15분 |
+| [실습 2](lab-2.md) | Secret 만들고 base64 풀기, 값 바꾸고 rollout restart | 섹션 2 | 7~12 | 12분 |
+| [실습 3](lab-3.md) | readinessProbe 실패시키고 EndpointSlice에서 ready: false 보기 | 섹션 3 | 13~18 | 12분 |
+| [실습 4](lab-4.md) | 메모리 한도 넘겨 OOMKilled 보기, requests가 너무 커서 Pending 보기 | 섹션 4 | 19~25 | 12분 |
+| [실습 5](lab-5.md) | MySQL에 데이터 넣고 Pod를 지우면 사라지는 것 보기 (emptyDir) | 섹션 5 | 26~29 | 12분 |
+| [실습 6](lab-6.md) | PVC로 같은 실험을 다시 해서 데이터가 남는 것 보기 | 섹션 6 | 30~34 | 12분 |
 
 ## 시작 전에
 
@@ -66,7 +66,7 @@ code .
 flowchart LR
   A["실습 2<br/>mysql-secret<br/>(skilleat)"] --> B["실습 5<br/>MySQL + emptyDir"]
   A --> C["실습 6<br/>MySQL + PVC"]
-  B -- "STEP 25에서<br/>Deployment 삭제" --> C
+  B -- "STEP 31에서<br/>Deployment 삭제" --> C
 ```
 
 ## 오늘 쓰는 파일
@@ -78,8 +78,8 @@ flowchart LR
 | `cm-pod.yaml` | 실습 1 | [cm-pod.yaml](../files/day4/cm-pod.yaml){ download } |
 | `secret-demo.yaml` | 실습 2 | [secret-demo.yaml](../files/day4/secret-demo.yaml){ download } |
 | `probe-web.yaml` | 실습 3 | [probe-web.yaml](../files/day4/probe-web.yaml){ download } |
-| `memory-hog.yaml` | 실습 4 (Windows, Intel Mac) | [memory-hog.yaml](../files/day4/memory-hog.yaml){ download } |
-| `memory-hog-arm.yaml` | 실습 4 (Apple Silicon Mac) | [memory-hog-arm.yaml](../files/day4/memory-hog-arm.yaml){ download } |
+| `memory-hog.yaml` | 실습 4 (Windows, Mac 공통) | [memory-hog.yaml](../files/day4/memory-hog.yaml){ download } |
+| `big-request.yaml` | 실습 4 | [big-request.yaml](../files/day4/big-request.yaml){ download } |
 | `mysql-emptydir.yaml` | 실습 5 | [mysql-emptydir.yaml](../files/day4/mysql-emptydir.yaml){ download } |
 | `mysql-pvc.yaml` | 실습 6 | [mysql-pvc.yaml](../files/day4/mysql-pvc.yaml){ download } |
 | `mysql-pvc-deploy.yaml` | 실습 6 | [mysql-pvc-deploy.yaml](../files/day4/mysql-pvc-deploy.yaml){ download } |
@@ -103,5 +103,5 @@ flowchart LR
 실습마다 정리를 했다면 할 필요 없습니다. 중간에 빠뜨린 것이 있어도 아래 한 줄이면 오늘 만든 것이 모두 지워집니다 (없는 것은 건너뜁니다).
 
 ```bash
-kubectl delete deploy/mysql deploy/secret-demo deploy/web-probe svc/web-probe pvc/mysql-pvc secret/mysql-secret cm/app-config pod/cm-pod pod/memory-hog --ignore-not-found
+kubectl delete deploy/mysql deploy/secret-demo deploy/web-probe svc/web-probe pvc/mysql-pvc secret/mysql-secret cm/app-config pod/cm-pod pod/memory-hog pod/big-request --ignore-not-found
 ```

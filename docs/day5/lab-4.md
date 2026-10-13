@@ -25,19 +25,23 @@
 
 3일차에 설치한 Envoy Gateway가 있어야 frontend 파일의 GatewayClass, Gateway, HTTPRoute가 검사를 통과합니다. [오늘의 실습](index.md#envoy-check)의 확인을 아직 안 했다면 먼저 합니다.
 
-### 1일차와 비교
+### 1일차 도커가 하던 일, 쿠버네티스에서는 누가 맡나
 
-| 1일차 도커 | 5일차 쿠버네티스 |
-|---|---|
-| `docker network create blog-net` | Namespace `webapp` + Service 이름으로 찾기 |
-| `docker run --name backend-service ...` | Deployment `backend` (replicas 1) + Service `backend-service:5000` |
-| `docker run -p 8080:80 ... frontend` | Deployment `frontend` (replicas 2) + Service `frontend-service:80` + Gateway |
-| 컨테이너 안 `/app/data/data.json` | PVC `blog-pvc`를 `/app/data`에 붙여 글 보존 |
-| 죽으면 사람이 살린다 | 죽어도 Deployment가 다시 띄운다 |
+| 하는 일 | 1일차 도커 | 5일차 쿠버네티스 |
+|---|---|---|
+| 실행 관리 | `docker run` 두 번, 죽으면 사람이 살린다 | Deployment `backend` (replicas 1), `frontend` (replicas 2), 죽어도 다시 띄운다 |
+| 이름으로 찾기 | `blog-net` 안의 컨테이너 이름 `backend-service` | Service `backend-service:5000`과 CoreDNS |
+| 리소스 묶음 | 없음 | Namespace `webapp` |
+| 통신 제한 | `blog-net` 밖의 컨테이너는 못 들어옴 | NetworkPolicy (실습 3) |
+| 입구 | `-p 8080:80` | Gateway `blog-gw`, HTTPRoute |
+| 데이터 | `/app/data/data.json` | PVC `blog-pvc`를 `/app/data`에 붙여 글 보존 |
 
-backend를 replicas 1로 두는 이유: Docker Desktop의 기본 저장소(hostpath)는 `ReadWriteOnce`, 즉 노드 하나에서만 붙습니다. 이 앱은 글을 파일 하나에 쓰므로 Pod 두 개가 동시에 쓰면 꼬일 수 있습니다.
+!!! warning "Namespace는 blog-net이 아닙니다"
+    Namespace는 리소스와 이름을 묶는 공간일 뿐 네트워크를 격리하지 않습니다. 다른 Namespace의 Pod끼리도 기본으로 서로 통합니다. 통신을 막는 일은 NetworkPolicy가 합니다.
 
-## STEP 16. 파일 2개를 편집기로 연다
+backend를 replicas 1로 두는 이유: Docker Desktop의 기본 저장소(hostpath)는 `ReadWriteOnce`, 즉 노드 하나에서만 붙습니다. 이 앱은 글을 파일 하나에 쓰므로 Pod 두 개가 동시에 쓰면 꼬일 수 있습니다. 같은 이유로 backend Deployment에는 `strategy: Recreate`를 넣었습니다. 업데이트할 때 옛 Pod를 먼저 내리고 새 Pod를 띄워, 잠깐 API가 멈추는 대신 두 Pod가 같은 파일에 동시에 쓰는 일을 막습니다. 빈칸은 아닙니다.
+
+## STEP 17. 파일 2개를 편집기로 연다
 
 빈칸 문제 파일 두 개를 내려받아 작업 폴더에 넣습니다.
 
@@ -73,7 +77,7 @@ code .
 
 GatewayClass `blog-gw-class`의 `controllerName`은 3일차에 설치한 Envoy Gateway가 맡겠다는 표시입니다. PVC는 `storageClassName`을 생략해 Docker Desktop의 기본 StorageClass를 씁니다.
 
-## STEP 17. 빈칸 (1) ~ (8) 채우고 저장
+## STEP 18. 빈칸 (1) ~ (8) 채우고 저장
 
 밑줄 부분(`(1)____` 전체)을 지우고 알맞은 값을 씁니다. 따옴표 안의 빈칸 (2)는 따옴표를 남겨 둡니다.
 
@@ -131,7 +135,7 @@ GatewayClass `blog-gw-class`의 `controllerName`은 3일차에 설치한 Envoy G
 
     같은 이름의 파일이 이미 있으면 Windows에서 오류가 납니다. 빈칸 파일을 먼저 지우거나 `mv -Force`(Windows) / `mv -f`(Mac)를 씁니다.
 
-## STEP 18. 문법만 검사 (아직 만들지 않는다)
+## STEP 19. 문법만 검사 (아직 만들지 않는다)
 
 `--dry-run=client`는 실제로 만들지 않고 YAML 문법과 형식만 검사합니다.
 

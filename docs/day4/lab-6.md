@@ -3,6 +3,7 @@
 !!! abstract "이번 실습에서 할 것"
     - PVC를 만들고 PV가 자동으로 생기는 것(동적 프로비저닝)을 봅니다.
     - 실습 5와 같은 실험을 PVC로 다시 해서, Pod를 지워도 데이터가 남는 것을 봅니다.
+    - Pod, PVC, 노드가 없어질 때 데이터가 어떻게 되는지, 데이터 보존과 서비스 연속성의 차이를 정리합니다.
 
 **소요 시간** 약 12분, **교안** DAY 4 섹션 6
 
@@ -21,7 +22,7 @@
 
 | 부분 | 뜻 |
 |---|---|
-| `storageClassName: hostpath` | Docker Desktop의 기본 StorageClass. 빼도 기본값이 쓰입니다. STEP 24에서 이름을 확인합니다. |
+| `storageClassName: hostpath` | Docker Desktop의 기본 StorageClass. 빼도 기본값이 쓰입니다. STEP 30에서 이름을 확인합니다. |
 | `accessModes: [ReadWriteOnce]` | 한 노드에서 읽기, 쓰기 (RWO). |
 | `storage: 1Gi` | 필요한 용량. |
 
@@ -41,7 +42,7 @@
 
 Secret, `mountPath` 등 나머지는 실습 5와 같습니다.
 
-## STEP 24. 기본 StorageClass 확인
+## STEP 30. 기본 StorageClass 확인
 
 ```bash
 kubectl get storageclass
@@ -59,10 +60,10 @@ hostpath (default)   docker.io/hostpath   Delete          Immediate           fa
     Docker Desktop 버전과 클러스터 방식에 따라 결과가 다를 수 있습니다.
 
     - **이름이 `hostpath`가 아니면**: `mysql-pvc.yaml`의 `storageClassName:` 값을 그 이름으로 바꾸거나, `storageClassName:` 줄을 지웁니다. 줄을 지우면 `(default)` StorageClass가 쓰입니다.
-    - **`VOLUMEBINDINGMODE`가 `WaitForFirstConsumer`면**: STEP 25에서 PVC가 `Pending`이고 PV가 아직 없는 것이 정상입니다. STEP 26에서 Pod가 PVC를 쓰는 순간 PV가 생기고 `Bound`가 됩니다.
+    - **`VOLUMEBINDINGMODE`가 `WaitForFirstConsumer`면**: STEP 31에서 PVC가 `Pending`이고 PV가 아직 없는 것이 정상입니다. STEP 32에서 Pod가 PVC를 쓰는 순간 PV가 생기고 `Bound`가 됩니다.
     - **`No resources found`로 StorageClass가 하나도 없으면**: PVC가 계속 `Pending`입니다. 강사에게 알려 주세요.
 
-## STEP 25. emptyDir MySQL 지우고 PVC 만들기
+## STEP 31. emptyDir MySQL 지우고 PVC 만들기
 
 실습 5의 emptyDir MySQL Deployment를 먼저 지웁니다. 같은 이름의 Deployment에 `strategy`만 바꿔 apply하면 오류가 나기 때문입니다 (아래 막히면 참고).
 
@@ -98,7 +99,7 @@ persistentvolume/pvc-3f1e2d4c-5b6a-4c7d-8e9f-0a1b2c3d4e5f   1Gi        RWO      
 
 우리가 만들지 않은 PV가 `pvc-`로 시작하는 이름으로 생겼고, PVC와 PV 모두 `Bound`입니다. PVC가 오자 StorageClass가 PV를 자동으로 만든 것, 즉 **동적 프로비저닝**입니다.
 
-## STEP 26. PVC를 쓰는 MySQL 올리기
+## STEP 32. PVC를 쓰는 MySQL 올리기
 
 ```bash
 kubectl apply -f mysql-pvc-deploy.yaml
@@ -108,7 +109,7 @@ kubectl apply -f mysql-pvc-deploy.yaml
 deployment.apps/mysql created
 ```
 
-`1/1 Running`이 되면 `Ctrl + C`로 멈춥니다.
+READY가 `1/1`이 되면 `Ctrl + C`로 멈춥니다. 실습 5와 같은 readinessProbe가 있어 초기화가 끝나야 `1/1`이 됩니다.
 
 ```bash
 kubectl get pods -l app=mysql -w
@@ -117,13 +118,14 @@ kubectl get pods -l app=mysql -w
 ```text
 NAME                     READY   STATUS              RESTARTS   AGE
 mysql-7b9c6d5f4e-h3j5k   0/1     ContainerCreating   0          2s
-mysql-7b9c6d5f4e-h3j5k   1/1     Running             0          20s
+mysql-7b9c6d5f4e-h3j5k   0/1     Running             0          10s
+mysql-7b9c6d5f4e-h3j5k   1/1     Running             0          40s
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
 
-## STEP 27. 데이터 넣기 (실습 5와 같은 SQL)
+## STEP 33. 데이터 넣기 (실습 5와 같은 SQL)
 
-`Running`이 되고 30초쯤 기다린 뒤 접속합니다.
+READY가 `1/1`이 된 뒤 접속합니다.
 
 ```bash
 kubectl exec -it deploy/mysql -- mysql -uroot -pskilleat
@@ -159,7 +161,7 @@ exit
     kubectl exec -it <Pod 이름> -- mysql -uroot -pskilleat -e "INSERT INTO blog.post VALUES (1, 'hello');"
     ```
 
-## STEP 28. Pod 지우고 1/1 Running 뒤 다시 확인
+## STEP 34. Pod 지우고 READY 1/1 뒤 다시 확인
 
 실습 5처럼 Pod를 지웁니다.
 
@@ -167,13 +169,13 @@ exit
 kubectl delete pod -l app=mysql
 ```
 
-새 Pod가 `1/1 Running`이 될 때까지 봅니다. Pod 이름이 바뀐 것도 확인합니다. `Ctrl + C`로 멈춥니다.
+새 Pod의 READY가 `1/1`이 될 때까지 봅니다. Pod 이름이 바뀐 것도 확인합니다. `Ctrl + C`로 멈춥니다.
 
 ```bash
 kubectl get pods -l app=mysql -w
 ```
 
-30초쯤 기다린 뒤 다시 접속합니다.
+다시 접속합니다.
 
 ```bash
 kubectl exec -it deploy/mysql -- mysql -uroot -pskilleat
@@ -203,11 +205,27 @@ SELECT * FROM blog.post;
 
 Pod는 사라졌다 새로 생겼지만 PVC와 PV는 Pod 밖에 그대로 있었고, 새 Pod가 같은 PVC를 다시 붙였습니다. 실습 5와 같은 실험, **결과만 다릅니다.**
 
+## 정리하기 전에: 무엇이 사라지면 데이터도 사라지나
+
+| 사라지는 것 | 데이터 | 이유 |
+|---|---|---|
+| Pod | 남습니다 | PVC, PV는 Pod 밖에 있고 새 Pod가 다시 붙입니다 (STEP 34). |
+| PVC | reclaimPolicy가 정합니다 | `Delete`(동적 프로비저닝 기본값)면 PV와 데이터도 지워집니다. `Retain`이면 PV와 데이터가 `Released` 상태로 남습니다. |
+| 노드 | 저장소 종류가 정합니다 | Docker Desktop의 `hostpath`는 **그 노드 안의 폴더**입니다. 노드를 잃으면 데이터도 잃고, 다른 노드에서 자동으로 쓰이지 않습니다. 클라우드 디스크, NFS 같은 네트워크 저장소는 다른 노드에 다시 붙일 수 있습니다. |
+
+PVC는 백업이 아닙니다. 실수로 PVC를 지우거나 노드를 잃는 경우는 백업으로 대비합니다.
+
+!!! info "사용 중인 PVC를 지우면"
+    Pod가 쓰고 있는 PVC를 지우면 바로 지워지지 않고 `Terminating` 상태로 기다립니다. 쓰는 Pod가 없어진 뒤에 지워집니다. 그래서 정리할 때 Deployment를 먼저 지웁니다.
+
+!!! warning "데이터 보존과 서비스 연속성은 다릅니다"
+    STEP 34의 성공은 **데이터 보존**입니다. 서비스가 끊기지 않았다는 뜻은 아닙니다. MySQL이 한 대이고 `Recreate`라서, Pod를 지운 순간부터 새 Pod가 READY `1/1`이 될 때까지는 접속할 수 없습니다. 그동안의 요청은 실패합니다. 끊기지 않게 하려면 여러 대와 DB 복제 구성이 필요합니다 (StatefulSet이 복제를 자동으로 구성해 주지는 않습니다).
+
 ## 성공하면
 
-- STEP 24: `hostpath (default)`가 보입니다.
-- STEP 25: PVC, PV 모두 STATUS `Bound`입니다.
-- STEP 28: 새 Pod에서도 `1`, `hello`가 남아 있습니다.
+- STEP 30: `hostpath (default)`가 보입니다.
+- STEP 31: PVC, PV 모두 STATUS `Bound`입니다.
+- STEP 34: 새 Pod에서도 `1`, `hello`가 남아 있습니다.
 
 ## 막히면
 
@@ -218,8 +236,8 @@ Pod는 사라졌다 새로 생겼지만 PVC와 PV는 Pod 밖에 그대로 있었
     kubectl describe pvc mysql-pvc
     ```
 
-    - `storageclass.storage.k8s.io "hostpath" not found`: `storageClassName` 오타이거나 이름이 다릅니다. STEP 24의 이름으로 고치고, PVC를 지운 뒤(`kubectl delete pvc mysql-pvc`) 다시 만듭니다.
-    - `waiting for first consumer to be created before binding`: 바인딩 모드가 `WaitForFirstConsumer`입니다. 정상입니다. STEP 26으로 가면 `Bound`가 됩니다.
+    - `storageclass.storage.k8s.io "hostpath" not found`: `storageClassName` 오타이거나 이름이 다릅니다. STEP 30의 이름으로 고치고, PVC를 지운 뒤(`kubectl delete pvc mysql-pvc`) 다시 만듭니다.
+    - `waiting for first consumer to be created before binding`: 바인딩 모드가 `WaitForFirstConsumer`입니다. 정상입니다. STEP 32으로 가면 `Bound`가 됩니다.
 
 ??? failure "The Deployment \"mysql\" is invalid: spec.strategy.rollingUpdate: Forbidden: may not be specified when strategy `type` is 'Recreate'"
     실습 5의 `mysql` Deployment를 지우지 않고 `mysql-pvc-deploy.yaml`을 apply했습니다. 지우고 다시 올립니다.
@@ -236,10 +254,10 @@ Pod는 사라졌다 새로 생겼지만 PVC와 PV는 Pod 밖에 그대로 있었
     PVC가 아직 `Bound`가 아닙니다. 위 **PVC가 Pending**을 봅니다.
 
 ??? failure "ERROR 2002 (HY000): Can't connect to local MySQL server through socket"
-    새 Pod가 아직 기동 중입니다. 30초쯤 뒤 다시 접속합니다.
+    새 Pod가 아직 기동 중입니다. READY가 `1/1`이 된 뒤 다시 접속합니다.
 
-??? failure "STEP 27에서 ERROR 1007 (HY000): Can't create database 'blog'; database exists"
-    이미 `blog`가 있습니다. STEP 27을 두 번 했거나, 앞에서 만든 데이터가 PVC에 남아 있는 것입니다. 그대로 STEP 28로 갑니다.
+??? failure "STEP 33에서 ERROR 1007 (HY000): Can't create database 'blog'; database exists"
+    이미 `blog`가 있습니다. STEP 33을 두 번 했거나, 앞에서 만든 데이터가 PVC에 남아 있는 것입니다. 그대로 STEP 34로 갑니다.
 
 ??? failure "ERROR 1045 (28000): Access denied for user 'root'@'localhost'"
     비밀번호가 다릅니다. `kubectl get secret mysql-secret -o go-template="{{.data.MYSQL_ROOT_PASSWORD | base64decode}}"`로 값을 확인합니다. PVC에는 **처음 초기화할 때의 비밀번호**가 저장되어, 그 뒤 Secret을 바꿔도 root 비밀번호는 바뀌지 않습니다.
@@ -265,7 +283,7 @@ kubectl delete configmap app-config
 ```
 
 !!! warning "PVC를 지우면 데이터도 지워집니다"
-    reclaimPolicy가 `Delete`면(STEP 24의 `RECLAIMPOLICY` 칸) PVC를 지울 때 PV와 그 안의 데이터도 함께 지워집니다. 실제 운영에서는 PVC를 지우기 전에 반드시 백업합니다.
+    reclaimPolicy가 `Delete`면(STEP 30의 `RECLAIMPOLICY` 칸) PVC를 지울 때 PV와 그 안의 데이터도 함께 지워집니다. 실제 운영에서는 PVC를 지우기 전에 반드시 백업합니다.
 
 !!! note "환경에 따라 다를 수 있음"
     reclaimPolicy가 `Retain`이면 PVC를 지워도 PV가 `Released` 상태로 남습니다. `kubectl get pv`로 확인하고 남아 있으면 `kubectl delete pv <PV 이름>`으로 지웁니다.
