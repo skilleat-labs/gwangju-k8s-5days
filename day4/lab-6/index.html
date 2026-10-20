@@ -2389,6 +2389,7 @@
 </span></code></pre></div>
 <p>READY가 <code>1/1</code>이 되면 <code>Ctrl + C</code>로 멈춥니다. 실습 5와 같은 readinessProbe가 있어 초기화가 끝나야 <code>1/1</code>이 됩니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>mysql<span class="w"> </span>-w
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># READY 확인 후 Ctrl+C</span>
 </span></code></pre></div>
 <p><div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>NAME                     READY   STATUS              RESTARTS   AGE
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>mysql-7b9c6d5f4e-h3j5k   0/1     ContainerCreating   0          2s
@@ -2425,6 +2426,7 @@
 </span></code></pre></div>
 <p>새 Pod의 READY가 <code>1/1</code>이 될 때까지 봅니다. Pod 이름이 바뀐 것도 확인합니다. <code>Ctrl + C</code>로 멈춥니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>mysql<span class="w"> </span>-w
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># READY 확인 후 Ctrl+C</span>
 </span></code></pre></div>
 <p>다시 접속합니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>deploy/mysql<span class="w"> </span>--<span class="w"> </span>mysql<span class="w"> </span>-uroot<span class="w"> </span>-pskilleat

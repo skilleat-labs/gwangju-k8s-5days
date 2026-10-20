@@ -2235,16 +2235,20 @@
 <p class="admonition-title">컨텍스트와 네임스페이스</p>
 <ul>
 <li><strong>컨텍스트</strong>: 어느 클러스터에 접속할지. 내 PC의 kubeconfig 파일에 적혀 있고, <code>kubectl config get-contexts</code>의 별표가 지금 접속 대상입니다.</li>
-<li><strong>네임스페이스</strong>: 접속한 클러스터 안을 나눈 칸. <code>-n</code>을 안 쓰면 <code>default</code> 칸을 봅니다. 오늘 실습은 모두 <code>default</code>에 만들고, 클러스터 두뇌 부품은 <code>kube-system</code> 칸에 있습니다(실습 2).</li>
+<li><strong>네임스페이스</strong>: 접속한 클러스터 안을 나눈 칸. <code>-n</code>을 안 쓰면 <strong>컨텍스트에 적힌 기본 네임스페이스</strong>를 봅니다. 따로 정하지 않았으면 <code>default</code>입니다. 이 과정은 <code>default</code>로 맞춰 두고, 오늘 실습은 모두 <code>default</code>에 만듭니다. 클러스터 두뇌 부품은 <code>kube-system</code> 칸에 있습니다(실습 2).</li>
 </ul>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>ns
 </span></code></pre></div>
+<p>기본 네임스페이스를 <code>default</code>로 맞춥니다. <a href="../../setup/3-kubernetes/">Kubernetes 켜기</a>의 "연결 대상 고정하기"에서 이미 했으면 다시 해도 결과가 같습니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>config<span class="w"> </span>set-context<span class="w"> </span>--current<span class="w"> </span>--namespace<span class="o">=</span>default
+</span></code></pre></div>
+<p><code>kubectl config get-contexts</code>의 NAMESPACE 칸에 <code>default</code>가 보이면 됩니다.</p>
 </div>
 <h2 id="step-3-ready">STEP 3. 노드가 Ready인지<a class="headerlink" href="#step-3-ready" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>NAME             STATUS   ROLES           AGE   VERSION
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>docker-desktop   Ready    control-plane   1d    v1.3x.x
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>NAME             STATUS   ROLES           AGE   VERSION
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>docker-desktop   Ready    control-plane   1d    v1.3x.x
 </span></code></pre></div>
 <small>출력은 예시입니다. AGE와 VERSION은 사람마다 다릅니다.</small></p>
 <p>노드가 <code>docker-desktop</code> 한 대뿐입니다. kubeadm 방식은 노드 1대짜리 클러스터라서, 이 한 대가 두뇌(컨트롤플레인)와 일꾼(워커노드) 역할을 같이 합니다.</p>

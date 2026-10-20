@@ -2339,35 +2339,37 @@
 <p>아무 설정 없이 nginx Pod를 띄우고, 컨테이너 안에서 <code>whoami</code>를 실행합니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>run<span class="w"> </span>root-test<span class="w"> </span>--image<span class="o">=</span>nginx:1.27
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>root-test
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="o">=</span><span class="nv">condition</span><span class="o">=</span>Ready<span class="w"> </span>pod/root-test<span class="w"> </span>--timeout<span class="o">=</span>120s
 </span></code></pre></div>
-<p><code>STATUS</code>가 <code>Running</code>이 되면 실행합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>root-test<span class="w"> </span>--<span class="w"> </span>whoami
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pod/root-test condition met
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>root
+<p>이미지를 받는 동안 기다렸다가 Pod가 Ready가 되면 돌아옵니다. 그다음 실행합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>root-test<span class="w"> </span>--<span class="w"> </span>whoami
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>root
 </span></code></pre></div>
 <p>공격자가 이 컨테이너의 셸을 얻으면 바로 root 권한을 갖게 됩니다.</p>
 <h2 id="step-2-restricted">STEP 2. restricted 네임스페이스<a class="headerlink" href="#step-2-restricted" title="Permanent link">&para;</a></h2>
 <p><code>secure</code> 네임스페이스를 만들고, 그 안의 모든 Pod를 <code>restricted</code> 기준으로 검사하도록 라벨을 붙입니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>secure
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>secure
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>label<span class="w"> </span>ns<span class="w"> </span>secure<span class="w"> </span>pod-security.kubernetes.io/enforce<span class="o">=</span>restricted
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>label<span class="w"> </span>ns<span class="w"> </span>secure<span class="w"> </span>pod-security.kubernetes.io/enforce<span class="o">=</span>restricted
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>namespace/secure created
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>namespace/secure labeled
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>namespace/secure created
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>namespace/secure labeled
 </span></code></pre></div>
 <p>라벨이 붙었는지 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>ns<span class="w"> </span>secure<span class="w"> </span>--show-labels
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>ns<span class="w"> </span>secure<span class="w"> </span>--show-labels
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>NAME     STATUS   AGE   LABELS
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>secure   Active   10s   kubernetes.io/metadata.name=secure,pod-security.kubernetes.io/enforce=restricted
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>NAME     STATUS   AGE   LABELS
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>secure   Active   10s   kubernetes.io/metadata.name=secure,pod-security.kubernetes.io/enforce=restricted
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>라벨 이름의 마지막 부분이 모드(<code>enforce</code>, <code>warn</code>, <code>audit</code>), 값이 기준(<code>privileged</code>, <code>baseline</code>, <code>restricted</code>)입니다. <code>enforce</code>는 어기는 Pod를 아예 만들지 않습니다.</p>
 <h2 id="step-3-pod">STEP 3. 위험한 Pod 올리기<a class="headerlink" href="#step-3-pod" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>bad-pod.yaml<span class="w"> </span>-n<span class="w"> </span>secure
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>bad-pod.yaml<span class="w"> </span>-n<span class="w"> </span>secure
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Error from server (Forbidden): error when creating "bad-pod.yaml": pods "bad-pod" is forbidden: violates PodSecurity "restricted:latest": privileged (container "app" must not set securityContext.privileged=true), allowPrivilegeEscalation != false (container "app" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "app" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "app" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "app" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Error from server (Forbidden): error when creating "bad-pod.yaml": pods "bad-pod" is forbidden: violates PodSecurity "restricted:latest": privileged (container "app" must not set securityContext.privileged=true), allowPrivilegeEscalation != false (container "app" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "app" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "app" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "app" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
 </span></code></pre></div>
 <small>출력은 예시입니다. 실제로는 한 줄로 길게 나오고, 항목 순서와 문구는 쿠버네티스 버전에 따라 다를 수 있습니다.</small></p>
 <p>읽는 법은 세 가지입니다.</p>
@@ -2378,44 +2380,43 @@
 </ul>
 <h2 id="step-4-pod">STEP 4. 규칙을 지킨 Pod<a class="headerlink" href="#step-4-pod" title="Permanent link">&para;</a></h2>
 <p>같은 <code>secure</code> 네임스페이스에 good-pod를 올립니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>good-pod.yaml<span class="w"> </span>-n<span class="w"> </span>secure
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>good-pod.yaml<span class="w"> </span>-n<span class="w"> </span>secure
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>good-pod<span class="w"> </span>-n<span class="w"> </span>secure
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="o">=</span><span class="nv">condition</span><span class="o">=</span>Ready<span class="w"> </span>pod/good-pod<span class="w"> </span>-n<span class="w"> </span>secure<span class="w"> </span>--timeout<span class="o">=</span>120s
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>NAME       READY   STATUS    RESTARTS   AGE
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>good-pod   1/1     Running   0          8s
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pod/good-pod condition met
 </span></code></pre></div>
-<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
+<p>Ready가 되면 STEP 5로 갑니다.</p>
 <h2 id="step-5">STEP 5. 누구로 도는지<a class="headerlink" href="#step-5" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>secure<span class="w"> </span>good-pod<span class="w"> </span>--<span class="w"> </span>id
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>secure<span class="w"> </span>good-pod<span class="w"> </span>--<span class="w"> </span>id
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>uid=1000 gid=0(root) groups=0(root)
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>uid=1000 gid=0(root) groups=0(root)
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p><code>uid=1000</code>이면 root가 아닙니다. 공격자가 이 컨테이너에 들어와도 root 권한이 없습니다.</p>
 <p><code>gid=0(root)</code>는 그룹 번호입니다. good-pod.yaml에 <code>runAsGroup</code>을 주지 않아서 이미지 기본값인 0이 남았습니다. root 사용자가 된 것은 아니지만, 그룹까지 바꾸려면 Pod <code>securityContext</code>에 <code>runAsGroup: 1000</code>을 더합니다.</p>
 <h2 id="step-6">STEP 6. 정리<a class="headerlink" href="#step-6" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>root-test
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>root-test
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>secure
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>secure
 </span></code></pre></div>
 <p>네임스페이스를 지우면 그 안의 good-pod도 함께 지워집니다.</p>
 <h2 id="_2">성공하면<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <ul>
 <li>STEP 1: <code>root</code></li>
 <li>STEP 3: <code>Forbidden</code>, <code>violates PodSecurity</code></li>
-<li>STEP 4: <code>Running</code></li>
+<li>STEP 4: <code>condition met</code></li>
 <li>STEP 5: <code>uid=1000</code> (root 아님)</li>
 </ul>
 <h2 id="_3">막히면<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <details class="failure">
 <summary>error: unable to upgrade connection: container not found / pod root-test does not have a host assigned</summary>
-<p>Pod가 아직 생성 중입니다. <code>kubectl get pod root-test</code>로 <code>Running</code>을 확인하고 몇 초 뒤 다시 실행합니다.</p>
+<p>Pod가 아직 생성 중입니다. <code>kubectl wait --for=condition=Ready pod/root-test --timeout=120s</code>로 Ready까지 기다린 뒤 다시 실행합니다. wait가 <code>timed out</code>으로 끝나면 <code>kubectl get pod root-test</code>로 STATUS를 봅니다.</p>
 </details>
 <details class="failure">
 <summary>STEP 4에서도 Forbidden</summary>
 <p>메시지 괄호 안에 나온 필드가 good-pod.yaml에 빠졌거나 들여쓰기가 틀린 것입니다. 특히 <code>seccompProfile</code> 줄을 빠뜨리면 아래처럼 다시 거부됩니다.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>seccompProfile (pod or container "app" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>seccompProfile (pod or container "app" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
 </span></code></pre></div>
 <p>내려받기 파일과 한 줄씩 비교합니다.</p>
 </details>
@@ -2437,7 +2438,7 @@
 </details>
 <h2 id="_4">정리<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>STEP 6에서 이미 정리했습니다. 남은 것이 없는지 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
 </span></code></pre></div>
 <p><code>root-test</code>가 없으면 됩니다.</p>
 

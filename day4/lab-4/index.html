@@ -2351,6 +2351,7 @@
 <h2 id="step-20-ctrlc">STEP 20. 상태 지켜보기 (Ctrl+C로 멈춤)<a class="headerlink" href="#step-20-ctrlc" title="Permanent link">&para;</a></h2>
 <p><code>-w</code>는 상태가 바뀔 때마다 한 줄씩 새로 보여 줍니다. 1분쯤 지켜본 뒤 <code>Ctrl + C</code>로 멈춥니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>memory-hog<span class="w"> </span>-w
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># OOMKilled, CrashLoopBackOff 확인 후 Ctrl+C</span>
 </span></code></pre></div>
 <p><div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NAME         READY   STATUS              RESTARTS     AGE
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>memory-hog   0/1     ContainerCreating   0            1s

@@ -2222,7 +2222,7 @@
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>web    1/1     Running   0          10s
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
-<p>처음에는 <code>ContainerCreating</code>으로 보일 수 있습니다. 이미지를 받는 중이니 몇 초 뒤 다시 실행합니다. 계속 지켜보고 싶으면 <code>kubectl get pods -w</code>를 쓰고, 다 보면 <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-c">C</kbd></span>로 빠져나옵니다.</p>
+<p>처음에는 <code>ContainerCreating</code>으로 보일 수 있습니다. 이미지를 받는 중이니 몇 초 뒤 다시 실행합니다. 계속 지켜보고 싶으면 <code>kubectl get pods -w</code>를 쓰고, READY가 <code>1/1</code>이 된 것을 확인한 뒤 <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-c">C</kbd></span>로 빠져나옵니다.</p>
 <h2 id="step-2-yaml">STEP 2. YAML 초안을 뽑아 선언형으로<a class="headerlink" href="#step-2-yaml" title="Permanent link">&para;</a></h2>
 <p>같은 명령에 <code>--dry-run=client -o yaml</code>을 붙이면 Pod를 실제로 만들지 않고 <strong>YAML 초안만</strong> 출력합니다. 이것을 <code>pod.yaml</code> 파일로 저장합니다. YAML을 처음부터 손으로 쓰지 않아도 되는 실무 요령입니다.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Windows (PowerShell)</label><label for="__tabbed_2_2">Mac (터미널)</label></div>
@@ -2242,7 +2242,6 @@
 </div>
 </div>
 </div>
-<p><small>교안 화면에는 명령이 두 줄로 나뉘어 있지만, 가이드에서는 한 줄로 이어서 씁니다.</small></p>
 <p>만든 파일을 VS Code로 열어 봅니다 (<code>code pod.yaml</code>). 아래와 같은 내용입니다.</p>
 <p><div class="language-yaml highlight"><span class="filename">pod.yaml</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>

@@ -2172,7 +2172,7 @@
 <li>Envoy Gateway로 문 하나를 세우고, HTTPRoute로 <code>/app1</code>, <code>/app2</code>를 두 앱에 나눠 보냅니다.</li>
 </ul>
 </div>
-<p>어제 Deployment로 자가복구, 스케일링, 롤링 업데이트까지 풀었습니다. 남은 한계는 "Pod가 바뀌면 주소도 바뀐다"입니다. 오늘은 하루 종일 이 <strong>주소</strong> 이야기를 합니다.</p>
+<p>어제는 Deployment로 자가복구, 스케일링을 풀었고, Pod를 하나씩 바꾸는 순차 교체 원리를 확인했습니다. 실제 요청이 끊기지 않는지는 Service와 readiness를 붙인 뒤 확인합니다. 남은 한계는 "Pod가 바뀌면 주소도 바뀐다"입니다. 오늘은 하루 종일 이 <strong>주소</strong> 이야기를 합니다.</p>
 <h2 id="_1">오늘의 실습<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

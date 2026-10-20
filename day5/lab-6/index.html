@@ -2021,6 +2021,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="STEP 32. 고친 리소스만 다시">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#image-selector-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        image, selector 고장: 파일 고친 뒤 apply만
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storageclass-pending-pvc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        StorageClass 고장일 때만: Pending PVC를 지우고 다시
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 33. 다 고친 뒤 확인
+      
+    </span>
+  </a>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2081,6 +2120,39 @@
         
           <li class="md-nav__item">
   <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        보안은 여러 겹
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        운영 베스트 프랙티스 8
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        다음에 가 볼 길
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         과정 전체 정리
@@ -2240,6 +2312,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="STEP 32. 고친 리소스만 다시">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#image-selector-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        image, selector 고장: 파일 고친 뒤 apply만
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storageclass-pending-pvc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        StorageClass 고장일 때만: Pending PVC를 지우고 다시
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STEP 33. 다 고친 뒤 확인
+      
+    </span>
+  </a>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2302,6 +2413,39 @@
   <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
+        보안은 여러 겹
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        운영 베스트 프랙티스 8
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        다음에 가 볼 길
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         과정 전체 정리
       
     </span>
@@ -2339,6 +2483,7 @@
 <li>get, describe, logs, events 순서로 <strong>증상에서 원인으로</strong> 좁혀 갑니다.</li>
 <li>전부 지우지 않고 <strong>고장 난 리소스만</strong> 고쳐서 글 등록까지 되게 만듭니다.</li>
 <li>찾은 과정을 진단 기록(증상, 근거, 수정, 재확인)으로 남깁니다.</li>
+<li>webapp을 켜 둔 채로, broken 블로그가 자기 백엔드만 쓰는지 확인합니다.</li>
 </ul>
 </div>
 <p><strong>소요 시간</strong> 약 12분, <strong>교안</strong> DAY 5 섹션 6</p>
@@ -2356,7 +2501,12 @@
 </div>
 </div>
 </div>
-<p>고장 난 블로그 파일을 내려받아 작업 폴더에 넣습니다. 이 파일은 <code>broken</code> 네임스페이스에 Namespace, PVC, backend, frontend를 모두 만듭니다. Gateway는 없고 마지막에 port-forward로 엽니다.</p>
+<p>고장 난 블로그 파일을 내려받아 작업 폴더에 넣습니다. 이 파일은 <code>broken</code> 네임스페이스에 Namespace, PVC, backend, frontend를 모두 만듭니다. Gateway는 없고 port-forward로 엽니다.</p>
+<div class="admonition info">
+<p class="admonition-title">broken의 frontend는 v4-kb5</p>
+<p>broken의 frontend 이미지는 <code>skilleat/frontend:v4-kb5</code>입니다. 이 태그는 <strong>자기 네임스페이스</strong>의 <code>backend-service</code>를 짧은 이름으로 부릅니다. 그래서 실습 5의 <code>webapp</code>이 살아 있어도 broken의 고장을 대신 받아 주지 않습니다. backend는 실습 5와 같은 <code>v3-kb5</code>를 쓰도록 되어 있습니다(지금은 고장 나 있습니다).</p>
+</div>
+<p>실습 5의 <code>webapp</code>은 <strong>지우지 않고 그대로 둡니다.</strong></p>
 <p><a download="download" href="../../files/day5/broken-blog.yaml">broken-blog.yaml 내려받기</a></p>
 <div class="admonition warning">
 <p class="admonition-title">YAML을 눈으로 훑어서 찾지 마세요</p>
@@ -2406,17 +2556,22 @@
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>service/frontend-service created
 </span></code></pre></div>
 <p>모두 <code>created</code>로 성공합니다. <strong>apply가 성공했다고 앱이 동작하는 것은 아닙니다.</strong></p>
+<p><strong>새 터미널</strong>을 열어 broken의 화면을 엽니다. 실습 5의 8080, 8888과 겹치지 않게 8081을 씁니다. 이 터미널은 STEP 33까지 켜 둡니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>svc/frontend-service<span class="w"> </span><span class="m">8081</span>:80
+</span></code></pre></div>
+<p>브라우저에서 <strong>http://localhost:8081</strong> 을 열고 글을 하나 써 봅니다. 화면은 뜨지만 <strong>글 쓰기는 실패</strong>해야 정상입니다. backend가 고장 났고, frontend는 webapp의 백엔드로 새지 않기 때문입니다. 글이 써진다면 강사에게 알려 주세요.</p>
+<p>원래 터미널로 돌아와 STEP 31을 합니다.</p>
 <h2 id="step-31">STEP 31. 루틴대로 좁혀 가기<a class="headerlink" href="#step-31" title="Permanent link">&para;</a></h2>
 <p>아래 명령을 순서대로 쓰면서 증상을 하나씩 찾습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods,pvc<span class="w"> </span>-n<span class="w"> </span>broken
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods,pvc<span class="w"> </span>-n<span class="w"> </span>broken
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>backend
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>backend
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>--sort-by<span class="o">=</span>.lastTimestamp
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>--sort-by<span class="o">=</span>.lastTimestamp
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-n<span class="w"> </span>broken
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-n<span class="w"> </span>broken
 </span></code></pre></div>
-<p>고장은 <strong>한 번에 하나씩</strong> 드러납니다. 하나를 찾으면 VS Code에서 broken-blog.yaml의 그 부분만 고치고 STEP 32로 반영한 뒤, STEP 31을 처음부터 다시 합니다.</p>
+<p>고장은 <strong>한 번에 하나씩</strong> 드러납니다. 하나를 찾으면 VS Code에서 broken-blog.yaml의 그 부분만 고치고 STEP 32의 해당 방법으로 반영한 뒤, STEP 31을 처음부터 다시 합니다.</p>
 <h3 id="_3">진단 기록<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <p>고장 하나를 찾을 때마다 한 줄씩 채워 채팅에 올립니다. 첫 줄은 예시입니다.</p>
 <table>
@@ -2457,10 +2612,10 @@
 <details class="tip">
 <summary>힌트 1: 첫 번째 고장</summary>
 <p><code>get pods,pvc</code>에서 backend Pod와 PVC가 둘 다 <code>Pending</code>입니다. Pod는 PVC를 기다리는 중이니 <strong>PVC 쪽</strong>을 describe합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pvc<span class="w"> </span>blog-pvc<span class="w"> </span>-n<span class="w"> </span>broken
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pvc<span class="w"> </span>blog-pvc<span class="w"> </span>-n<span class="w"> </span>broken
 </span></code></pre></div>
 <p>Events에 나오는 StorageClass 이름이 클러스터에 실제로 있는지 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>storageclass
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>storageclass
 </span></code></pre></div>
 </details>
 <details class="tip">
@@ -2470,67 +2625,58 @@
 <details class="tip">
 <summary>힌트 3: 세 번째 고장</summary>
 <p>Pod가 모두 <code>Running</code>인데 화면에서 글 등록만 실패합니다. Service 뒤에 Pod가 붙어 있는지 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>backend-service
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>backend-service
 </span></code></pre></div>
 <p>ENDPOINTS가 비어 있으면 Service의 SELECTOR와 Pod의 LABELS를 비교합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>backend-service<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>-o<span class="w"> </span>wide
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>backend-service<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>-o<span class="w"> </span>wide
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>--show-labels
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>--show-labels
 </span></code></pre></div>
 <p>frontend 로그에도 백엔드에 연결하지 못한 흔적이 남습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>frontend
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>frontend
 </span></code></pre></div>
 </details>
 <h2 id="step-32">STEP 32. 고친 리소스만 다시<a class="headerlink" href="#step-32" title="Permanent link">&para;</a></h2>
-<p>전부 지우고 다시 만들지 않습니다. 고장 난 리소스만 고칩니다. <code>kubectl apply -f</code>는 파일 전체를 다시 보내도 <strong>바뀐 리소스만</strong> 갱신하고, 나머지는 <code>unchanged</code>로 둡니다.</p>
-<table>
-<thead>
-<tr>
-<th>고장</th>
-<th>고치는 법</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>이미지 태그 오타 (Deployment)</td>
-<td>파일의 <code>image</code> 줄을 고치고 <code>kubectl apply -f broken-blog.yaml</code>. 새 ReplicaSet이 새 Pod를 만듭니다</td>
-</tr>
-<tr>
-<td>selector 오타 (Service)</td>
-<td>파일의 <code>selector</code> 줄을 고치고 <code>kubectl apply -f broken-blog.yaml</code>. Pod는 그대로이고 연결만 바로 생깁니다</td>
-</tr>
-<tr>
-<td>없는 StorageClass (PVC)</td>
-<td><code>storageClassName</code>은 만든 뒤 바꿀 수 없습니다. 파일을 고친 뒤 <strong>Pending PVC만 지우고</strong> apply합니다</td>
-</tr>
-</tbody>
-</table>
-<p>PVC를 고칠 때는 이렇게 합니다. 이 PVC는 한 번도 <code>Bound</code>된 적이 없어서 지워도 잃을 데이터가 없습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pvc<span class="w"> </span>blog-pvc<span class="w"> </span>-n<span class="w"> </span>broken
-</span></code></pre></div>
+<p>전부 지우고 다시 만들지 않습니다. 고장 난 리소스만 고칩니다. 고장마다 방법이 다릅니다.</p>
+<h3 id="image-selector-apply">image, selector 고장: 파일 고친 뒤 apply만<a class="headerlink" href="#image-selector-apply" title="Permanent link">&para;</a></h3>
+<p>이미지 태그 오타(Deployment)와 selector 오타(Service)는 VS Code에서 파일의 그 줄만 고친 뒤 아래 명령 <strong>하나만</strong> 실행합니다. PVC는 지우지 않습니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>broken-blog.yaml
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>namespace/broken unchanged
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>persistentvolumeclaim/blog-pvc created
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>deployment.apps/backend unchanged
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>service/backend-service unchanged
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>deployment.apps/frontend unchanged
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>service/frontend-service unchanged
+<p><code>kubectl apply -f</code>는 파일 전체를 다시 보내도 <strong>바뀐 리소스만</strong> 갱신하고, 나머지는 <code>unchanged</code>로 둡니다. image를 고치면 새 ReplicaSet이 새 Pod를 만들고, selector를 고치면 Pod는 그대로이고 연결만 바로 생깁니다.</p>
+<h3 id="storageclass-pending-pvc">StorageClass 고장일 때만: Pending PVC를 지우고 다시<a class="headerlink" href="#storageclass-pending-pvc" title="Permanent link">&para;</a></h3>
+<p><code>storageClassName</code>은 만든 뒤 바꿀 수 없어서 apply만 하면 거부됩니다. 이 방법은 <strong>한 번도 <code>Bound</code>된 적이 없어 데이터가 없는 PVC</strong>에만 씁니다. <code>kubectl get pvc -n broken</code>에서 STATUS가 <code>Pending</code>인지 먼저 확인합니다.</p>
+<p>파일의 <code>storageClassName</code> 줄을 고친 뒤 실행합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pvc<span class="w"> </span>blog-pvc<span class="w"> </span>-n<span class="w"> </span>broken
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>broken-blog.yaml
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>namespace/broken unchanged
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>persistentvolumeclaim/blog-pvc created
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>deployment.apps/backend unchanged
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>service/backend-service unchanged
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>deployment.apps/frontend unchanged
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>service/frontend-service unchanged
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <div class="admonition warning">
-<p class="admonition-title">Bound된 PVC는 함부로 지우지 않습니다</p>
-<p>PVC 삭제는 데이터가 없는 Pending PVC일 때만 쓰는 방법입니다. 글이 들어 있는 Bound PVC를 지우면 reclaimPolicy에 따라 데이터가 함께 지워질 수 있습니다. <code>kubectl delete -f broken-blog.yaml</code>로 Namespace까지 통째로 지우는 것도 처음부터 다시 할 때만 씁니다.</p>
+<p class="admonition-title">Bound된 PVC는 지우지 않습니다</p>
+<p>PVC 삭제는 데이터가 없는 Pending PVC일 때만 쓰는 방법입니다. image나 selector를 고칠 때 이 명령을 따라 치지 않습니다. 글이 들어 있는 Bound PVC를 지우면 reclaimPolicy에 따라 데이터가 함께 지워질 수 있고, 사용 중인 PVC는 보호 장치 때문에 Terminating에 머뭅니다. <code>kubectl delete -f broken-blog.yaml</code>로 Namespace까지 통째로 지우는 것도 처음부터 다시 할 때만 씁니다.</p>
 </div>
-<p>세 군데를 다 고쳤으면 frontend를 열어 글 등록까지 확인합니다. <code>broken</code>에는 Gateway가 없으므로 frontend-service에 직접 붙어 <strong>앱 기능만</strong> 확인합니다. 실습 5의 8080, 8888과 겹치지 않게 8081을 씁니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>svc/frontend-service<span class="w"> </span><span class="m">8081</span>:80
+<h2 id="step-33">STEP 33. 다 고친 뒤 확인<a class="headerlink" href="#step-33" title="Permanent link">&para;</a></h2>
+<p>세 군데를 다 고쳤으면 backend 교체가 끝날 때까지 기다립니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/backend<span class="w"> </span>-n<span class="w"> </span>broken<span class="w"> </span>--timeout<span class="o">=</span>180s
 </span></code></pre></div>
-<p>브라우저에서 <strong>http://localhost:8081</strong> 을 열고 글을 하나 씁니다. 목록에 나오면 끝입니다. 확인한 뒤 port-forward 터미널에서 <code>Ctrl + C</code>로 멈춥니다.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>deployment "backend" successfully rolled out
+</span></code></pre></div>
+<p>STEP 30에서 켜 둔 8081 port-forward 화면(<strong>http://localhost:8081</strong>)에서 글을 하나 씁니다. 이번에는 목록에 나옵니다. 8081 터미널이 끊겼으면 STEP 30의 port-forward를 다시 실행합니다.</p>
+<p>마지막으로 실습 5의 webapp 블로그(<strong>http://localhost:8888</strong>)를 새로고침합니다. 방금 broken에 쓴 글은 <strong>webapp에는 없습니다.</strong> 두 블로그가 각자 자기 네임스페이스의 백엔드와 PVC를 쓴다는 증거입니다. 8888이 끊겼으면 실습 5 STEP 24의 port-forward를 다시 실행합니다.</p>
+<p>확인한 뒤 port-forward 터미널에서 <code>Ctrl + C</code>로 멈춥니다.</p>
 <h2 id="_4">성공하면<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Pod <code>Running</code>, PVC <code>Bound</code></li>
 <li>EndpointSlice에 주소가 있다</li>
-<li>port-forward로 글 등록</li>
+<li>STEP 30: 고치기 전 8081 글 쓰기 실패</li>
+<li>STEP 33: 8081 글 등록 성공, 그 글이 8888(webapp)에는 없음</li>
 <li>진단 기록 세 줄</li>
 </ul>
 <h2 id="_5">정답<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
@@ -2538,138 +2684,136 @@
 <details class="success">
 <summary>정답 1: PVC Pending (StorageClass 없음)</summary>
 <p><strong>증상</strong>: <code>get pods,pvc</code>에서 PVC와 backend Pod가 <code>Pending</code>.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>NAME                             STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>persistentvolumeclaim/blog-pvc   Pending                                      fast-ssd       20s
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>NAME                             STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>persistentvolumeclaim/blog-pvc   Pending                                      fast-ssd       20s
 </span></code></pre></div>
 <p>describe pvc의 Events:</p>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Warning  ProvisioningFailed  ...  storageclass.storage.k8s.io "fast-ssd" not found
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Warning  ProvisioningFailed  ...  storageclass.storage.k8s.io "fast-ssd" not found
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p><strong>원인</strong>: 클러스터에 없는 <code>fast-ssd</code> StorageClass를 요청했습니다. <code>kubectl get storageclass</code>에는 <code>hostpath</code>만 있습니다.</p>
-<p><strong>고치기</strong>: PVC의 <code>storageClassName: fast-ssd</code> 줄을 지웁니다 (기본 StorageClass 사용). 또는 <code>storageClassName: hostpath</code>로 바꿉니다. 그다음 <code>kubectl delete pvc blog-pvc -n broken</code> 후 <code>kubectl apply -f broken-blog.yaml</code>.</p>
+<p><strong>고치기</strong>: PVC의 <code>storageClassName: fast-ssd</code> 줄을 지웁니다 (기본 StorageClass 사용). 또는 <code>storageClassName: hostpath</code>로 바꿉니다. 이 PVC는 <code>Pending</code>이라 데이터가 없으므로 <code>kubectl delete pvc blog-pvc -n broken</code> 후 <code>kubectl apply -f broken-blog.yaml</code>. 이 PVC 삭제는 이 고장에만 씁니다.</p>
 </details>
 <details class="success">
 <summary>정답 2: ImagePullBackOff (이미지 태그 오타)</summary>
 <p><strong>증상</strong>: backend Pod가 <code>ErrImagePull</code> → <code>ImagePullBackOff</code>.</p>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Warning  Failed   ...  Failed to pull image "skilleat/backend:v3-kb55": ... not found
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Warning  Failed   ...  Error: ErrImagePull
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Normal   BackOff  ...  Back-off pulling image "skilleat/backend:v3-kb55"
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Warning  Failed   ...  Failed to pull image "skilleat/backend:v3-kb55": ... not found
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Warning  Failed   ...  Error: ErrImagePull
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Normal   BackOff  ...  Back-off pulling image "skilleat/backend:v3-kb55"
 </span></code></pre></div>
 <small>출력은 예시입니다. 실제로는 <code>failed to resolve reference</code> 같은 문구가 길게 붙습니다.</small></p>
 <p><strong>원인</strong>: 태그 <code>v3-kb55</code>가 Docker Hub에 없습니다.</p>
-<p><strong>고치기</strong>: <code>image: skilleat/backend:v3-kb5</code>로 바로잡고 <code>kubectl apply -f broken-blog.yaml</code>. Deployment만 바뀝니다.</p>
+<p><strong>고치기</strong>: <code>image: skilleat/backend:v3-kb5</code>로 바로잡고 <code>kubectl apply -f broken-blog.yaml</code>만 합니다. Deployment만 바뀝니다. PVC는 지우지 않습니다.</p>
 </details>
 <details class="success">
 <summary>정답 3: 빈 EndpointSlice (Service selector 오타)</summary>
 <p><strong>증상</strong>: Pod는 모두 <code>Running</code>, 화면은 뜨는데 글 등록만 실패. EndpointSlice가 비어 있습니다.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>NAME                    ADDRESSTYPE   PORTS     ENDPOINTS   AGE
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>backend-service-8fz2q   IPv4          &lt;unset&gt;   &lt;unset&gt;     2m
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>NAME                    ADDRESSTYPE   PORTS     ENDPOINTS   AGE
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>backend-service-8fz2q   IPv4          &lt;unset&gt;   &lt;unset&gt;     2m
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE   SELECTOR
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>backend-service   ClusterIP   10.96.77.10    &lt;none&gt;        5000/TCP   2m    app=backnd
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE   SELECTOR
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>backend-service   ClusterIP   10.96.77.10    &lt;none&gt;        5000/TCP   2m    app=backnd
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p><strong>원인</strong>: Service의 selector가 <code>app: backnd</code>, Pod 라벨은 <code>app=backend</code>입니다. 고른 Pod가 없어서 Service 뒤가 비었습니다. Service는 오류 이벤트를 남기지 않아서 events만 봐서는 못 찾습니다.</p>
-<p><strong>고치기</strong>: <code>selector: {app: backend}</code>로 바로잡고 <code>kubectl apply -f broken-blog.yaml</code>. Service만 바뀝니다.</p>
+<p><strong>고치기</strong>: <code>selector: {app: backend}</code>로 바로잡고 <code>kubectl apply -f broken-blog.yaml</code>만 합니다. Service만 바뀝니다. PVC는 지우지 않습니다.</p>
 </details>
 <details class="success">
 <summary>고장 난 파일 전체 보기 (broken-blog.yaml)</summary>
-<div class="language-yaml highlight"><span class="filename">broken-blog.yaml</span><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># 고장 난 미니 블로그 (DAY 5 실습 6)</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># 세 군데가 틀렸다. YAML 을 눈으로 훑지 말고, get, describe, logs, events 순서로 증상부터 찾는다.</span>
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Namespace</span>
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
-</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="nn">---</span>
-</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
-</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blog-pvc</span>
-</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
-</span><span id="__span-23-13"><a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-23-14"><a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fast-ssd</span>
-</span><span id="__span-23-15"><a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a><span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"ReadWriteOnce"</span><span class="p p-Indicator">]</span>
-</span><span id="__span-23-16"><a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
-</span><span id="__span-23-17"><a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a><span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
-</span><span id="__span-23-18"><a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
-</span><span id="__span-23-19"><a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a><span class="nn">---</span>
-</span><span id="__span-23-20"><a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
-</span><span id="__span-23-21"><a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
-</span><span id="__span-23-22"><a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-23-23"><a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
-</span><span id="__span-23-24"><a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
-</span><span id="__span-23-25"><a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-23-26"><a id="__codelineno-23-26" name="__codelineno-23-26" href="#__codelineno-23-26"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-</span><span id="__span-23-27"><a id="__codelineno-23-27" name="__codelineno-23-27" href="#__codelineno-23-27"></a><span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
-</span><span id="__span-23-28"><a id="__codelineno-23-28" name="__codelineno-23-28" href="#__codelineno-23-28"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recreate</span><span class="w">   </span><span class="c1"># 파일 하나에 쓰는 백엔드: 새 Pod 전에 옛 Pod 를 먼저 끈다</span>
-</span><span id="__span-23-29"><a id="__codelineno-23-29" name="__codelineno-23-29" href="#__codelineno-23-29"></a><span class="w">  </span><span class="c1"># 글을 파일 하나에 쓰는 앱 + ReadWriteOnce PVC: 옛 Pod 를 먼저 내리고 새 Pod 를 띄운다.</span>
-</span><span id="__span-23-30"><a id="__codelineno-23-30" name="__codelineno-23-30" href="#__codelineno-23-30"></a><span class="w">  </span><span class="c1"># 업데이트 중 잠깐 API 가 멈추지만, 두 Pod 가 같은 파일에 동시에 쓰는 일이 없다.</span>
-</span><span id="__span-23-31"><a id="__codelineno-23-31" name="__codelineno-23-31" href="#__codelineno-23-31"></a><span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
-</span><span id="__span-23-32"><a id="__codelineno-23-32" name="__codelineno-23-32" href="#__codelineno-23-32"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recreate</span>
-</span><span id="__span-23-33"><a id="__codelineno-23-33" name="__codelineno-23-33" href="#__codelineno-23-33"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
-</span><span id="__span-23-34"><a id="__codelineno-23-34" name="__codelineno-23-34" href="#__codelineno-23-34"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
-</span><span id="__span-23-35"><a id="__codelineno-23-35" name="__codelineno-23-35" href="#__codelineno-23-35"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
-</span><span id="__span-23-36"><a id="__codelineno-23-36" name="__codelineno-23-36" href="#__codelineno-23-36"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
-</span><span id="__span-23-37"><a id="__codelineno-23-37" name="__codelineno-23-37" href="#__codelineno-23-37"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-23-38"><a id="__codelineno-23-38" name="__codelineno-23-38" href="#__codelineno-23-38"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-</span><span id="__span-23-39"><a id="__codelineno-23-39" name="__codelineno-23-39" href="#__codelineno-23-39"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
-</span><span id="__span-23-40"><a id="__codelineno-23-40" name="__codelineno-23-40" href="#__codelineno-23-40"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-23-41"><a id="__codelineno-23-41" name="__codelineno-23-41" href="#__codelineno-23-41"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-</span><span id="__span-23-42"><a id="__codelineno-23-42" name="__codelineno-23-42" href="#__codelineno-23-42"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
-</span><span id="__span-23-43"><a id="__codelineno-23-43" name="__codelineno-23-43" href="#__codelineno-23-43"></a><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">skilleat/backend:v3-kb55</span>
-</span><span id="__span-23-44"><a id="__codelineno-23-44" name="__codelineno-23-44" href="#__codelineno-23-44"></a><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-23-45"><a id="__codelineno-23-45" name="__codelineno-23-45" href="#__codelineno-23-45"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
-</span><span id="__span-23-46"><a id="__codelineno-23-46" name="__codelineno-23-46" href="#__codelineno-23-46"></a><span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
-</span><span id="__span-23-47"><a id="__codelineno-23-47" name="__codelineno-23-47" href="#__codelineno-23-47"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
-</span><span id="__span-23-48"><a id="__codelineno-23-48" name="__codelineno-23-48" href="#__codelineno-23-48"></a><span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/app/data</span>
-</span><span id="__span-23-49"><a id="__codelineno-23-49" name="__codelineno-23-49" href="#__codelineno-23-49"></a><span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
-</span><span id="__span-23-50"><a id="__codelineno-23-50" name="__codelineno-23-50" href="#__codelineno-23-50"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
-</span><span id="__span-23-51"><a id="__codelineno-23-51" name="__codelineno-23-51" href="#__codelineno-23-51"></a><span class="w">        </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span>
-</span><span id="__span-23-52"><a id="__codelineno-23-52" name="__codelineno-23-52" href="#__codelineno-23-52"></a><span class="w">          </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blog-pvc</span>
-</span><span id="__span-23-53"><a id="__codelineno-23-53" name="__codelineno-23-53" href="#__codelineno-23-53"></a><span class="nn">---</span>
-</span><span id="__span-23-54"><a id="__codelineno-23-54" name="__codelineno-23-54" href="#__codelineno-23-54"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-</span><span id="__span-23-55"><a id="__codelineno-23-55" name="__codelineno-23-55" href="#__codelineno-23-55"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
-</span><span id="__span-23-56"><a id="__codelineno-23-56" name="__codelineno-23-56" href="#__codelineno-23-56"></a><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-23-57"><a id="__codelineno-23-57" name="__codelineno-23-57" href="#__codelineno-23-57"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend-service</span>
-</span><span id="__span-23-58"><a id="__codelineno-23-58" name="__codelineno-23-58" href="#__codelineno-23-58"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
-</span><span id="__span-23-59"><a id="__codelineno-23-59" name="__codelineno-23-59" href="#__codelineno-23-59"></a><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-23-60"><a id="__codelineno-23-60" name="__codelineno-23-60" href="#__codelineno-23-60"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="nv">backnd</span><span class="p p-Indicator">}</span>
-</span><span id="__span-23-61"><a id="__codelineno-23-61" name="__codelineno-23-61" href="#__codelineno-23-61"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-23-62"><a id="__codelineno-23-62" name="__codelineno-23-62" href="#__codelineno-23-62"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
-</span><span id="__span-23-63"><a id="__codelineno-23-63" name="__codelineno-23-63" href="#__codelineno-23-63"></a><span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
-</span><span id="__span-23-64"><a id="__codelineno-23-64" name="__codelineno-23-64" href="#__codelineno-23-64"></a><span class="nn">---</span>
-</span><span id="__span-23-65"><a id="__codelineno-23-65" name="__codelineno-23-65" href="#__codelineno-23-65"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
-</span><span id="__span-23-66"><a id="__codelineno-23-66" name="__codelineno-23-66" href="#__codelineno-23-66"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
-</span><span id="__span-23-67"><a id="__codelineno-23-67" name="__codelineno-23-67" href="#__codelineno-23-67"></a><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-23-68"><a id="__codelineno-23-68" name="__codelineno-23-68" href="#__codelineno-23-68"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
-</span><span id="__span-23-69"><a id="__codelineno-23-69" name="__codelineno-23-69" href="#__codelineno-23-69"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
-</span><span id="__span-23-70"><a id="__codelineno-23-70" name="__codelineno-23-70" href="#__codelineno-23-70"></a><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-23-71"><a id="__codelineno-23-71" name="__codelineno-23-71" href="#__codelineno-23-71"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-</span><span id="__span-23-72"><a id="__codelineno-23-72" name="__codelineno-23-72" href="#__codelineno-23-72"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
-</span><span id="__span-23-73"><a id="__codelineno-23-73" name="__codelineno-23-73" href="#__codelineno-23-73"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
-</span><span id="__span-23-74"><a id="__codelineno-23-74" name="__codelineno-23-74" href="#__codelineno-23-74"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
-</span><span id="__span-23-75"><a id="__codelineno-23-75" name="__codelineno-23-75" href="#__codelineno-23-75"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
-</span><span id="__span-23-76"><a id="__codelineno-23-76" name="__codelineno-23-76" href="#__codelineno-23-76"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-23-77"><a id="__codelineno-23-77" name="__codelineno-23-77" href="#__codelineno-23-77"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-</span><span id="__span-23-78"><a id="__codelineno-23-78" name="__codelineno-23-78" href="#__codelineno-23-78"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
-</span><span id="__span-23-79"><a id="__codelineno-23-79" name="__codelineno-23-79" href="#__codelineno-23-79"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-23-80"><a id="__codelineno-23-80" name="__codelineno-23-80" href="#__codelineno-23-80"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-</span><span id="__span-23-81"><a id="__codelineno-23-81" name="__codelineno-23-81" href="#__codelineno-23-81"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
-</span><span id="__span-23-82"><a id="__codelineno-23-82" name="__codelineno-23-82" href="#__codelineno-23-82"></a><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">skilleat/frontend:v4-kb5</span><span class="w">   </span><span class="c1"># 같은 네임스페이스의 backend-service 를 부르는 태그</span>
-</span><span id="__span-23-83"><a id="__codelineno-23-83" name="__codelineno-23-83" href="#__codelineno-23-83"></a><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-23-84"><a id="__codelineno-23-84" name="__codelineno-23-84" href="#__codelineno-23-84"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-</span><span id="__span-23-85"><a id="__codelineno-23-85" name="__codelineno-23-85" href="#__codelineno-23-85"></a><span class="nn">---</span>
-</span><span id="__span-23-86"><a id="__codelineno-23-86" name="__codelineno-23-86" href="#__codelineno-23-86"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-</span><span id="__span-23-87"><a id="__codelineno-23-87" name="__codelineno-23-87" href="#__codelineno-23-87"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
-</span><span id="__span-23-88"><a id="__codelineno-23-88" name="__codelineno-23-88" href="#__codelineno-23-88"></a><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-23-89"><a id="__codelineno-23-89" name="__codelineno-23-89" href="#__codelineno-23-89"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend-service</span>
-</span><span id="__span-23-90"><a id="__codelineno-23-90" name="__codelineno-23-90" href="#__codelineno-23-90"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
-</span><span id="__span-23-91"><a id="__codelineno-23-91" name="__codelineno-23-91" href="#__codelineno-23-91"></a><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-23-92"><a id="__codelineno-23-92" name="__codelineno-23-92" href="#__codelineno-23-92"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
-</span><span id="__span-23-93"><a id="__codelineno-23-93" name="__codelineno-23-93" href="#__codelineno-23-93"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
-</span><span id="__span-23-94"><a id="__codelineno-23-94" name="__codelineno-23-94" href="#__codelineno-23-94"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-23-95"><a id="__codelineno-23-95" name="__codelineno-23-95" href="#__codelineno-23-95"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
-</span><span id="__span-23-96"><a id="__codelineno-23-96" name="__codelineno-23-96" href="#__codelineno-23-96"></a><span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<div class="language-yaml highlight"><span class="filename">broken-blog.yaml</span><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 고장 난 미니 블로그 (DAY 5 실습 6)</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1"># 세 군데가 틀렸다. YAML 을 눈으로 훑지 말고, get, describe, logs, events 순서로 증상부터 찾는다.</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Namespace</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="nn">---</span>
+</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
+</span><span id="__span-26-10"><a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-26-11"><a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blog-pvc</span>
+</span><span id="__span-26-12"><a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
+</span><span id="__span-26-13"><a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-26-14"><a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fast-ssd</span>
+</span><span id="__span-26-15"><a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a><span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"ReadWriteOnce"</span><span class="p p-Indicator">]</span>
+</span><span id="__span-26-16"><a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a><span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
+</span><span id="__span-26-17"><a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a><span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
+</span><span id="__span-26-18"><a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+</span><span id="__span-26-19"><a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a><span class="nn">---</span>
+</span><span id="__span-26-20"><a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+</span><span id="__span-26-21"><a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+</span><span id="__span-26-22"><a id="__codelineno-26-22" name="__codelineno-26-22" href="#__codelineno-26-22"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-26-23"><a id="__codelineno-26-23" name="__codelineno-26-23" href="#__codelineno-26-23"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+</span><span id="__span-26-24"><a id="__codelineno-26-24" name="__codelineno-26-24" href="#__codelineno-26-24"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
+</span><span id="__span-26-25"><a id="__codelineno-26-25" name="__codelineno-26-25" href="#__codelineno-26-25"></a><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-26-26"><a id="__codelineno-26-26" name="__codelineno-26-26" href="#__codelineno-26-26"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+</span><span id="__span-26-27"><a id="__codelineno-26-27" name="__codelineno-26-27" href="#__codelineno-26-27"></a><span class="w">  </span><span class="c1"># 글을 파일 하나에 쓰는 앱 + ReadWriteOnce PVC: 옛 Pod 를 먼저 내리고 새 Pod 를 띄운다.</span>
+</span><span id="__span-26-28"><a id="__codelineno-26-28" name="__codelineno-26-28" href="#__codelineno-26-28"></a><span class="w">  </span><span class="c1"># 업데이트 중 잠깐 API 가 멈추지만, 두 Pod 가 같은 파일에 동시에 쓰는 일이 없다.</span>
+</span><span id="__span-26-29"><a id="__codelineno-26-29" name="__codelineno-26-29" href="#__codelineno-26-29"></a><span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
+</span><span id="__span-26-30"><a id="__codelineno-26-30" name="__codelineno-26-30" href="#__codelineno-26-30"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recreate</span><span class="w">   </span><span class="c1"># 파일 하나에 쓰는 백엔드: 새 Pod 전에 옛 Pod 를 먼저 끈다</span>
+</span><span id="__span-26-31"><a id="__codelineno-26-31" name="__codelineno-26-31" href="#__codelineno-26-31"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+</span><span id="__span-26-32"><a id="__codelineno-26-32" name="__codelineno-26-32" href="#__codelineno-26-32"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+</span><span id="__span-26-33"><a id="__codelineno-26-33" name="__codelineno-26-33" href="#__codelineno-26-33"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+</span><span id="__span-26-34"><a id="__codelineno-26-34" name="__codelineno-26-34" href="#__codelineno-26-34"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+</span><span id="__span-26-35"><a id="__codelineno-26-35" name="__codelineno-26-35" href="#__codelineno-26-35"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-26-36"><a id="__codelineno-26-36" name="__codelineno-26-36" href="#__codelineno-26-36"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+</span><span id="__span-26-37"><a id="__codelineno-26-37" name="__codelineno-26-37" href="#__codelineno-26-37"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+</span><span id="__span-26-38"><a id="__codelineno-26-38" name="__codelineno-26-38" href="#__codelineno-26-38"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-26-39"><a id="__codelineno-26-39" name="__codelineno-26-39" href="#__codelineno-26-39"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+</span><span id="__span-26-40"><a id="__codelineno-26-40" name="__codelineno-26-40" href="#__codelineno-26-40"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+</span><span id="__span-26-41"><a id="__codelineno-26-41" name="__codelineno-26-41" href="#__codelineno-26-41"></a><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">skilleat/backend:v3-kb55</span>
+</span><span id="__span-26-42"><a id="__codelineno-26-42" name="__codelineno-26-42" href="#__codelineno-26-42"></a><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-26-43"><a id="__codelineno-26-43" name="__codelineno-26-43" href="#__codelineno-26-43"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+</span><span id="__span-26-44"><a id="__codelineno-26-44" name="__codelineno-26-44" href="#__codelineno-26-44"></a><span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
+</span><span id="__span-26-45"><a id="__codelineno-26-45" name="__codelineno-26-45" href="#__codelineno-26-45"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
+</span><span id="__span-26-46"><a id="__codelineno-26-46" name="__codelineno-26-46" href="#__codelineno-26-46"></a><span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/app/data</span>
+</span><span id="__span-26-47"><a id="__codelineno-26-47" name="__codelineno-26-47" href="#__codelineno-26-47"></a><span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-26-48"><a id="__codelineno-26-48" name="__codelineno-26-48" href="#__codelineno-26-48"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
+</span><span id="__span-26-49"><a id="__codelineno-26-49" name="__codelineno-26-49" href="#__codelineno-26-49"></a><span class="w">        </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span>
+</span><span id="__span-26-50"><a id="__codelineno-26-50" name="__codelineno-26-50" href="#__codelineno-26-50"></a><span class="w">          </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blog-pvc</span>
+</span><span id="__span-26-51"><a id="__codelineno-26-51" name="__codelineno-26-51" href="#__codelineno-26-51"></a><span class="nn">---</span>
+</span><span id="__span-26-52"><a id="__codelineno-26-52" name="__codelineno-26-52" href="#__codelineno-26-52"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+</span><span id="__span-26-53"><a id="__codelineno-26-53" name="__codelineno-26-53" href="#__codelineno-26-53"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+</span><span id="__span-26-54"><a id="__codelineno-26-54" name="__codelineno-26-54" href="#__codelineno-26-54"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-26-55"><a id="__codelineno-26-55" name="__codelineno-26-55" href="#__codelineno-26-55"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend-service</span>
+</span><span id="__span-26-56"><a id="__codelineno-26-56" name="__codelineno-26-56" href="#__codelineno-26-56"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
+</span><span id="__span-26-57"><a id="__codelineno-26-57" name="__codelineno-26-57" href="#__codelineno-26-57"></a><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-26-58"><a id="__codelineno-26-58" name="__codelineno-26-58" href="#__codelineno-26-58"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="nv">backnd</span><span class="p p-Indicator">}</span>
+</span><span id="__span-26-59"><a id="__codelineno-26-59" name="__codelineno-26-59" href="#__codelineno-26-59"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-26-60"><a id="__codelineno-26-60" name="__codelineno-26-60" href="#__codelineno-26-60"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+</span><span id="__span-26-61"><a id="__codelineno-26-61" name="__codelineno-26-61" href="#__codelineno-26-61"></a><span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+</span><span id="__span-26-62"><a id="__codelineno-26-62" name="__codelineno-26-62" href="#__codelineno-26-62"></a><span class="nn">---</span>
+</span><span id="__span-26-63"><a id="__codelineno-26-63" name="__codelineno-26-63" href="#__codelineno-26-63"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+</span><span id="__span-26-64"><a id="__codelineno-26-64" name="__codelineno-26-64" href="#__codelineno-26-64"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+</span><span id="__span-26-65"><a id="__codelineno-26-65" name="__codelineno-26-65" href="#__codelineno-26-65"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-26-66"><a id="__codelineno-26-66" name="__codelineno-26-66" href="#__codelineno-26-66"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
+</span><span id="__span-26-67"><a id="__codelineno-26-67" name="__codelineno-26-67" href="#__codelineno-26-67"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
+</span><span id="__span-26-68"><a id="__codelineno-26-68" name="__codelineno-26-68" href="#__codelineno-26-68"></a><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-26-69"><a id="__codelineno-26-69" name="__codelineno-26-69" href="#__codelineno-26-69"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+</span><span id="__span-26-70"><a id="__codelineno-26-70" name="__codelineno-26-70" href="#__codelineno-26-70"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+</span><span id="__span-26-71"><a id="__codelineno-26-71" name="__codelineno-26-71" href="#__codelineno-26-71"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+</span><span id="__span-26-72"><a id="__codelineno-26-72" name="__codelineno-26-72" href="#__codelineno-26-72"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
+</span><span id="__span-26-73"><a id="__codelineno-26-73" name="__codelineno-26-73" href="#__codelineno-26-73"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+</span><span id="__span-26-74"><a id="__codelineno-26-74" name="__codelineno-26-74" href="#__codelineno-26-74"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-26-75"><a id="__codelineno-26-75" name="__codelineno-26-75" href="#__codelineno-26-75"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+</span><span id="__span-26-76"><a id="__codelineno-26-76" name="__codelineno-26-76" href="#__codelineno-26-76"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
+</span><span id="__span-26-77"><a id="__codelineno-26-77" name="__codelineno-26-77" href="#__codelineno-26-77"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-26-78"><a id="__codelineno-26-78" name="__codelineno-26-78" href="#__codelineno-26-78"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+</span><span id="__span-26-79"><a id="__codelineno-26-79" name="__codelineno-26-79" href="#__codelineno-26-79"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
+</span><span id="__span-26-80"><a id="__codelineno-26-80" name="__codelineno-26-80" href="#__codelineno-26-80"></a><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">skilleat/frontend:v4-kb5</span><span class="w">   </span><span class="c1"># 같은 네임스페이스의 backend-service 를 부르는 태그</span>
+</span><span id="__span-26-81"><a id="__codelineno-26-81" name="__codelineno-26-81" href="#__codelineno-26-81"></a><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-26-82"><a id="__codelineno-26-82" name="__codelineno-26-82" href="#__codelineno-26-82"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+</span><span id="__span-26-83"><a id="__codelineno-26-83" name="__codelineno-26-83" href="#__codelineno-26-83"></a><span class="nn">---</span>
+</span><span id="__span-26-84"><a id="__codelineno-26-84" name="__codelineno-26-84" href="#__codelineno-26-84"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+</span><span id="__span-26-85"><a id="__codelineno-26-85" name="__codelineno-26-85" href="#__codelineno-26-85"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+</span><span id="__span-26-86"><a id="__codelineno-26-86" name="__codelineno-26-86" href="#__codelineno-26-86"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-26-87"><a id="__codelineno-26-87" name="__codelineno-26-87" href="#__codelineno-26-87"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend-service</span>
+</span><span id="__span-26-88"><a id="__codelineno-26-88" name="__codelineno-26-88" href="#__codelineno-26-88"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broken</span>
+</span><span id="__span-26-89"><a id="__codelineno-26-89" name="__codelineno-26-89" href="#__codelineno-26-89"></a><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-26-90"><a id="__codelineno-26-90" name="__codelineno-26-90" href="#__codelineno-26-90"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+</span><span id="__span-26-91"><a id="__codelineno-26-91" name="__codelineno-26-91" href="#__codelineno-26-91"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
+</span><span id="__span-26-92"><a id="__codelineno-26-92" name="__codelineno-26-92" href="#__codelineno-26-92"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-26-93"><a id="__codelineno-26-93" name="__codelineno-26-93" href="#__codelineno-26-93"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+</span><span id="__span-26-94"><a id="__codelineno-26-94" name="__codelineno-26-94" href="#__codelineno-26-94"></a><span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
 </span></code></pre></div>
 </details>
 <div class="admonition info">
@@ -2683,7 +2827,7 @@
 </details>
 <details class="failure">
 <summary>The PersistentVolumeClaim \"blog-pvc\" is invalid: spec: Forbidden: spec is immutable after creation</summary>
-<p>PVC를 지우지 않고 <code>apply</code>만 다시 했습니다. STEP 32처럼 <code>kubectl delete pvc blog-pvc -n broken</code> 후 <code>apply</code>합니다.</p>
+<p><code>storageClassName</code>을 고치고 <code>apply</code>만 다시 했습니다. PVC가 <code>Pending</code>(한 번도 Bound 안 됨)인지 확인한 뒤, STEP 32의 StorageClass 방법대로 <code>kubectl delete pvc blog-pvc -n broken</code> 후 <code>apply</code>합니다. Bound된 PVC라면 지우지 말고 강사에게 알려 주세요.</p>
 </details>
 <details class="failure">
 <summary>PVC가 Terminating에 머물러 지워지지 않음</summary>
@@ -2702,7 +2846,7 @@
 <p>8081을 다른 프로그램이 쓰고 있습니다. <code>8082:80</code>처럼 앞 숫자를 바꾸고 그 포트로 엽니다.</p>
 </details>
 <h2 id="_7">정리<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>broken<span class="w"> </span>webapp
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>broken<span class="w"> </span>webapp
 </span></code></pre></div>
 <p>실습 5의 <code>webapp</code>과 이 실습의 <code>broken</code>이 함께 지워집니다. 과정 전체를 정리하려면 아래 과정 마무리를 따라 합니다.</p>
 <h2 id="wrap-up">과정 마무리<a class="headerlink" href="#wrap-up" title="Permanent link">&para;</a></h2>
@@ -2737,29 +2881,144 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_8">과정 전체 정리<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_8">보안은 여러 겹<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>층</th>
+<th>이 과정에서 한 것</th>
+<th>다음 단계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>신원</td>
+<td>ServiceAccount, kubeconfig 인증서</td>
+<td>회사 계정 연동 (OIDC)</td>
+</tr>
+<tr>
+<td>권한</td>
+<td>RBAC 최소 권한, 토큰 자동 마운트 끄기</td>
+<td>정기 권한 점검, 감사 로그</td>
+</tr>
+<tr>
+<td>실행</td>
+<td>securityContext, PSA restricted</td>
+<td>정책 엔진 (Kyverno, OPA Gatekeeper)</td>
+</tr>
+<tr>
+<td>네트워크</td>
+<td>NetworkPolicy 기본 차단 후 허용</td>
+<td>서비스 메시 mTLS</td>
+</tr>
+<tr>
+<td>비밀</td>
+<td>Secret으로 이미지 밖에 보관</td>
+<td>etcd 암호화, 외부 비밀 저장소</td>
+</tr>
+<tr>
+<td>이미지</td>
+<td>버전 태그 지정</td>
+<td>취약점 스캔, 이미지 서명</td>
+</tr>
+</tbody>
+</table>
+<h3 id="8">운영 베스트 프랙티스 8<a class="headerlink" href="#8" title="Permanent link">&para;</a></h3>
+<p>YAML을 클러스터에 올리기 전에 확인합니다. 괄호는 배운 날입니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>보안</th>
+<th></th>
+<th>운영</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>root로 돌리지 않는다: runAsNonRoot, allowPrivilegeEscalation false (5일차)</td>
+<td>5</td>
+<td>이미지는 버전 태그. latest 대신 정해진 태그 (1일차)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>네임스페이스에 PSA: warn으로 보고 restricted로 enforce (5일차)</td>
+<td>6</td>
+<td>설정과 비밀은 이미지 밖에: ConfigMap, Secret (4일차)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>앱마다 전용 SA, 최소 권한. API를 안 쓰면 토큰을 끈다 (5일차)</td>
+<td>7</td>
+<td>모든 앱에 probe와 자원: readiness, requests, limits (4일차)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>통신은 기본 차단. deny-all 후 필요한 길만, DNS 포함 (5일차)</td>
+<td>8</td>
+<td>남을 데이터는 PVC에. 백업은 따로, 한 파일에 쓰면 Recreate (4, 5일차)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_9">다음에 가 볼 길<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>주제</th>
+<th>무엇</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Helm, Kustomize</td>
+<td>YAML 묶음을 패키지로, 개발과 운영 환경별로 관리</td>
+</tr>
+<tr>
+<td>Prometheus, Grafana</td>
+<td>관측성: 지표, 대시보드, 로그. 데이터센터 운영과 바로 이어집니다</td>
+</tr>
+<tr>
+<td>Argo CD, Flux</td>
+<td>GitOps: Git에 적은 원하는 상태로 자동 배포</td>
+</tr>
+<tr>
+<td>멀티 노드 클러스터</td>
+<td>kind, 클라우드 관리형(EKS, AKS, GKE). 1일차 한계 1(서버 장애)을 직접 확인</td>
+</tr>
+<tr>
+<td>StatefulSet, Operator</td>
+<td>DB처럼 상태가 있는 앱의 운영 자동화</td>
+</tr>
+<tr>
+<td>CKA, CKAD</td>
+<td>쿠버네티스 자격증으로 실력 점검</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_10">과정 전체 정리<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>노트북을 원래대로 돌려놓고 싶을 때 아래 순서로 합니다. 계속 연습할 거라면 하지 않아도 됩니다.</p>
 <p><strong>1. 5일차 네임스페이스 지우기.</strong> 이미 지운 것은 건너뜁니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>webapp<span class="w"> </span>broken<span class="w"> </span>secure<span class="w"> </span>rbac-lab<span class="w"> </span>np-lab<span class="w"> </span>--ignore-not-found
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>webapp<span class="w"> </span>broken<span class="w"> </span>secure<span class="w"> </span>rbac-lab<span class="w"> </span>np-lab<span class="w"> </span>--ignore-not-found
 </span></code></pre></div>
 <p><strong>2. Gateway 리소스 지우기.</strong> GatewayClass는 네임스페이스에 속하지 않아서 따로 지웁니다. 3일차의 <code>eg</code>도 남아 있으면 함께 지웁니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>gatewayclass<span class="w"> </span>blog-gw-class<span class="w"> </span>--ignore-not-found
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>gatewayclass<span class="w"> </span>blog-gw-class<span class="w"> </span>--ignore-not-found
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>gateway<span class="w"> </span>eg<span class="w"> </span>--ignore-not-found
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>gateway<span class="w"> </span>eg<span class="w"> </span>--ignore-not-found
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>gatewayclass<span class="w"> </span>eg<span class="w"> </span>--ignore-not-found
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>gatewayclass<span class="w"> </span>eg<span class="w"> </span>--ignore-not-found
 </span></code></pre></div>
 <p><strong>3. Envoy Gateway 제거.</strong> 3일차에 설치할 때 쓴 <code>install.yaml</code>로 지웁니다. 버전은 <a href="../../day3/lab-5/">3일차 실습 5</a>에서 설치한 것과 같아야 합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>https://github.com/envoyproxy/gateway/releases/download/v1.9.2/install.yaml<span class="w"> </span>--ignore-not-found
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>https://github.com/envoyproxy/gateway/releases/download/v1.9.2/install.yaml<span class="w"> </span>--ignore-not-found
 </span></code></pre></div>
 <p><code>envoy-gateway-system</code> 네임스페이스와 Gateway API CRD가 함께 지워집니다. 1~2분 걸릴 수 있습니다. 3일차에 파일로 내려받아 설치했다면 <code>kubectl delete -f install.yaml</code>로 지워도 같습니다.</p>
 <p><strong>4. 남은 것 확인.</strong> 앞 일차에서 <code>default</code> 네임스페이스에 만든 것이 남아 있는지 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>all,pvc,configmap,secret
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>all,pvc,configmap,secret
 </span></code></pre></div>
 <p><code>service/kubernetes</code>와 <code>configmap/kube-root-ca.crt</code>는 쿠버네티스 기본 리소스이니 그대로 둡니다. 나머지는 <code>kubectl delete 종류 이름</code>으로 지웁니다. 한꺼번에 비우고 싶으면 Docker Desktop의 Kubernetes 설정에서 <strong>Reset cluster</strong>를 누릅니다. 클러스터 안의 모든 리소스가 지워집니다.</p>
 <p><strong>5. 클러스터 끄기.</strong> Docker Desktop 왼쪽 메뉴 <strong>Kubernetes</strong> → <strong>Stop</strong>을 누릅니다. 버전에 따라 <strong>Settings → Kubernetes</strong>에서 <strong>Enable Kubernetes</strong>를 끄고 <strong>Apply</strong>를 누릅니다. 노트북 메모리를 돌려받습니다. 다시 쓸 때는 <a href="../../setup/3-kubernetes/">Kubernetes 켜기</a>를 따라 켭니다.</p>
 <p><strong>6. (선택) 이미지 지우기.</strong> 디스크 공간이 필요하면 실습 이미지를 지웁니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>docker<span class="w"> </span>rmi<span class="w"> </span>skilleat/frontend:v3-kb5<span class="w"> </span>skilleat/backend:v3-kb5<span class="w"> </span>skilleat/frontend:v4-kb5<span class="w"> </span>skilleat/backend:v4-kb5<span class="w"> </span>nginx:1.27<span class="w"> </span>busybox:1.36
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>docker<span class="w"> </span>rmi<span class="w"> </span>skilleat/frontend:v3-kb5<span class="w"> </span>skilleat/backend:v3-kb5<span class="w"> </span>skilleat/frontend:v4-kb5<span class="w"> </span>skilleat/backend:v4-kb5<span class="w"> </span>nginx:1.27<span class="w"> </span>busybox:1.36
 </span></code></pre></div>
 <p>사용 중이라 안 지워지는 이미지가 있으면 Docker Desktop을 다시 시작한 뒤 다시 실행합니다.</p>
 

@@ -1562,10 +1562,38 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="오늘 쓰는 파일">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#git-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git clone으로 한 번에 받기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        하나씩 받기
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         오늘 쓰는 명령 모음
@@ -1576,7 +1604,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         하루를 마치고 한꺼번에 정리
@@ -2122,10 +2150,38 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="오늘 쓰는 파일">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#git-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        git clone으로 한 번에 받기
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        하나씩 받기
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         오늘 쓰는 명령 모음
@@ -2136,7 +2192,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         하루를 마치고 한꺼번에 정리
@@ -2268,6 +2324,63 @@
   A --&gt; C["실습 6&lt;br/&gt;MySQL + PVC"]
   B -- "STEP 31에서&lt;br/&gt;Deployment 삭제" --&gt; C</code></pre>
 <h2 id="_4">오늘 쓰는 파일<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<h3 id="git-clone">git clone으로 한 번에 받기<a class="headerlink" href="#git-clone" title="Permanent link">&para;</a></h3>
+<p>파일을 하나씩 만들거나 내려받는 대신, 실습 저장소를 통째로 받아 오늘 폴더로 복사할 수 있습니다.</p>
+<p><strong>① git이 있는지 확인</strong> (<code>git version 2.x</code>처럼 나오면 됩니다)</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>git<span class="w"> </span>--version
+</span></code></pre></div>
+<details class="info">
+<summary>git이 없다고 나오면</summary>
+<ul>
+<li>Windows: PowerShell에서 <code>winget install --id Git.Git -e</code> 를 실행하거나 <a href="https://git-scm.com/download/win">git-scm.com</a>에서 설치한 뒤, <strong>터미널을 새로 엽니다.</strong></li>
+<li>Mac: <code>git --version</code>을 입력하면 "명령어 라인 개발자 도구" 설치 창이 뜹니다. <strong>설치</strong>를 누르고 끝나면 다시 실행합니다.</li>
+</ul>
+</details>
+<p><strong>② 저장소 받기</strong> (처음 한 번만. 이미 받았으면 ③으로)</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Windows (PowerShell)</label><label for="__tabbed_2_2">Mac (터미널)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">cd </span><span class="nv">$HOME</span><span class="p">\</span><span class="n">k8s-labs</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">skilleat-labs</span><span class="p">/</span><span class="n">gwangju-k8s</span><span class="p">-</span><span class="n">5days</span><span class="p">.</span><span class="n">git</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">cd</span><span class="w"> </span>~/k8s-labs
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/skilleat-labs/gwangju-k8s-5days.git
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<p>이미 받아 둔 저장소가 있으면 최신으로 맞춥니다.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Windows (PowerShell)</label><label for="__tabbed_3_2">Mac (터미널)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">cd </span><span class="nv">$HOME</span><span class="p">\</span><span class="n">k8s-labs</span><span class="p">\</span><span class="n">gwangju-k8s</span><span class="p">-</span><span class="n">5days</span><span class="p">;</span> <span class="n">git</span> <span class="n">pull</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>~/k8s-labs/gwangju-k8s-5days<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>pull
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<p><strong>③ 오늘 파일을 day4 폴더로 복사하고 이동</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Windows (PowerShell)</label><label for="__tabbed_4_2">Mac (터미널)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">mkdir</span> <span class="nv">$HOME</span><span class="p">\</span><span class="n">k8s-labs</span><span class="p">\</span><span class="n">day4</span> <span class="n">-Force</span><span class="p">;</span> <span class="nb">Copy-Item</span> <span class="nv">$HOME</span><span class="p">\</span><span class="n">k8s-labs</span><span class="p">\</span><span class="n">gwangju-k8s</span><span class="p">-</span><span class="n">5days</span><span class="p">\</span><span class="n">docs</span><span class="p">\</span><span class="n">files</span><span class="p">\</span><span class="n">day4</span><span class="p">\*</span> <span class="nv">$HOME</span><span class="p">\</span><span class="n">k8s-labs</span><span class="p">\</span><span class="n">day4</span><span class="p">\</span> <span class="n">-Force</span><span class="p">;</span> <span class="nb">cd </span><span class="nv">$HOME</span><span class="p">\</span><span class="n">k8s-labs</span><span class="p">\</span><span class="n">day4</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/k8s-labs/day4<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cp<span class="w"> </span>~/k8s-labs/gwangju-k8s-5days/docs/files/day4/*<span class="w"> </span>~/k8s-labs/day4/<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/k8s-labs/day4
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ls
+</span></code></pre></div>
+<p>아래 표의 파일이 모두 보이면 준비가 끝났습니다. 실습 중에 파일을 고쳐도 저장소 원본은 그대로라서, 다시 복사하면 처음 상태로 돌아갑니다.</p>
+<h3 id="_5">하나씩 받기<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>모두 <code>day4</code> 폴더에 저장합니다. VS Code로 직접 만들거나 아래 링크로 내려받습니다.</p>
 <table>
 <thead>
@@ -2320,7 +2433,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="_5">오늘 쓰는 명령 모음<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h2 id="_6">오늘 쓰는 명령 모음<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2367,9 +2480,9 @@
 </tr>
 </tbody>
 </table>
-<h2 id="_6">하루를 마치고 한꺼번에 정리<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h2 id="_7">하루를 마치고 한꺼번에 정리<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
 <p>실습마다 정리를 했다면 할 필요 없습니다. 중간에 빠뜨린 것이 있어도 아래 한 줄이면 오늘 만든 것이 모두 지워집니다 (없는 것은 건너뜁니다).</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>deploy/mysql<span class="w"> </span>deploy/secret-demo<span class="w"> </span>deploy/web-probe<span class="w"> </span>svc/web-probe<span class="w"> </span>pvc/mysql-pvc<span class="w"> </span>secret/mysql-secret<span class="w"> </span>cm/app-config<span class="w"> </span>pod/cm-pod<span class="w"> </span>pod/memory-hog<span class="w"> </span>pod/big-request<span class="w"> </span>--ignore-not-found
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>deploy/mysql<span class="w"> </span>deploy/secret-demo<span class="w"> </span>deploy/web-probe<span class="w"> </span>svc/web-probe<span class="w"> </span>pvc/mysql-pvc<span class="w"> </span>secret/mysql-secret<span class="w"> </span>cm/app-config<span class="w"> </span>pod/cm-pod<span class="w"> </span>pod/memory-hog<span class="w"> </span>pod/big-request<span class="w"> </span>--ignore-not-found
 </span></code></pre></div>
 
 

@@ -2048,7 +2048,7 @@
   <a href="#step-28-v2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 28. 운영, 보안 설정을 붙인 v2 적용
+        STEP 28. (선택) 운영, 보안 설정을 붙인 v2 적용
       
     </span>
   </a>
@@ -2059,7 +2059,7 @@
   <a href="#step-29" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 29. 붙었는지 확인
+        STEP 29. (선택) 붙었는지 확인
       
     </span>
   </a>
@@ -2327,7 +2327,7 @@
   <a href="#step-28-v2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 28. 운영, 보안 설정을 붙인 v2 적용
+        STEP 28. (선택) 운영, 보안 설정을 붙인 v2 적용
       
     </span>
   </a>
@@ -2338,7 +2338,7 @@
   <a href="#step-29" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STEP 29. 붙었는지 확인
+        STEP 29. (선택) 붙었는지 확인
       
     </span>
   </a>
@@ -2401,10 +2401,14 @@
 <ul>
 <li>실습 4의 YAML 두 장으로 미니 블로그 전체를 띄우고, <strong>Gateway를 거쳐</strong> 브라우저로 글을 씁니다.</li>
 <li>backend Pod, frontend Pod를 지우며 자가복구, 데이터 보존, 요청 연속성을 <strong>따로따로</strong> 확인합니다.</li>
-<li>4일차와 오늘 배운 운영, 보안 설정(readinessProbe, requests와 limits, 토큰 끄기)을 붙인 v2를 적용합니다.</li>
+<li>(선택) 4일차와 오늘 배운 운영, 보안 설정(readinessProbe, requests와 limits, 토큰 끄기)을 붙인 v2를 적용합니다.</li>
 </ul>
 </div>
-<p><strong>소요 시간</strong> 약 23분, <strong>교안</strong> DAY 5 섹션 5</p>
+<p><strong>소요 시간</strong> 약 23분 (필수 STEP 20~27 약 18분, 선택 STEP 28~29 약 5분), <strong>교안</strong> DAY 5 섹션 5</p>
+<div class="admonition tip">
+<p class="admonition-title">필수와 선택</p>
+<p>필수는 <strong>기본 배포, 글 보존</strong>이고 실습 6의 <strong>장애 진단</strong>까지가 오늘 꼭 할 것입니다. STEP 28~29의 v2 운영 설정은 <strong>선택</strong>입니다. 시간이 부족하면 강사 시연으로 봅니다.</p>
+</div>
 <h2 id="_1">준비<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <p>작업 폴더로 이동합니다.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Windows (PowerShell)</label><label for="__tabbed_1_2">Mac (터미널)</label></div>
@@ -2426,7 +2430,7 @@
 </span></code></pre></div>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mv<span class="w"> </span>miniblog-frontend-answer.yaml<span class="w"> </span>miniblog-frontend.yaml
 </span></code></pre></div>
-<p>STEP 28에서 쓸 v2 파일 두 개도 받아 둡니다.</p>
+<p>STEP 28(선택)에서 쓸 v2 파일 두 개도 받아 둡니다. v2는 운영 설정을 더한 YAML 버전이며 이미지 태그와는 별개입니다. 이미지는 그대로 <code>v3-kb5</code>입니다.</p>
 <p><a download="download" href="../../files/day5/miniblog-backend-v2.yaml">miniblog-backend-v2.yaml 내려받기</a></p>
 <p><a download="download" href="../../files/day5/miniblog-frontend-v2.yaml">miniblog-frontend-v2.yaml 내려받기</a></p>
 <p>3일차에 설치한 Envoy Gateway가 살아 있는지 봅니다.</p>
@@ -2461,7 +2465,7 @@
 <tr>
 <td>한계 4 배포마다 사람이 바꾼다</td>
 <td>선언한 대로 자동 교체 (frontend는 롤링 업데이트, backend는 Recreate)</td>
-<td>STEP 28</td>
+<td>STEP 28 (선택)</td>
 </tr>
 <tr>
 <td>한계 5 주소가 바뀐다</td>
@@ -2641,7 +2645,7 @@
 </span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>backend-6d9c7b8f5d-p8v4n   1/1     Running             0          3s
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
-<p>Deployment가 곧바로 새 backend Pod를 만듭니다. 새 Pod의 IP는 바뀌었지만 frontend는 <code>backend-service</code>라는 이름으로 찾으므로 그대로 연결됩니다 (한계 5). 다 보았으면 <code>Ctrl + C</code>로 빠져나옵니다.</p>
+<p>Deployment가 곧바로 새 backend Pod를 만듭니다. 새 Pod의 IP는 바뀌었지만 frontend는 <code>backend-service</code>라는 이름으로 찾으므로 그대로 연결됩니다 (한계 5). 새 backend Pod의 <code>READY</code>가 <code>1/1</code>이 된 것을 확인한 뒤 <code>Ctrl + C</code>로 빠져나옵니다.</p>
 <p>브라우저(localhost:8888)를 새로고침합니다. <strong>아까 쓴 글이 그대로 있습니다.</strong> 글은 Pod가 아니라 PVC(<code>blog-pvc</code>)에 저장돼 있기 때문입니다.</p>
 <div class="admonition warning">
 <p class="admonition-title">몇 초 실패는 정상입니다</p>
@@ -2664,7 +2668,12 @@
 <p class="admonition-title">frontend에 직접 port-forward 중이었다면</p>
 <p><code>kubectl port-forward svc/frontend-service ...</code>는 Service 뒤의 Pod <strong>하나</strong>에 붙습니다. 지운 Pod가 그 Pod였다면 port-forward 터미널에 <code>lost connection to pod</code>가 나오고 끊깁니다. Gateway 경유(8888) 쪽은 Envoy 프록시 Pod에 붙어 있어서 frontend를 지워도 끊기지 않습니다.</p>
 </div>
-<h2 id="step-28-v2">STEP 28. 운영, 보안 설정을 붙인 v2 적용<a class="headerlink" href="#step-28-v2" title="Permanent link">&para;</a></h2>
+<h2 id="step-28-v2">STEP 28. (선택) 운영, 보안 설정을 붙인 v2 적용<a class="headerlink" href="#step-28-v2" title="Permanent link">&para;</a></h2>
+<div class="admonition note">
+<p class="admonition-title">선택 단계: 시간이 부족하면 강사 시연</p>
+<p>STEP 28~29는 선택입니다. 시간이 부족하면 강사 화면으로 보고 실습 6으로 넘어갑니다.</p>
+</div>
+<p>이 단계의 목표는 <strong>데이터를 유지하며 운영 설정을 적용하는 것</strong>입니다. 무중단은 아닙니다. v2는 운영 설정을 더한 YAML 버전이며 이미지 태그와는 별개입니다(이미지는 그대로 <code>v3-kb5</code>).</p>
 <p>기본 배포가 되었으니 배운 설정을 붙입니다. v2 파일에는 Deployment만 들어 있고, 바뀐 부분은 아래와 같습니다.</p>
 <table>
 <thead>
@@ -2739,7 +2748,7 @@
 </span><span id="__span-35-40"><a id="__codelineno-35-40" name="__codelineno-35-40" href="#__codelineno-35-40"></a><span class="w">          </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </span></code></pre></div>
 <div class="language-yaml highlight"><span class="filename">miniblog-backend-v2.yaml</span><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># 미니 블로그 backend v2: 운영, 보안 설정을 붙인 Deployment (DAY 5 실습 5 STEP 28)</span>
-</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="c1"># miniblog-backend.yaml 을 적용한 뒤에 적용한다. Deployment 만 바뀐다 (롤링 업데이트).</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="c1"># miniblog-backend.yaml 을 적용한 뒤에 적용한다. Deployment 만 바뀐다 (Recreate: 옛 Pod 를 끄고 새 Pod 를 띄운다. 그동안 API 가 잠시 멈춘다).</span>
 </span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 </span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 </span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="nt">metadata</span><span class="p">:</span>
@@ -2747,71 +2756,74 @@
 </span><span id="__span-36-7"><a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webapp</span>
 </span><span id="__span-36-8"><a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="nt">spec</span><span class="p">:</span>
 </span><span id="__span-36-9"><a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-</span><span id="__span-36-10"><a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
-</span><span id="__span-36-11"><a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recreate</span><span class="w">   </span><span class="c1"># 파일 하나에 쓰는 백엔드: 새 Pod 전에 옛 Pod 를 먼저 끈다</span>
-</span><span id="__span-36-12"><a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a><span class="w">  </span><span class="c1"># 글을 파일 하나에 쓰는 앱 + ReadWriteOnce PVC: 옛 Pod 를 먼저 내리고 새 Pod 를 띄운다.</span>
-</span><span id="__span-36-13"><a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a><span class="w">  </span><span class="c1"># 업데이트 중 잠깐 API 가 멈추지만, 두 Pod 가 같은 파일에 동시에 쓰는 일이 없다.</span>
-</span><span id="__span-36-14"><a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a><span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
-</span><span id="__span-36-15"><a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recreate</span>
-</span><span id="__span-36-16"><a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
-</span><span id="__span-36-17"><a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
-</span><span id="__span-36-18"><a id="__codelineno-36-18" name="__codelineno-36-18" href="#__codelineno-36-18"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
-</span><span id="__span-36-19"><a id="__codelineno-36-19" name="__codelineno-36-19" href="#__codelineno-36-19"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
-</span><span id="__span-36-20"><a id="__codelineno-36-20" name="__codelineno-36-20" href="#__codelineno-36-20"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-36-21"><a id="__codelineno-36-21" name="__codelineno-36-21" href="#__codelineno-36-21"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
-</span><span id="__span-36-22"><a id="__codelineno-36-22" name="__codelineno-36-22" href="#__codelineno-36-22"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
-</span><span id="__span-36-23"><a id="__codelineno-36-23" name="__codelineno-36-23" href="#__codelineno-36-23"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-36-24"><a id="__codelineno-36-24" name="__codelineno-36-24" href="#__codelineno-36-24"></a><span class="w">      </span><span class="c1"># API 서버를 쓰지 않는 앱이라 토큰을 꽂지 않는다 (DAY 5 섹션 2)</span>
-</span><span id="__span-36-25"><a id="__codelineno-36-25" name="__codelineno-36-25" href="#__codelineno-36-25"></a><span class="w">      </span><span class="nt">automountServiceAccountToken</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-</span><span id="__span-36-26"><a id="__codelineno-36-26" name="__codelineno-36-26" href="#__codelineno-36-26"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
-</span><span id="__span-36-27"><a id="__codelineno-36-27" name="__codelineno-36-27" href="#__codelineno-36-27"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
-</span><span id="__span-36-28"><a id="__codelineno-36-28" name="__codelineno-36-28" href="#__codelineno-36-28"></a><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">skilleat/backend:v3-kb5</span>
-</span><span id="__span-36-29"><a id="__codelineno-36-29" name="__codelineno-36-29" href="#__codelineno-36-29"></a><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-36-30"><a id="__codelineno-36-30" name="__codelineno-36-30" href="#__codelineno-36-30"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
-</span><span id="__span-36-31"><a id="__codelineno-36-31" name="__codelineno-36-31" href="#__codelineno-36-31"></a><span class="w">        </span><span class="c1"># 5000 포트가 열리면 준비된 것으로 본다 (DAY 4)</span>
-</span><span id="__span-36-32"><a id="__codelineno-36-32" name="__codelineno-36-32" href="#__codelineno-36-32"></a><span class="w">        </span><span class="nt">readinessProbe</span><span class="p">:</span>
-</span><span id="__span-36-33"><a id="__codelineno-36-33" name="__codelineno-36-33" href="#__codelineno-36-33"></a><span class="w">          </span><span class="nt">tcpSocket</span><span class="p">:</span>
-</span><span id="__span-36-34"><a id="__codelineno-36-34" name="__codelineno-36-34" href="#__codelineno-36-34"></a><span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
-</span><span id="__span-36-35"><a id="__codelineno-36-35" name="__codelineno-36-35" href="#__codelineno-36-35"></a><span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-</span><span id="__span-36-36"><a id="__codelineno-36-36" name="__codelineno-36-36" href="#__codelineno-36-36"></a><span class="w">        </span><span class="c1"># 배치 기준과 메모리 한도 (DAY 4)</span>
-</span><span id="__span-36-37"><a id="__codelineno-36-37" name="__codelineno-36-37" href="#__codelineno-36-37"></a><span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
-</span><span id="__span-36-38"><a id="__codelineno-36-38" name="__codelineno-36-38" href="#__codelineno-36-38"></a><span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
-</span><span id="__span-36-39"><a id="__codelineno-36-39" name="__codelineno-36-39" href="#__codelineno-36-39"></a><span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50m</span>
-</span><span id="__span-36-40"><a id="__codelineno-36-40" name="__codelineno-36-40" href="#__codelineno-36-40"></a><span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">64Mi</span>
-</span><span id="__span-36-41"><a id="__codelineno-36-41" name="__codelineno-36-41" href="#__codelineno-36-41"></a><span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
-</span><span id="__span-36-42"><a id="__codelineno-36-42" name="__codelineno-36-42" href="#__codelineno-36-42"></a><span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256Mi</span>
-</span><span id="__span-36-43"><a id="__codelineno-36-43" name="__codelineno-36-43" href="#__codelineno-36-43"></a><span class="w">        </span><span class="nt">securityContext</span><span class="p">:</span>
-</span><span id="__span-36-44"><a id="__codelineno-36-44" name="__codelineno-36-44" href="#__codelineno-36-44"></a><span class="w">          </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-</span><span id="__span-36-45"><a id="__codelineno-36-45" name="__codelineno-36-45" href="#__codelineno-36-45"></a><span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
-</span><span id="__span-36-46"><a id="__codelineno-36-46" name="__codelineno-36-46" href="#__codelineno-36-46"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
-</span><span id="__span-36-47"><a id="__codelineno-36-47" name="__codelineno-36-47" href="#__codelineno-36-47"></a><span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/app/data</span>
-</span><span id="__span-36-48"><a id="__codelineno-36-48" name="__codelineno-36-48" href="#__codelineno-36-48"></a><span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
-</span><span id="__span-36-49"><a id="__codelineno-36-49" name="__codelineno-36-49" href="#__codelineno-36-49"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
-</span><span id="__span-36-50"><a id="__codelineno-36-50" name="__codelineno-36-50" href="#__codelineno-36-50"></a><span class="w">        </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span>
-</span><span id="__span-36-51"><a id="__codelineno-36-51" name="__codelineno-36-51" href="#__codelineno-36-51"></a><span class="w">          </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blog-pvc</span>
+</span><span id="__span-36-10"><a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="w">  </span><span class="c1"># 글을 파일 하나에 쓰는 앱 + ReadWriteOnce PVC: 옛 Pod 를 먼저 내리고 새 Pod 를 띄운다.</span>
+</span><span id="__span-36-11"><a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a><span class="w">  </span><span class="c1"># 업데이트 중 잠깐 API 가 멈추지만, 두 Pod 가 같은 파일에 동시에 쓰는 일이 없다.</span>
+</span><span id="__span-36-12"><a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a><span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
+</span><span id="__span-36-13"><a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recreate</span><span class="w">   </span><span class="c1"># 파일 하나에 쓰는 백엔드: 새 Pod 전에 옛 Pod 를 먼저 끈다</span>
+</span><span id="__span-36-14"><a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+</span><span id="__span-36-15"><a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+</span><span id="__span-36-16"><a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+</span><span id="__span-36-17"><a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+</span><span id="__span-36-18"><a id="__codelineno-36-18" name="__codelineno-36-18" href="#__codelineno-36-18"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-36-19"><a id="__codelineno-36-19" name="__codelineno-36-19" href="#__codelineno-36-19"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+</span><span id="__span-36-20"><a id="__codelineno-36-20" name="__codelineno-36-20" href="#__codelineno-36-20"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+</span><span id="__span-36-21"><a id="__codelineno-36-21" name="__codelineno-36-21" href="#__codelineno-36-21"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-36-22"><a id="__codelineno-36-22" name="__codelineno-36-22" href="#__codelineno-36-22"></a><span class="w">      </span><span class="c1"># API 서버를 쓰지 않는 앱이라 토큰을 꽂지 않는다 (DAY 5 섹션 2)</span>
+</span><span id="__span-36-23"><a id="__codelineno-36-23" name="__codelineno-36-23" href="#__codelineno-36-23"></a><span class="w">      </span><span class="nt">automountServiceAccountToken</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-36-24"><a id="__codelineno-36-24" name="__codelineno-36-24" href="#__codelineno-36-24"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+</span><span id="__span-36-25"><a id="__codelineno-36-25" name="__codelineno-36-25" href="#__codelineno-36-25"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+</span><span id="__span-36-26"><a id="__codelineno-36-26" name="__codelineno-36-26" href="#__codelineno-36-26"></a><span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">skilleat/backend:v3-kb5</span>
+</span><span id="__span-36-27"><a id="__codelineno-36-27" name="__codelineno-36-27" href="#__codelineno-36-27"></a><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-36-28"><a id="__codelineno-36-28" name="__codelineno-36-28" href="#__codelineno-36-28"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+</span><span id="__span-36-29"><a id="__codelineno-36-29" name="__codelineno-36-29" href="#__codelineno-36-29"></a><span class="w">        </span><span class="c1"># 5000 포트가 열리면 준비된 것으로 본다 (DAY 4)</span>
+</span><span id="__span-36-30"><a id="__codelineno-36-30" name="__codelineno-36-30" href="#__codelineno-36-30"></a><span class="w">        </span><span class="nt">readinessProbe</span><span class="p">:</span>
+</span><span id="__span-36-31"><a id="__codelineno-36-31" name="__codelineno-36-31" href="#__codelineno-36-31"></a><span class="w">          </span><span class="nt">tcpSocket</span><span class="p">:</span>
+</span><span id="__span-36-32"><a id="__codelineno-36-32" name="__codelineno-36-32" href="#__codelineno-36-32"></a><span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+</span><span id="__span-36-33"><a id="__codelineno-36-33" name="__codelineno-36-33" href="#__codelineno-36-33"></a><span class="w">          </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+</span><span id="__span-36-34"><a id="__codelineno-36-34" name="__codelineno-36-34" href="#__codelineno-36-34"></a><span class="w">        </span><span class="c1"># 배치 기준과 메모리 한도 (DAY 4)</span>
+</span><span id="__span-36-35"><a id="__codelineno-36-35" name="__codelineno-36-35" href="#__codelineno-36-35"></a><span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+</span><span id="__span-36-36"><a id="__codelineno-36-36" name="__codelineno-36-36" href="#__codelineno-36-36"></a><span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
+</span><span id="__span-36-37"><a id="__codelineno-36-37" name="__codelineno-36-37" href="#__codelineno-36-37"></a><span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50m</span>
+</span><span id="__span-36-38"><a id="__codelineno-36-38" name="__codelineno-36-38" href="#__codelineno-36-38"></a><span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">64Mi</span>
+</span><span id="__span-36-39"><a id="__codelineno-36-39" name="__codelineno-36-39" href="#__codelineno-36-39"></a><span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
+</span><span id="__span-36-40"><a id="__codelineno-36-40" name="__codelineno-36-40" href="#__codelineno-36-40"></a><span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256Mi</span>
+</span><span id="__span-36-41"><a id="__codelineno-36-41" name="__codelineno-36-41" href="#__codelineno-36-41"></a><span class="w">        </span><span class="nt">securityContext</span><span class="p">:</span>
+</span><span id="__span-36-42"><a id="__codelineno-36-42" name="__codelineno-36-42" href="#__codelineno-36-42"></a><span class="w">          </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-36-43"><a id="__codelineno-36-43" name="__codelineno-36-43" href="#__codelineno-36-43"></a><span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
+</span><span id="__span-36-44"><a id="__codelineno-36-44" name="__codelineno-36-44" href="#__codelineno-36-44"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
+</span><span id="__span-36-45"><a id="__codelineno-36-45" name="__codelineno-36-45" href="#__codelineno-36-45"></a><span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/app/data</span>
+</span><span id="__span-36-46"><a id="__codelineno-36-46" name="__codelineno-36-46" href="#__codelineno-36-46"></a><span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-36-47"><a id="__codelineno-36-47" name="__codelineno-36-47" href="#__codelineno-36-47"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
+</span><span id="__span-36-48"><a id="__codelineno-36-48" name="__codelineno-36-48" href="#__codelineno-36-48"></a><span class="w">        </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span>
+</span><span id="__span-36-49"><a id="__codelineno-36-49" name="__codelineno-36-49" href="#__codelineno-36-49"></a><span class="w">          </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blog-pvc</span>
 </span></code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">runAsNonRoot는 왜 없나</p>
 <p><code>runAsNonRoot: true</code>는 이미지가 root 없이 돌도록 만들어졌을 때만 붙입니다. 기본 nginx 계열 이미지는 root로 시작하도록 만들어져 있어서, 이 줄만 붙이면 시작이 거부되거나 80 포트, 캐시 폴더 권한 때문에 죽을 수 있습니다. 또 <code>readOnlyRootFilesystem: true</code>는 컨테이너 기본 파일 시스템만 읽기 전용으로 만들고, <code>/app/data</code>처럼 따로 마운트한 쓰기 볼륨은 막지 않습니다. 이미지가 다른 곳(임시 폴더 등)에 쓰는지 확인한 뒤 붙입니다.</p>
 </div>
-<p>적용합니다. Pod 템플릿이 바뀌었으니 Pod가 새 이름으로 교체됩니다. frontend는 2일차의 롤링 업데이트로 하나씩 바뀌고, backend는 <code>strategy: Recreate</code>라서 옛 Pod를 먼저 내린 뒤 새 Pod를 띄웁니다. 그래서 backend가 바뀌는 몇 초 동안은 글 요청이 실패할 수 있습니다.</p>
+<p>적용합니다. Pod 템플릿이 바뀌었으니 Pod가 새 이름으로 교체됩니다. frontend는 2일차의 롤링 업데이트로 하나씩 바뀌고, backend는 <code>strategy: Recreate</code>라서 옛 Pod를 먼저 내린 뒤 새 Pod를 띄웁니다. 그래서 frontend 화면은 계속 나오지만, backend가 바뀌는 몇 초 동안은 글 요청이 실패할 수 있습니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>miniblog-backend-v2.yaml
 </span></code></pre></div>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>miniblog-frontend-v2.yaml
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/frontend<span class="w"> </span>-n<span class="w"> </span>webapp
+<p>글이 남았는지 보기 전에 <strong>두 Deployment 모두</strong> 교체가 끝날 때까지 기다립니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/backend<span class="w"> </span>-n<span class="w"> </span>webapp<span class="w"> </span>--timeout<span class="o">=</span>180s
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>deployment "frontend" successfully rolled out
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/frontend<span class="w"> </span>-n<span class="w"> </span>webapp<span class="w"> </span>--timeout<span class="o">=</span>180s
 </span></code></pre></div>
-<h2 id="step-29">STEP 29. 붙었는지 확인<a class="headerlink" href="#step-29" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>webapp
+<div class="language-text highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>deployment "backend" successfully rolled out
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>deployment "frontend" successfully rolled out
+</span></code></pre></div>
+<p>backend를 기다리지 않고 새로고침하면 새 backend가 아직 뜨는 중이라 글이 없는 것처럼 보일 수 있습니다.</p>
+<h2 id="step-29">STEP 29. (선택) 붙었는지 확인<a class="headerlink" href="#step-29" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>webapp
 </span></code></pre></div>
 <p>모든 Pod가 새 이름으로 바뀌고 <code>READY</code>가 <code>1/1</code>이면 readinessProbe를 통과한 것입니다.</p>
 <p>frontend 안에 토큰 파일이 없는지 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>webapp<span class="w"> </span>deploy/frontend<span class="w"> </span>--<span class="w"> </span>ls<span class="w"> </span>/var/run/secrets/kubernetes.io/serviceaccount
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>webapp<span class="w"> </span>deploy/frontend<span class="w"> </span>--<span class="w"> </span>ls<span class="w"> </span>/var/run/secrets/kubernetes.io/serviceaccount
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>ls: cannot access '/var/run/secrets/kubernetes.io/serviceaccount': No such file or directory
-</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>command terminated with exit code 2
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>ls: cannot access '/var/run/secrets/kubernetes.io/serviceaccount': No such file or directory
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>command terminated with exit code 2
 </span></code></pre></div>
 <small>출력은 예시입니다. 이미지에 따라 문구가 조금 다를 수 있습니다.</small></p>
 <p>마지막으로 localhost:8888을 새로고침해 <strong>글이 그대로</strong> 있는지 봅니다. 8888이 끊겨 있으면 STEP 24의 port-forward를 다시 실행합니다.</p>
@@ -2826,7 +2838,7 @@
 <li>② 글 등록 후 목록에 보인다</li>
 <li>③ backend를 지워도 새 Pod가 뜨고 글이 남는다 (몇 초 실패는 정상)</li>
 <li>④ frontend 하나를 지워도 8888 화면이 계속 나온다</li>
-<li>v2 적용 후 READY <code>1/1</code>, 토큰 파일 없음, 글 그대로</li>
+<li>(선택) v2 적용 후 두 rollout 완료, READY <code>1/1</code>, 토큰 파일 없음, 글 그대로</li>
 </ul>
 <h2 id="_3">막히면<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <details class="failure">
@@ -2860,7 +2872,7 @@
 <details class="failure">
 <summary>화면은 뜨는데 글 등록만 실패</summary>
 <p>backend Service 이름이 <code>backend-service</code>가 아니거나, selector가 backend Pod 라벨과 다릅니다. frontend는 정확히 <code>backend-service:5000</code>으로 백엔드를 찾습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc,endpointslices<span class="w"> </span>-n<span class="w"> </span>webapp
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc,endpointslices<span class="w"> </span>-n<span class="w"> </span>webapp
 </span></code></pre></div>
 <p><code>backend-service</code>가 있고 EndpointSlice에 주소가 있는지 봅니다.</p>
 </details>

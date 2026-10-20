@@ -2313,71 +2313,76 @@
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>deployment.apps/web-probe created
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>service/web-probe exposed
 </span></code></pre></div>
+<p>두 Pod가 뜰 때까지 기다립니다. STEP 15의 exec가 이미지를 받는 중인 Pod에 붙지 않게 하기 위해서입니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/web-probe<span class="w"> </span>--timeout<span class="o">=</span>120s
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>deployment "web-probe" successfully rolled out
+</span></code></pre></div>
 <h2 id="step-14-pod-ready-day-3">STEP 14. 두 Pod 모두 ready인지 (DAY 3)<a class="headerlink" href="#step-14-pod-ready-day-3" title="Permanent link">&para;</a></h2>
 <p>Pod 두 개의 이름과 IP를 봅니다. 이 출력은 STEP 15, 14, 15에서 다시 보니 창에 남겨 둡니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>web-probe<span class="w"> </span>-o<span class="w"> </span>wide
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>web-probe<span class="w"> </span>-o<span class="w"> </span>wide
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NAME                         READY   STATUS    RESTARTS   AGE   IP          NODE             NOMINATED NODE   READINESS GATES
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>web-probe-6d8f7c9b5d-abcde   1/1     Running   0          30s   10.1.0.21   docker-desktop   &lt;none&gt;           &lt;none&gt;
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>web-probe-6d8f7c9b5d-fghij   1/1     Running   0          30s   10.1.0.22   docker-desktop   &lt;none&gt;           &lt;none&gt;
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>NAME                         READY   STATUS    RESTARTS   AGE   IP          NODE             NOMINATED NODE   READINESS GATES
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>web-probe-6d8f7c9b5d-abcde   1/1     Running   0          30s   10.1.0.21   docker-desktop   &lt;none&gt;           &lt;none&gt;
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>web-probe-6d8f7c9b5d-fghij   1/1     Running   0          30s   10.1.0.22   docker-desktop   &lt;none&gt;           &lt;none&gt;
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>3일차처럼 Service 이름 라벨로 EndpointSlice를 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>web-probe<span class="w"> </span>-o<span class="w"> </span>yaml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>web-probe<span class="w"> </span>-o<span class="w"> </span>yaml
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>endpoints:
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>- addresses:
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  - 10.1.0.21
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  conditions:
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    ready: true
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    serving: true
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    terminating: false
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>- addresses:
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  - 10.1.0.22
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  conditions:
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    ready: true
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    serving: true
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    terminating: false
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>endpoints:
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>- addresses:
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  - 10.1.0.21
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  conditions:
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    ready: true
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    serving: true
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    terminating: false
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>- addresses:
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  - 10.1.0.22
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  conditions:
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    ready: true
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    serving: true
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    terminating: false
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다. 실제 출력은 더 길고, <code>endpoints:</code> 부분만 옮겼습니다.</small></p>
 <p>주소 두 개 모두 <code>ready: true</code>입니다.</p>
 <h2 id="step-15-pod">STEP 15. Pod 하나의 점검 파일 지우기<a class="headerlink" href="#step-15-pod" title="Permanent link">&para;</a></h2>
 <p>STEP 14 목록에서 Pod 이름 하나를 복사해 <code>&lt;Pod 이름&gt;</code> 자리에 넣습니다. 꺾쇠 <code>&lt; &gt;</code>는 지우고 이름만 넣습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>rm<span class="w"> </span>/usr/share/nginx/html/index.html
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>rm<span class="w"> </span>/usr/share/nginx/html/index.html
 </span></code></pre></div>
 <p>예를 들어 Pod 이름이 <code>web-probe-6d8f7c9b5d-fghij</code>라면 이렇게 입력합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>web-probe-6d8f7c9b5d-fghij<span class="w"> </span>--<span class="w"> </span>rm<span class="w"> </span>/usr/share/nginx/html/index.html
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>web-probe-6d8f7c9b5d-fghij<span class="w"> </span>--<span class="w"> </span>rm<span class="w"> </span>/usr/share/nginx/html/index.html
 </span></code></pre></div>
 <p>이제 이 Pod에 <code>/index.html</code>을 요청하면 404가 나서 readinessProbe가 실패합니다. 지운 Pod 이름과 IP를 기억해 둡니다.</p>
 <h2 id="step-16-ready-01-restarts-0">STEP 16. READY 0/1, RESTARTS는 0 그대로<a class="headerlink" href="#step-16-ready-01-restarts-0" title="Permanent link">&para;</a></h2>
 <p>5초쯤 기다린 뒤 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>web-probe
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>web-probe
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>NAME                         READY   STATUS    RESTARTS   AGE
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>web-probe-6d8f7c9b5d-abcde   1/1     Running   0          2m
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>web-probe-6d8f7c9b5d-fghij   0/1     Running   0          2m
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>NAME                         READY   STATUS    RESTARTS   AGE
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>web-probe-6d8f7c9b5d-abcde   1/1     Running   0          2m
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>web-probe-6d8f7c9b5d-fghij   0/1     Running   0          2m
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>파일을 지운 Pod는 READY가 <code>0/1</code>입니다. STATUS는 <code>Running</code>, RESTARTS는 <code>0</code>입니다. <strong>살아 있지만 준비가 안 된</strong> 상태입니다.</p>
 <h2 id="step-17-ready-false">STEP 17. 주소 목록에서 ready: false 확인<a class="headerlink" href="#step-17-ready-false" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>web-probe<span class="w"> </span>-o<span class="w"> </span>yaml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>endpointslices<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>web-probe<span class="w"> </span>-o<span class="w"> </span>yaml
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>endpoints:
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>- addresses:
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  - 10.1.0.21
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  conditions:
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    ready: true
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    serving: true
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    terminating: false
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>- addresses:
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  - 10.1.0.22
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  conditions:
-</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    ready: false
-</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    serving: false
-</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    terminating: false
-</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>ports:
-</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>- port: 80
-</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>  protocol: TCP
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>endpoints:
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>- addresses:
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  - 10.1.0.21
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  conditions:
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    ready: true
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    serving: true
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    terminating: false
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>- addresses:
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>  - 10.1.0.22
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>  conditions:
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    ready: false
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>    serving: false
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    terminating: false
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>ports:
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>- port: 80
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>  protocol: TCP
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <table>
@@ -2402,18 +2407,18 @@
 <div class="admonition note">
 <p class="admonition-title">환경에 따라 다를 수 있음</p>
 <p>Docker Desktop 버전에 따라 주소 순서, <code>serving</code> 값, 출력 모양이 조금 다를 수 있습니다. 확인할 것은 <strong>파일을 지운 Pod의 IP에서 <code>ready: false</code></strong> 한 가지입니다. YAML이 길어 찾기 어려우면 describe로 봅니다. 주소마다 <code>Conditions</code> 아래 <code>Ready:</code> 값이 나옵니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>endpointslices<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>web-probe
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>endpointslices<span class="w"> </span>-l<span class="w"> </span>kubernetes.io/service-name<span class="o">=</span>web-probe
 </span></code></pre></div>
 </div>
 <h2 id="step-18-pod">STEP 18. 되돌리기: 그 Pod를 지우면 새로 뜬다<a class="headerlink" href="#step-18-pod" title="Permanent link">&para;</a></h2>
 <p>STEP 15에서 파일을 지운 Pod를 지웁니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>web-probe
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>web-probe
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>NAME                         READY   STATUS    RESTARTS   AGE
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>web-probe-6d8f7c9b5d-abcde   1/1     Running   0          4m
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>web-probe-6d8f7c9b5d-klmno   1/1     Running   0          8s
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>NAME                         READY   STATUS    RESTARTS   AGE
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>web-probe-6d8f7c9b5d-abcde   1/1     Running   0          4m
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>web-probe-6d8f7c9b5d-klmno   1/1     Running   0          8s
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>Deployment가 새 Pod를 만들었고, 새 Pod에는 <code>index.html</code>이 있으니 다시 <code>1/1</code>입니다.</p>
@@ -2451,9 +2456,9 @@
 </details>
 <h2 id="_4">정리<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>Deployment와 Service를 지웁니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>deployment<span class="w"> </span>web-probe
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>deployment<span class="w"> </span>web-probe
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>service<span class="w"> </span>web-probe
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>service<span class="w"> </span>web-probe
 </span></code></pre></div>
 
 

@@ -2220,6 +2220,9 @@
 <div class="admonition info">
 <p class="admonition-title">인증과 인가</p>
 <p>API 서버는 요청마다 두 가지를 차례로 묻습니다. <strong>인증</strong>은 "누구인가"로, kubeconfig의 인증서나 ServiceAccount 토큰으로 확인합니다. 실패하면 <code>401 Unauthorized</code>입니다. <strong>인가</strong>는 "무엇을 할 수 있나"로, RBAC의 Role과 RoleBinding이 정합니다. 실패하면 <code>403 Forbidden</code>입니다. 이번 실습의 <code>--as</code>는 내 계정으로 인증한 채 그 SA인 척해서(impersonation), "이 SA라면 인가가 어떻게 나는지"를 물어보는 방법입니다.</p>
+<p>인증과 인가를 통과한 요청은 마지막으로 <strong>어드미션</strong>을 지납니다. 요청 내용이 정책에 맞는지 검사하는 단계로, 실습 1에서 restricted 네임스페이스가 위험한 Pod를 거부한 PSA가 여기서 동작합니다. 세 관문을 모두 통과해야 etcd에 기록됩니다.</p>
+<pre class="mermaid"><code>flowchart LR
+    R["요청&lt;br&gt;kubectl, Pod"] --&gt; A["① 인증&lt;br&gt;누구인가 (401)"] --&gt; Z["② 인가&lt;br&gt;RBAC (403)"] --&gt; M["③ 어드미션&lt;br&gt;PSA (거부)"] --&gt; E["etcd 저장"]</code></pre>
 </div>
 <h2 id="_1">준비<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <p>작업 폴더로 이동합니다.</p>
@@ -2350,9 +2353,9 @@
 <h2 id="step-10-pod">STEP 10. 토큰을 끈 Pod<a class="headerlink" href="#step-10-pod" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>no-token.yaml<span class="w"> </span>-n<span class="w"> </span>rbac-lab
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>no-token<span class="w"> </span>-n<span class="w"> </span>rbac-lab
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="o">=</span><span class="nv">condition</span><span class="o">=</span>Ready<span class="w"> </span>pod/no-token<span class="w"> </span>-n<span class="w"> </span>rbac-lab<span class="w"> </span>--timeout<span class="o">=</span>120s
 </span></code></pre></div>
-<p><code>Running</code>이 되면 토큰이 꽂히는 경로를 봅니다.</p>
+<p>Ready가 되면 토큰이 꽂히는 경로를 봅니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>rbac-lab<span class="w"> </span>no-token<span class="w"> </span>--<span class="w"> </span>ls<span class="w"> </span>/var/run/secrets/kubernetes.io/serviceaccount
 </span></code></pre></div>
 <p><div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ls: /var/run/secrets/kubernetes.io/serviceaccount: No such file or directory
@@ -2365,11 +2368,13 @@
 <p>아무 설정 없는 Pod에는 같은 경로에 <code>token</code> 파일이 있습니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span>run<span class="w"> </span>with-token<span class="w"> </span>--image<span class="o">=</span>busybox:1.36<span class="w"> </span>-n<span class="w"> </span>rbac-lab<span class="w"> </span>--<span class="w"> </span>sleep<span class="w"> </span><span class="m">3600</span>
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>rbac-lab<span class="w"> </span>with-token<span class="w"> </span>--<span class="w"> </span>ls<span class="w"> </span>/var/run/secrets/kubernetes.io/serviceaccount
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="o">=</span><span class="nv">condition</span><span class="o">=</span>Ready<span class="w"> </span>pod/with-token<span class="w"> </span>-n<span class="w"> </span>rbac-lab<span class="w"> </span>--timeout<span class="o">=</span>120s
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ca.crt
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>namespace
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>token
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>rbac-lab<span class="w"> </span>with-token<span class="w"> </span>--<span class="w"> </span>ls<span class="w"> </span>/var/run/secrets/kubernetes.io/serviceaccount
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ca.crt
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>namespace
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>token
 </span></code></pre></div>
 </details>
 <h2 id="_2">성공하면<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
@@ -2387,7 +2392,7 @@
 <details class="failure">
 <summary>STEP 9에서 list도 no</summary>
 <p>STEP 8의 Role이나 RoleBinding이 다른 네임스페이스에 만들어졌을 수 있습니다. 둘 다 <code>-n rbac-lab</code>이 붙었는지 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>role,rolebinding<span class="w"> </span>-n<span class="w"> </span>rbac-lab
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>role,rolebinding<span class="w"> </span>-n<span class="w"> </span>rbac-lab
 </span></code></pre></div>
 </details>
 <details class="failure">
@@ -2404,7 +2409,7 @@
 </details>
 <h2 id="_4">정리<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>다음 실습에서 쓰지 않습니다. 네임스페이스를 지우면 Role, RoleBinding, Pod가 함께 지워집니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>rbac-lab
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>ns<span class="w"> </span>rbac-lab
 </span></code></pre></div>
 
 

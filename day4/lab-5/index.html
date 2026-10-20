@@ -2261,7 +2261,7 @@
 </tr>
 <tr>
 <td><code>readinessProbe</code></td>
-<td>섹션 3에서 배운 준비 확인입니다. <code>mysqladmin ping</code>으로 127.0.0.1에 접속이 되어야 READY가 <code>1/1</code>이 됩니다. 초기화 중에는 <code>0/1</code>입니다.</td>
+<td>섹션 3에서 배운 준비 확인입니다. <code>mysqladmin ping</code>이 127.0.0.1의 MySQL 서버가 응답하는지 봅니다. 초기화 중에는 <code>0/1</code>입니다. 서버가 살아 있는지만 보므로 비밀번호가 틀려 <code>Access denied</code>가 나도 성공으로 끝납니다. READY <code>1/1</code>이 SQL 로그인 성공을 뜻하지는 않습니다.</td>
 </tr>
 <tr>
 <td><code>/var/lib/mysql</code></td>
@@ -2273,6 +2273,11 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">READY 1/1은 로그인 확인이 아닙니다</p>
+<p><code>mysqladmin ping</code>은 서버가 실행 중이면 <code>Access denied</code>가 나도 종료 코드 0으로 끝납니다. 그래서 READY <code>1/1</code>은 서버가 살아 있다는 뜻이지, root 비밀번호로 SQL 로그인이 된다는 뜻은 아닙니다. 자격증명까지 확인하려면 인증해서 <code>SELECT 1</code>을 실행하는 더 엄격한 검사를 쓸 수 있습니다. 이 실습은 <code>ping</code>으로 둡니다.
+근거: <a href="https://dev.mysql.com/doc/refman/8.0/en/mysqladmin.html">MySQL 8.0 mysqladmin</a></p>
+</div>
 <h2 id="step-26-mysql-ready-11">STEP 26. MySQL 올리고 READY 1/1 기다리기<a class="headerlink" href="#step-26-mysql-ready-11" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>mysql-emptydir.yaml
 </span></code></pre></div>
@@ -2280,6 +2285,7 @@
 </span></code></pre></div>
 <p>READY가 <code>1/1</code>이 될 때까지 지켜봅니다. 이미지가 크고 첫 기동 때 초기화를 해서 1분쯤 걸릴 수 있습니다. <code>Running</code>이 먼저 보여도 READY가 <code>0/1</code>이면 아직 초기화 중입니다. <code>1/1</code>이 보이면 <code>Ctrl + C</code>로 멈춥니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>mysql<span class="w"> </span>-w
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># READY 확인 후 Ctrl+C</span>
 </span></code></pre></div>
 <p><div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>NAME                     READY   STATUS              RESTARTS   AGE
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>mysql-5c7d8f9b6d-x2k4p   0/1     ContainerCreating   0          3s
@@ -2347,6 +2353,7 @@
 </span></code></pre></div>
 <p>Deployment가 곧바로 새 Pod를 만듭니다. READY가 <code>1/1</code>이 되면 <code>Ctrl + C</code>로 멈춥니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>mysql<span class="w"> </span>-w
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># READY 확인 후 Ctrl+C</span>
 </span></code></pre></div>
 <p><div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>NAME                     READY   STATUS              RESTARTS   AGE
 </span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>mysql-5c7d8f9b6d-q8w7e   0/1     ContainerCreating   0          2s

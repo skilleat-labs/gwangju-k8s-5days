@@ -2374,44 +2374,49 @@
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>deployment.apps/secret-demo created
 </span></code></pre></div>
-<p>Pod가 <code>Running</code>이 되면 컨테이너 안의 환경변수를 봅니다. <code>deploy/secret-demo</code>라고 쓰면 Pod 이름을 몰라도 그 Deployment의 Pod 하나에 붙습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>deploy/secret-demo<span class="w"> </span>--<span class="w"> </span>printenv<span class="w"> </span>MYSQL_ROOT_PASSWORD
+<p>Pod가 뜰 때까지 기다립니다. 이미지를 받는 중에 exec를 하면 실패하기 때문입니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/secret-demo<span class="w"> </span>--timeout<span class="o">=</span>120s
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pass1234
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>deployment "secret-demo" successfully rolled out
+</span></code></pre></div>
+<p>그다음 컨테이너 안의 환경변수를 봅니다. <code>deploy/secret-demo</code>라고 쓰면 Pod 이름을 몰라도 그 Deployment의 Pod 하나에 붙습니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>deploy/secret-demo<span class="w"> </span>--<span class="w"> </span>printenv<span class="w"> </span>MYSQL_ROOT_PASSWORD
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pass1234
 </span></code></pre></div>
 <p>컨테이너 안에서는 평문입니다. 앱이 써야 하니 당연합니다.</p>
 <h2 id="step-10">STEP 10. 값 바꾸기 (지우고 다시 만들기)<a class="headerlink" href="#step-10" title="Permanent link">&para;</a></h2>
 <p>Secret을 지우고 같은 이름으로 새 값 <code>skilleat</code>을 넣어 다시 만듭니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>mysql-secret
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>mysql-secret
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>mysql-secret<span class="w"> </span>--from-literal<span class="o">=</span><span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span>skilleat
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>mysql-secret<span class="w"> </span>--from-literal<span class="o">=</span><span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span>skilleat
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>secret "mysql-secret" deleted
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>secret/mysql-secret created
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>secret "mysql-secret" deleted
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>secret/mysql-secret created
 </span></code></pre></div>
 <h2 id="step-11-pod">STEP 11. 떠 있는 Pod는 아직 옛 값<a class="headerlink" href="#step-11-pod" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>deploy/secret-demo<span class="w"> </span>--<span class="w"> </span>printenv<span class="w"> </span>MYSQL_ROOT_PASSWORD
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>deploy/secret-demo<span class="w"> </span>--<span class="w"> </span>printenv<span class="w"> </span>MYSQL_ROOT_PASSWORD
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pass1234
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>pass1234
 </span></code></pre></div>
 <p>Secret은 바뀌었지만 컨테이너는 모릅니다. 환경변수는 컨테이너가 <strong>시작할 때 한 번만</strong> 읽기 때문입니다.</p>
 <h2 id="step-12-pod">STEP 12. Pod를 새로 교체하고 다시 확인<a class="headerlink" href="#step-12-pod" title="Permanent link">&para;</a></h2>
-<p>rollout restart로 Pod를 새로 띄웁니다. 이미지나 설정은 그대로 두고, 2일차의 롤링 업데이트 방식으로 Pod만 교체합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/secret-demo
+<p>rollout restart로 Pod를 새로 띄웁니다. 이미지나 설정은 그대로 두고, 2일차의 롤링 업데이트 방식으로 Pod만 교체합니다. 교체 중 서비스가 끊기지 않는지는 롤링 전략과 readinessProbe 설정에 따라 달라집니다. 이 실습에서는 새 Pod가 새 값을 읽는 것을 확인합니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/secret-demo
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>deployment.apps/secret-demo restarted
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>deployment.apps/secret-demo restarted
 </span></code></pre></div>
 <p>교체가 끝날 때까지 기다립니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/secret-demo
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/secret-demo<span class="w"> </span>--timeout<span class="o">=</span>120s
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Waiting for deployment "secret-demo" rollout to finish: 1 old replicas are pending termination...
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>deployment "secret-demo" successfully rolled out
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Waiting for deployment "secret-demo" rollout to finish: 1 old replicas are pending termination...
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>deployment "secret-demo" successfully rolled out
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p><code>successfully rolled out</code>을 본 뒤 다시 확인합니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>deploy/secret-demo<span class="w"> </span>--<span class="w"> </span>printenv<span class="w"> </span>MYSQL_ROOT_PASSWORD
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>deploy/secret-demo<span class="w"> </span>--<span class="w"> </span>printenv<span class="w"> </span>MYSQL_ROOT_PASSWORD
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>skilleat
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>skilleat
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">3교시 MySQL 비밀번호는 skilleat입니다</p>
@@ -2420,7 +2425,7 @@
 <h2 id="_2">성공하면<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <ul>
 <li>STEP 7: <code>data</code>에 <code>MYSQL_ROOT_PASSWORD: cGFzczEyMzQ=</code>가 보입니다.</li>
-<li>STEP 8, 6: <code>pass1234</code>가 나옵니다.</li>
+<li>STEP 8, 9: <code>pass1234</code>가 나옵니다.</li>
 <li>STEP 11: 값을 바꿨는데도 <code>pass1234</code> 그대로입니다.</li>
 <li>STEP 12: <code>skilleat</code>으로 바뀝니다.</li>
 </ul>
@@ -2447,7 +2452,7 @@
 </details>
 <h2 id="_4">정리<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>Deployment만 지웁니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>deployment<span class="w"> </span>secret-demo
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>deployment<span class="w"> </span>secret-demo
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">mysql-secret은 지우지 마세요</p>

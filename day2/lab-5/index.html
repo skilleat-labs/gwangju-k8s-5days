@@ -2324,8 +2324,9 @@
 <p><code>selector</code>의 <code>app: web</code>과 <code>template.metadata.labels</code>의 <code>app: web</code>은 <strong>반드시 같아야 합니다.</strong></p>
 <div class="admonition tip">
 <p class="admonition-title">다른 터미널로 지켜보기</p>
-<p>터미널을 하나 더 열고 아래 명령을 켜 두면, Pod가 지워지고 생기는 순간을 실시간으로 볼 수 있습니다. 다 보면 <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-c">C</kbd></span>로 끝냅니다.</p>
+<p>터미널을 하나 더 열고 아래 명령을 켜 두면, Pod가 지워지고 생기는 순간을 실시간으로 볼 수 있습니다.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-w
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># READY 확인 후 Ctrl+C</span>
 </span></code></pre></div>
 </div>
 <h2 id="step-1-deployment">STEP 1. Deployment 만들기<a class="headerlink" href="#step-1-deployment" title="Permanent link">&para;</a></h2>
@@ -2333,61 +2334,70 @@
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>deployment.apps/web created
 </span></code></pre></div>
-<p>Deployment, ReplicaSet, Pod를 한 번에 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>deploy,rs,pods
+<p>Pod 3개가 모두 준비될 때까지 기다립니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/web<span class="w"> </span>--timeout<span class="o">=</span>120s
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>deployment.apps/web   3/3     3            3           20s
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>NAME                             DESIRED   CURRENT   READY   AGE
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>replicaset.apps/web-7c5b8d9f6d   3         3         3       20s
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>NAME                       READY   STATUS    RESTARTS   AGE
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>pod/web-7c5b8d9f6d-4xk2p   1/1     Running   0          20s
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>pod/web-7c5b8d9f6d-9qz7m   1/1     Running   0          20s
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>pod/web-7c5b8d9f6d-wq8rt   1/1     Running   0          20s
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>deployment "web" successfully rolled out
+</span></code></pre></div>
+<p>Deployment, ReplicaSet, Pod를 한 번에 봅니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>deploy,rs,pods
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>deployment.apps/web   3/3     3            3           20s
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>NAME                             DESIRED   CURRENT   READY   AGE
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>replicaset.apps/web-7c5b8d9f6d   3         3         3       20s
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>NAME                       READY   STATUS    RESTARTS   AGE
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>pod/web-7c5b8d9f6d-4xk2p   1/1     Running   0          20s
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>pod/web-7c5b8d9f6d-9qz7m   1/1     Running   0          20s
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>pod/web-7c5b8d9f6d-wq8rt   1/1     Running   0          20s
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>Deployment 1개, ReplicaSet 1개, Pod 3개입니다. 이름이 <code>web</code> → <code>web-7c5b8d9f6d</code> → <code>web-7c5b8d9f6d-4xk2p</code>처럼 이어집니다. Deployment가 ReplicaSet을, ReplicaSet이 Pod를 만들었습니다.</p>
 <h2 id="step-2-pod">STEP 2. Pod 하나를 지운다<a class="headerlink" href="#step-2-pod" title="Permanent link">&para;</a></h2>
-<p>1일차에 <code>docker kill</code>로 컨테이너를 죽였을 때는 아무도 살리지 않았습니다. 오늘은 Pod 하나를 지워 봅니다. STEP 1에서 본 Pod 이름 하나를 복사해 넣습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>&lt;web-로<span class="w"> </span>시작하는<span class="w"> </span>Pod<span class="w"> </span>이름&gt;
+<p>1일차에 <code>docker rm</code>으로 지운 컨테이너는 그것으로 끝이었습니다. 오늘은 Deployment가 만든 Pod 하나를 지워 봅니다. STEP 1에서 본 Pod 이름 하나를 복사해 넣습니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>&lt;web-로<span class="w"> </span>시작하는<span class="w"> </span>Pod<span class="w"> </span>이름&gt;
 </span></code></pre></div>
 <p>예를 들면 <code>kubectl delete pod web-7c5b8d9f6d-4xk2p</code>입니다. 이름은 Tab 키 자동완성이 안 되면 복사해서 붙입니다. 바로 목록을 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>NAME                   READY   STATUS    RESTARTS   AGE
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>web-7c5b8d9f6d-9qz7m   1/1     Running   0          2m
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>web-7c5b8d9f6d-h2lwn   1/1     Running   0          3s
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>web-7c5b8d9f6d-wq8rt   1/1     Running   0          2m
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>NAME                   READY   STATUS    RESTARTS   AGE
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>web-7c5b8d9f6d-9qz7m   1/1     Running   0          2m
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>web-7c5b8d9f6d-h2lwn   1/1     Running   0          3s
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>web-7c5b8d9f6d-wq8rt   1/1     Running   0          2m
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>AGE가 몇 초짜리인 <strong>새 이름의 Pod</strong>가 생겨 다시 3개입니다. 아무도 손대지 않았는데 돌아왔습니다. 1일차 도커의 한계 2번이 풀렸습니다.</p>
 <p>ReplicaSet의 Events에 누가 Pod를 만들었는지 기록이 남습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>rs
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>rs
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>...
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Events:
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  Type    Reason            Age   From                   Message
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  ----    ------            ----  ----                   -------
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  Normal  SuccessfulCreate  3m    replicaset-controller  Created pod: web-7c5b8d9f6d-4xk2p
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  Normal  SuccessfulCreate  3m    replicaset-controller  Created pod: web-7c5b8d9f6d-9qz7m
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  Normal  SuccessfulCreate  3m    replicaset-controller  Created pod: web-7c5b8d9f6d-wq8rt
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>  Normal  SuccessfulCreate  40s   replicaset-controller  Created pod: web-7c5b8d9f6d-h2lwn
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>...
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Events:
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  Type    Reason            Age   From                   Message
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  ----    ------            ----  ----                   -------
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  Normal  SuccessfulCreate  3m    replicaset-controller  Created pod: web-7c5b8d9f6d-4xk2p
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  Normal  SuccessfulCreate  3m    replicaset-controller  Created pod: web-7c5b8d9f6d-9qz7m
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  Normal  SuccessfulCreate  3m    replicaset-controller  Created pod: web-7c5b8d9f6d-wq8rt
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  Normal  SuccessfulCreate  40s   replicaset-controller  Created pod: web-7c5b8d9f6d-h2lwn
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>맨 아래 줄이 지운 자리를 채운 새 Pod입니다. ReplicaSet이 "원하는 3, 지금 2"를 보고 하나를 더 만들었습니다. 지운 Pod가 되살아난 것이 아니라 <strong>이름과 UID가 다른 새 Pod</strong>입니다.</p>
 <h2 id="step-3-pod">STEP 3. 컨테이너만 멈춘다 (Pod는 그대로)<a class="headerlink" href="#step-3-pod" title="Permanent link">&para;</a></h2>
-<p>이번에는 Pod는 지우지 않고 안의 nginx 프로세스만 멈춥니다. <code>kubectl get pods</code>에서 Pod 이름 하나를 골라 넣습니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>nginx<span class="w"> </span>-s<span class="w"> </span>stop
+<p>이번에는 Pod는 지우지 않고 안의 nginx 프로세스만 멈춥니다. 1일차 <code>docker kill</code>과 비슷합니다. <code>docker kill</code>도 컨테이너를 멈출 뿐 객체는 남겼고, 그때는 사람이 <code>docker start</code>로 다시 켜야 했습니다. <code>kubectl get pods</code>에서 Pod 이름 하나를 골라 넣습니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;Pod<span class="w"> </span>이름&gt;<span class="w"> </span>--<span class="w"> </span>nginx<span class="w"> </span>-s<span class="w"> </span>stop
 </span></code></pre></div>
-<p>예를 들면 <code>kubectl exec web-7c5b8d9f6d-9qz7m -- nginx -s stop</code>입니다. 바로 목록을 봅니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+<p>예를 들면 <code>kubectl exec web-7c5b8d9f6d-9qz7m -- nginx -s stop</code>입니다. 다시 시작되는 순간을 지켜봅니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-w
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># READY 확인 후 Ctrl+C</span>
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>NAME                   READY   STATUS    RESTARTS     AGE
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>web-7c5b8d9f6d-9qz7m   1/1     Running   1 (5s ago)   3m
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>web-7c5b8d9f6d-h2lwn   1/1     Running   0            1m
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>web-7c5b8d9f6d-wq8rt   1/1     Running   0            3m
+<p>빠져나온 뒤 목록을 봅니다.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+</span></code></pre></div>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>NAME                   READY   STATUS    RESTARTS     AGE
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>web-7c5b8d9f6d-9qz7m   1/1     Running   1 (5s ago)   3m
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>web-7c5b8d9f6d-h2lwn   1/1     Running   0            1m
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>web-7c5b8d9f6d-wq8rt   1/1     Running   0            3m
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>이번에는 Pod <strong>이름이 그대로</strong>이고 <code>RESTARTS</code>가 1이 됐습니다. 컨테이너가 끝나자 그 노드의 kubelet이 같은 Pod 안에서 컨테이너를 다시 시작했습니다. STEP 2와 비교합니다.</p>
@@ -2423,47 +2433,47 @@
 </div>
 <h2 id="step-4-5">STEP 4. 5개로<a class="headerlink" href="#step-4-5" title="Permanent link">&para;</a></h2>
 <p>1일차에는 frontend를 하나 더 띄우려다 <code>port is already allocated</code>가 나서 8081, 8082로 포트를 바꿔 하나씩 실행했습니다. 오늘은 숫자만 바꿉니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>web<span class="w"> </span>--replicas<span class="o">=</span><span class="m">5</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>web<span class="w"> </span>--replicas<span class="o">=</span><span class="m">5</span>
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>deployment.apps/web scaled
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>deployment.apps/web scaled
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>NAME                   READY   STATUS    RESTARTS   AGE
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>web-7c5b8d9f6d-9qz7m   1/1     Running   0          5m
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>web-7c5b8d9f6d-h2lwn   1/1     Running   0          2m
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>web-7c5b8d9f6d-kx5vd   1/1     Running   0          4s
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>web-7c5b8d9f6d-p7bnc   1/1     Running   0          4s
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>web-7c5b8d9f6d-wq8rt   1/1     Running   0          5m
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>NAME                   READY   STATUS    RESTARTS   AGE
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>web-7c5b8d9f6d-9qz7m   1/1     Running   0          5m
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>web-7c5b8d9f6d-h2lwn   1/1     Running   0          2m
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>web-7c5b8d9f6d-kx5vd   1/1     Running   0          4s
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>web-7c5b8d9f6d-p7bnc   1/1     Running   0          4s
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>web-7c5b8d9f6d-wq8rt   1/1     Running   0          5m
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>포트를 신경 쓰지 않았습니다. Pod마다 자기 IP를 따로 가지기 때문입니다. 1일차 도커의 한계 3번이 풀렸습니다.</p>
 <h2 id="step-5-2">STEP 5. 2개로<a class="headerlink" href="#step-5-2" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>web<span class="w"> </span>--replicas<span class="o">=</span><span class="m">2</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>web<span class="w"> </span>--replicas<span class="o">=</span><span class="m">2</span>
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>NAME                   READY   STATUS        RESTARTS   AGE
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>web-7c5b8d9f6d-9qz7m   1/1     Running       0          6m
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>web-7c5b8d9f6d-h2lwn   1/1     Terminating   0          3m
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>web-7c5b8d9f6d-kx5vd   1/1     Terminating   0          1m
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>web-7c5b8d9f6d-p7bnc   1/1     Terminating   0          1m
-</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>web-7c5b8d9f6d-wq8rt   1/1     Running       0          6m
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>NAME                   READY   STATUS        RESTARTS   AGE
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>web-7c5b8d9f6d-9qz7m   1/1     Running       0          6m
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>web-7c5b8d9f6d-h2lwn   1/1     Terminating   0          3m
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>web-7c5b8d9f6d-kx5vd   1/1     Terminating   0          1m
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>web-7c5b8d9f6d-p7bnc   1/1     Terminating   0          1m
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>web-7c5b8d9f6d-wq8rt   1/1     Running       0          6m
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>3개가 <code>Terminating</code>이 되며 사라집니다. 몇 초 뒤 다시 보면 2개만 남습니다.</p>
 <h2 id="step-6-3">STEP 6. 다시 3개로 (선언형: 파일 기준)<a class="headerlink" href="#step-6-3" title="Permanent link">&para;</a></h2>
 <p><code>kubectl scale</code>로 바꾼 숫자는 <code>deployment.yaml</code> 파일에 남지 않습니다. 파일을 다시 apply하면 파일에 적힌 <code>replicas: 3</code>으로 돌아갑니다.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>deployment.yaml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>deployment.yaml
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>deployment.apps/web configured
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>deployment.apps/web configured
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods
 </span></code></pre></div>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>NAME                   READY   STATUS    RESTARTS   AGE
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>web-7c5b8d9f6d-9qz7m   1/1     Running   0          7m
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>web-7c5b8d9f6d-t4mzc   1/1     Running   0          3s
-</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>web-7c5b8d9f6d-wq8rt   1/1     Running   0          7m
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>NAME                   READY   STATUS    RESTARTS   AGE
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>web-7c5b8d9f6d-9qz7m   1/1     Running   0          7m
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>web-7c5b8d9f6d-t4mzc   1/1     Running   0          3s
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>web-7c5b8d9f6d-wq8rt   1/1     Running   0          7m
 </span></code></pre></div>
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small></p>
 <p>운영에서는 <code>kubectl scale</code> 대신 YAML의 <code>replicas</code> 값을 고쳐 apply하는 방식을 권합니다. 파일이 곧 기록이 됩니다.</p>
