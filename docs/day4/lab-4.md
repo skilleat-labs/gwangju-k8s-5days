@@ -58,6 +58,7 @@ pod/memory-hog created
 
 ```bash
 kubectl get pod memory-hog -w
+# OOMKilled, CrashLoopBackOff 확인 후 Ctrl+C
 ```
 
 ```text

@@ -10,6 +10,13 @@
 !!! info "인증과 인가"
     API 서버는 요청마다 두 가지를 차례로 묻습니다. **인증**은 "누구인가"로, kubeconfig의 인증서나 ServiceAccount 토큰으로 확인합니다. 실패하면 `401 Unauthorized`입니다. **인가**는 "무엇을 할 수 있나"로, RBAC의 Role과 RoleBinding이 정합니다. 실패하면 `403 Forbidden`입니다. 이번 실습의 `--as`는 내 계정으로 인증한 채 그 SA인 척해서(impersonation), "이 SA라면 인가가 어떻게 나는지"를 물어보는 방법입니다.
 
+    인증과 인가를 통과한 요청은 마지막으로 **어드미션**을 지납니다. 요청 내용이 정책에 맞는지 검사하는 단계로, 실습 1에서 restricted 네임스페이스가 위험한 Pod를 거부한 PSA가 여기서 동작합니다. 세 관문을 모두 통과해야 etcd에 기록됩니다.
+
+    ```mermaid
+    flowchart LR
+        R["요청<br>kubectl, Pod"] --> A["① 인증<br>누구인가 (401)"] --> Z["② 인가<br>RBAC (403)"] --> M["③ 어드미션<br>PSA (거부)"] --> E["etcd 저장"]
+    ```
+
 ## 준비
 
 작업 폴더로 이동합니다.
@@ -149,10 +156,10 @@ kubectl apply -f no-token.yaml -n rbac-lab
 ```
 
 ```bash
-kubectl get pod no-token -n rbac-lab
+kubectl wait --for=condition=Ready pod/no-token -n rbac-lab --timeout=120s
 ```
 
-`Running`이 되면 토큰이 꽂히는 경로를 봅니다.
+Ready가 되면 토큰이 꽂히는 경로를 봅니다.
 
 ```bash
 kubectl exec -n rbac-lab no-token -- ls /var/run/secrets/kubernetes.io/serviceaccount
@@ -171,6 +178,10 @@ command terminated with exit code 1
 
     ```bash
     kubectl run with-token --image=busybox:1.36 -n rbac-lab -- sleep 3600
+    ```
+
+    ```bash
+    kubectl wait --for=condition=Ready pod/with-token -n rbac-lab --timeout=120s
     ```
 
     ```bash

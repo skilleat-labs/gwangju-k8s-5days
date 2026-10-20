@@ -122,7 +122,17 @@ kubectl apply -f secret-demo.yaml
 deployment.apps/secret-demo created
 ```
 
-Pod가 `Running`이 되면 컨테이너 안의 환경변수를 봅니다. `deploy/secret-demo`라고 쓰면 Pod 이름을 몰라도 그 Deployment의 Pod 하나에 붙습니다.
+Pod가 뜰 때까지 기다립니다. 이미지를 받는 중에 exec를 하면 실패하기 때문입니다.
+
+```bash
+kubectl rollout status deployment/secret-demo --timeout=120s
+```
+
+```text
+deployment "secret-demo" successfully rolled out
+```
+
+그다음 컨테이너 안의 환경변수를 봅니다. `deploy/secret-demo`라고 쓰면 Pod 이름을 몰라도 그 Deployment의 Pod 하나에 붙습니다.
 
 ```bash
 kubectl exec deploy/secret-demo -- printenv MYSQL_ROOT_PASSWORD
@@ -165,7 +175,7 @@ Secret은 바뀌었지만 컨테이너는 모릅니다. 환경변수는 컨테�
 
 ## STEP 12. Pod를 새로 교체하고 다시 확인
 
-rollout restart로 Pod를 새로 띄웁니다. 이미지나 설정은 그대로 두고, 2일차의 롤링 업데이트 방식으로 Pod만 교체합니다.
+rollout restart로 Pod를 새로 띄웁니다. 이미지나 설정은 그대로 두고, 2일차의 롤링 업데이트 방식으로 Pod만 교체합니다. 교체 중 서비스가 끊기지 않는지는 롤링 전략과 readinessProbe 설정에 따라 달라집니다. 이 실습에서는 새 Pod가 새 값을 읽는 것을 확인합니다.
 
 ```bash
 kubectl rollout restart deployment/secret-demo
@@ -178,7 +188,7 @@ deployment.apps/secret-demo restarted
 교체가 끝날 때까지 기다립니다.
 
 ```bash
-kubectl rollout status deployment/secret-demo
+kubectl rollout status deployment/secret-demo --timeout=120s
 ```
 
 ```text
@@ -203,7 +213,7 @@ skilleat
 ## 성공하면
 
 - STEP 7: `data`에 `MYSQL_ROOT_PASSWORD: cGFzczEyMzQ=`가 보입니다.
-- STEP 8, 6: `pass1234`가 나옵니다.
+- STEP 8, 9: `pass1234`가 나옵니다.
 - STEP 11: 값을 바꿨는데도 `pass1234` 그대로입니다.
 - STEP 12: `skilleat`으로 바뀝니다.
 

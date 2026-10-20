@@ -71,6 +71,72 @@ flowchart LR
 
 ## 오늘 쓰는 파일
 
+### git clone으로 한 번에 받기
+
+파일을 하나씩 만들거나 내려받는 대신, 실습 저장소를 통째로 받아 오늘 폴더로 복사할 수 있습니다.
+
+**① git이 있는지 확인** (`git version 2.x`처럼 나오면 됩니다)
+
+```bash
+git --version
+```
+
+??? info "git이 없다고 나오면"
+    - Windows: PowerShell에서 `winget install --id Git.Git -e` 를 실행하거나 [git-scm.com](https://git-scm.com/download/win)에서 설치한 뒤, **터미널을 새로 엽니다.**
+    - Mac: `git --version`을 입력하면 "명령어 라인 개발자 도구" 설치 창이 뜹니다. **설치**를 누르고 끝나면 다시 실행합니다.
+
+**② 저장소 받기** (처음 한 번만. 이미 받았으면 ③으로)
+
+=== "Windows (PowerShell)"
+
+    ```powershell
+    cd $HOME\k8s-labs
+    git clone https://github.com/skilleat-labs/gwangju-k8s-5days.git
+    ```
+
+=== "Mac (터미널)"
+
+    ```bash
+    cd ~/k8s-labs
+    git clone https://github.com/skilleat-labs/gwangju-k8s-5days.git
+    ```
+
+이미 받아 둔 저장소가 있으면 최신으로 맞춥니다.
+
+=== "Windows (PowerShell)"
+
+    ```powershell
+    cd $HOME\k8s-labs\gwangju-k8s-5days; git pull
+    ```
+
+=== "Mac (터미널)"
+
+    ```bash
+    cd ~/k8s-labs/gwangju-k8s-5days && git pull
+    ```
+
+**③ 오늘 파일을 day4 폴더로 복사하고 이동**
+
+=== "Windows (PowerShell)"
+
+    ```powershell
+    mkdir $HOME\k8s-labs\day4 -Force; Copy-Item $HOME\k8s-labs\gwangju-k8s-5days\docs\files\day4\* $HOME\k8s-labs\day4\ -Force; cd $HOME\k8s-labs\day4
+    ```
+
+=== "Mac (터미널)"
+
+    ```bash
+    mkdir -p ~/k8s-labs/day4 && cp ~/k8s-labs/gwangju-k8s-5days/docs/files/day4/* ~/k8s-labs/day4/ && cd ~/k8s-labs/day4
+    ```
+
+```bash
+ls
+```
+
+아래 표의 파일이 모두 보이면 준비가 끝났습니다. 실습 중에 파일을 고쳐도 저장소 원본은 그대로라서, 다시 복사하면 처음 상태로 돌아갑니다.
+
+### 하나씩 받기
+
 모두 `day4` 폴더에 저장합니다. VS Code로 직접 만들거나 아래 링크로 내려받습니다.
 
 | 파일 | 실습 | 내려받기 |

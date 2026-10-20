@@ -5,7 +5,7 @@
     - 밖에서 접속하는 방법(NodePort, LoadBalancer, port-forward)을 고르고, 연결이 안 될 때 **EndpointSlice**를 보고 원인을 찾습니다.
     - Envoy Gateway로 문 하나를 세우고, HTTPRoute로 `/app1`, `/app2`를 두 앱에 나눠 보냅니다.
 
-어제 Deployment로 자가복구, 스케일링, 롤링 업데이트까지 풀었습니다. 남은 한계는 "Pod가 바뀌면 주소도 바뀐다"입니다. 오늘은 하루 종일 이 **주소** 이야기를 합니다.
+어제는 Deployment로 자가복구, 스케일링을 풀었고, Pod를 하나씩 바꾸는 순차 교체 원리를 확인했습니다. 실제 요청이 끊기지 않는지는 Service와 readiness를 붙인 뒤 확인합니다. 남은 한계는 "Pod가 바뀌면 주소도 바뀐다"입니다. 오늘은 하루 종일 이 **주소** 이야기를 합니다.
 
 ## 오늘의 실습
 

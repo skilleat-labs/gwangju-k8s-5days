@@ -24,12 +24,10 @@ metadata:
   namespace: webapp
 spec:
   replicas: 1
-  strategy:
-    type: Recreate   # 파일 하나에 쓰는 백엔드: 새 Pod 전에 옛 Pod 를 먼저 끈다
   # 글을 파일 하나에 쓰는 앱 + ReadWriteOnce PVC: 옛 Pod 를 먼저 내리고 새 Pod 를 띄운다.
   # 업데이트 중 잠깐 API 가 멈추지만, 두 Pod 가 같은 파일에 동시에 쓰는 일이 없다.
   strategy:
-    type: Recreate
+    type: Recreate   # 파일 하나에 쓰는 백엔드: 새 Pod 전에 옛 Pod 를 먼저 끈다
   selector:
     matchLabels:
       app: backend

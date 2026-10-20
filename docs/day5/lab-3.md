@@ -101,7 +101,13 @@ kubectl run backend --image=busybox:1.36 -l app=backend -n np-lab -- sleep 3600
 kubectl run hacker --image=busybox:1.36 -l app=web -n np-lab -- sleep 3600
 ```
 
-세 Pod가 모두 `Running`인지 봅니다.
+세 Pod가 모두 Ready가 될 때까지 기다립니다. 이미지를 받는 중에 exec하면 실패합니다.
+
+```bash
+kubectl wait --for=condition=Ready pod --all -n np-lab --timeout=120s
+```
+
+라벨과 상태를 봅니다.
 
 ```bash
 kubectl get pods -n np-lab --show-labels

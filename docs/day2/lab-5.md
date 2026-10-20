@@ -40,10 +40,11 @@ VS Code에서 새 파일 `deployment.yaml`을 만들고 아래 내용을 붙여 
 `selector`의 `app: web`과 `template.metadata.labels`의 `app: web`은 **반드시 같아야 합니다.**
 
 !!! tip "다른 터미널로 지켜보기"
-    터미널을 하나 더 열고 아래 명령을 켜 두면, Pod가 지워지고 생기는 순간을 실시간으로 볼 수 있습니다. 다 보면 ++ctrl+c++로 끝냅니다.
+    터미널을 하나 더 열고 아래 명령을 켜 두면, Pod가 지워지고 생기는 순간을 실시간으로 볼 수 있습니다.
 
     ```bash
     kubectl get pods -w
+    # READY 확인 후 Ctrl+C
     ```
 
 ## STEP 1. Deployment 만들기
@@ -54,6 +55,16 @@ kubectl apply -f deployment.yaml
 
 ```text
 deployment.apps/web created
+```
+
+Pod 3개가 모두 준비될 때까지 기다립니다.
+
+```bash
+kubectl rollout status deployment/web --timeout=120s
+```
+
+```text
+deployment "web" successfully rolled out
 ```
 
 Deployment, ReplicaSet, Pod를 한 번에 봅니다.
@@ -80,7 +91,7 @@ Deployment 1개, ReplicaSet 1개, Pod 3개입니다. 이름이 `web` → `web-7c
 
 ## STEP 2. Pod 하나를 지운다
 
-1일차에 `docker kill`로 컨테이너를 죽였을 때는 아무도 살리지 않았습니다. 오늘은 Pod 하나를 지워 봅니다. STEP 1에서 본 Pod 이름 하나를 복사해 넣습니다.
+1일차에 `docker rm`으로 지운 컨테이너는 그것으로 끝이었습니다. 오늘은 Deployment가 만든 Pod 하나를 지워 봅니다. STEP 1에서 본 Pod 이름 하나를 복사해 넣습니다.
 
 ```bash
 kubectl delete pod <web-로 시작하는 Pod 이름>
@@ -124,13 +135,20 @@ Events:
 
 ## STEP 3. 컨테이너만 멈춘다 (Pod는 그대로)
 
-이번에는 Pod는 지우지 않고 안의 nginx 프로세스만 멈춥니다. `kubectl get pods`에서 Pod 이름 하나를 골라 넣습니다.
+이번에는 Pod는 지우지 않고 안의 nginx 프로세스만 멈춥니다. 1일차 `docker kill`과 비슷합니다. `docker kill`도 컨테이너를 멈출 뿐 객체는 남겼고, 그때는 사람이 `docker start`로 다시 켜야 했습니다. `kubectl get pods`에서 Pod 이름 하나를 골라 넣습니다.
 
 ```bash
 kubectl exec <Pod 이름> -- nginx -s stop
 ```
 
-예를 들면 `kubectl exec web-7c5b8d9f6d-9qz7m -- nginx -s stop`입니다. 바로 목록을 봅니다.
+예를 들면 `kubectl exec web-7c5b8d9f6d-9qz7m -- nginx -s stop`입니다. 다시 시작되는 순간을 지켜봅니다.
+
+```bash
+kubectl get pods -w
+# READY 확인 후 Ctrl+C
+```
+
+빠져나온 뒤 목록을 봅니다.
 
 ```bash
 kubectl get pods

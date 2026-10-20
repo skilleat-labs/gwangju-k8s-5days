@@ -7,6 +7,9 @@
 
 **소요 시간** 약 12분, **교안** DAY 3 섹션 1
 
+!!! tip "Windows PowerShell은 가이드의 한 줄 명령을 복사합니다"
+    PowerShell에서는 줄 끝 `\`로 명령을 이어 쓸 수 없습니다. 이 가이드의 명령은 모두 한 줄로 적어 두었으니 그대로 복사해 입력합니다.
+
 ## 준비
 
 - 작업 폴더로 이동합니다. ([오늘의 실습](index.md) 참고)
@@ -41,6 +44,16 @@ kubectl apply -f web-deploy.yaml
 deployment.apps/web unchanged
 ```
 <small>어제 것이 없었다면 `created`, 이미지 버전 등이 달랐다면 `configured`가 나옵니다.</small>
+
+Pod 세 개가 준비될 때까지 기다립니다.
+
+```bash
+kubectl rollout status deployment/web --timeout=120s
+```
+
+```text
+deployment "web" successfully rolled out
+```
 
 | 줄 | 뜻 |
 |---|---|
@@ -110,17 +123,23 @@ pod "tmp" deleted
 kubectl delete pod -l app=web
 ```
 
+새 Pod 세 개가 준비될 때까지 기다립니다.
+
+```bash
+kubectl rollout status deployment/web --timeout=120s
+```
+
 ```bash
 kubectl get pods -l app=web -o wide
 ```
 
-새 Pod 세 개가 `1/1 Running`이 되면 위의 `kubectl run tmp ... wget -qO- web` 명령을 **그대로 다시** 실행합니다. 이번에도 `Welcome to nginx!`가 나옵니다. Pod는 전부 바뀌었는데 접속하는 쪽은 아무것도 바꾸지 않았습니다. 어제 남은 한계 "Pod가 바뀌면 주소도 바뀐다"가 Service로 풀렸습니다.
+`successfully rolled out`이 나오고 새 Pod 세 개가 `1/1 Running`이면 위의 `kubectl run tmp ... wget -qO- web` 명령을 **그대로 다시** 실행합니다. 이번에도 `Welcome to nginx!`가 나옵니다. Pod는 전부 바뀌었는데 접속하는 쪽은 아무것도 바꾸지 않았습니다. 어제 남은 한계 "Pod가 바뀌면 주소도 바뀐다"가 Service로 풀렸습니다.
 
 !!! note "번갈아 응답하는지는 여기서 보지 않습니다"
     nginx 기본 페이지는 어느 Pod가 답해도 똑같아서 요청이 여러 Pod로 나뉘는지는 이 화면으로 알 수 없습니다. 이 실습의 성공 조건은 "Pod가 바뀌어도 같은 이름으로 접속된다"입니다.
 
 !!! tip "명령은 한 줄로"
-    교안 화면에서는 이 명령이 두 줄로 나뉘어 있지만, PowerShell에서는 줄 끝 `\`가 동작하지 않습니다. 위처럼 한 줄로 복사해 입력합니다.
+    교안 화면에서 명령이 길어 두 줄로 접혀 보여도 한 줄 명령입니다. PowerShell에서는 줄 끝 `\`가 동작하지 않으니 위처럼 한 줄로 복사해 입력합니다.
 
 | 옵션 | 뜻 |
 |---|---|
@@ -131,6 +150,7 @@ kubectl get pods -l app=web -o wide
 
 ## 성공하면
 
+- STEP 1: `rollout status`에 `successfully rolled out`이 나옵니다.
 - STEP 2: `kubectl get svc web`에 CLUSTER-IP가 보입니다.
 - STEP 3: `Welcome to nginx!`가 들어 있는 HTML이 출력됩니다. Pod를 모두 지운 뒤 다시 실행해도 똑같이 나옵니다.
 
@@ -167,7 +187,7 @@ kubectl get pods -l app=web -o wide
     busybox 이미지를 처음 내려받는 중이거나, 출력이 붙기 전에 명령이 끝난 경우입니다. 10초쯤 기다려도 그대로면 `Ctrl + C`로 끝내고, `kubectl delete pod tmp` 후 다시 실행합니다.
 
 ??? failure "Pod를 지운 직후 다시 접속하니 실패함"
-    새 Pod가 아직 `ContainerCreating`이거나 준비 중입니다. `kubectl get pods -l app=web`에서 세 개 모두 `1/1 Running`이 된 뒤 다시 실행합니다.
+    새 Pod가 아직 `ContainerCreating`이거나 준비 중입니다. `kubectl rollout status deployment/web --timeout=120s`가 끝나고 세 개 모두 `1/1 Running`이 된 뒤 다시 실행합니다.
 
 ??? failure "Windows 메모장으로 저장했더니 web-svc.yaml.txt가 됨"
     메모장은 이름 뒤에 `.txt`를 붙입니다. 저장할 때 파일 형식을 **모든 파일**로 바꾸고 이름을 `"web-svc.yaml"`처럼 큰따옴표로 감쌉니다. VS Code를 쓰면 이 문제가 없습니다.

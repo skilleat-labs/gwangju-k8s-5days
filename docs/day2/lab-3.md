@@ -47,7 +47,7 @@ web    1/1     Running   0          10s
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
 
-처음에는 `ContainerCreating`으로 보일 수 있습니다. 이미지를 받는 중이니 몇 초 뒤 다시 실행합니다. 계속 지켜보고 싶으면 `kubectl get pods -w`를 쓰고, 다 보면 ++ctrl+c++로 빠져나옵니다.
+처음에는 `ContainerCreating`으로 보일 수 있습니다. 이미지를 받는 중이니 몇 초 뒤 다시 실행합니다. 계속 지켜보고 싶으면 `kubectl get pods -w`를 쓰고, READY가 `1/1`이 된 것을 확인한 뒤 ++ctrl+c++로 빠져나옵니다.
 
 ## STEP 2. YAML 초안을 뽑아 선언형으로
 
@@ -69,8 +69,6 @@ web    1/1     Running   0          10s
     ```bash
     kubectl run web2 --image=nginx:1.27 --dry-run=client -o yaml > pod.yaml
     ```
-
-<small>교안 화면에는 명령이 두 줄로 나뉘어 있지만, 가이드에서는 한 줄로 이어서 씁니다.</small>
 
 만든 파일을 VS Code로 열어 봅니다 (`code pod.yaml`). 아래와 같은 내용입니다.
 

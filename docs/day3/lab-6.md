@@ -62,6 +62,16 @@ deployment.apps/app2 created
 service/app2 created
 ```
 
+이미지를 받는 동안 기다립니다. 두 줄 모두 `successfully rolled out`이 나오면 다음으로 갑니다.
+
+```bash
+kubectl rollout status deployment/app1 --timeout=120s
+```
+
+```bash
+kubectl rollout status deployment/app2 --timeout=120s
+```
+
 라벨 셀렉터로 두 앱의 Pod만 골라 봅니다.
 
 ```bash

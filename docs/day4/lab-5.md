@@ -36,9 +36,13 @@ kubectl create secret generic mysql-secret --from-literal=MYSQL_ROOT_PASSWORD=sk
 | 부분 | 뜻 |
 |---|---|
 | `envFrom` | `mysql-secret`의 모든 키를 이름 그대로 환경변수로 넣습니다. MySQL 이미지는 처음 뜰 때 `MYSQL_ROOT_PASSWORD`로 root 비밀번호를 정합니다. |
-| `readinessProbe` | 섹션 3에서 배운 준비 확인입니다. `mysqladmin ping`으로 127.0.0.1에 접속이 되어야 READY가 `1/1`이 됩니다. 초기화 중에는 `0/1`입니다. |
+| `readinessProbe` | 섹션 3에서 배운 준비 확인입니다. `mysqladmin ping`이 127.0.0.1의 MySQL 서버가 응답하는지 봅니다. 초기화 중에는 `0/1`입니다. 서버가 살아 있는지만 보므로 비밀번호가 틀려 `Access denied`가 나도 성공으로 끝납니다. READY `1/1`이 SQL 로그인 성공을 뜻하지는 않습니다. |
 | `/var/lib/mysql` | MySQL이 데이터를 쓰는 폴더입니다. |
 | `emptyDir: {}` | Pod가 지워지면 함께 사라지는 폴더입니다. |
+
+!!! note "READY 1/1은 로그인 확인이 아닙니다"
+    `mysqladmin ping`은 서버가 실행 중이면 `Access denied`가 나도 종료 코드 0으로 끝납니다. 그래서 READY `1/1`은 서버가 살아 있다는 뜻이지, root 비밀번호로 SQL 로그인이 된다는 뜻은 아닙니다. 자격증명까지 확인하려면 인증해서 `SELECT 1`을 실행하는 더 엄격한 검사를 쓸 수 있습니다. 이 실습은 `ping`으로 둡니다.
+    근거: [MySQL 8.0 mysqladmin](https://dev.mysql.com/doc/refman/8.0/en/mysqladmin.html)
 
 ## STEP 26. MySQL 올리고 READY 1/1 기다리기
 
@@ -54,6 +58,7 @@ READY가 `1/1`이 될 때까지 지켜봅니다. 이미지가 크고 첫 기동 
 
 ```bash
 kubectl get pods -l app=mysql -w
+# READY 확인 후 Ctrl+C
 ```
 
 ```text
@@ -160,6 +165,7 @@ Deployment가 곧바로 새 Pod를 만듭니다. READY가 `1/1`이 되면 `Ctrl 
 
 ```bash
 kubectl get pods -l app=mysql -w
+# READY 확인 후 Ctrl+C
 ```
 
 ```text

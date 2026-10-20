@@ -2,6 +2,13 @@
 
 실습에 쓰는 파일을 모았습니다. 각 실습 페이지에도 같은 파일의 내려받기 링크가 있습니다.
 
+!!! tip "git clone으로 받기"
+    ```bash
+    git clone https://github.com/skilleat-labs/gwangju-k8s-5days.git
+    ```
+
+    실습 파일은 받은 폴더의 `docs/files/day1` ~ `day5`에 있습니다. 일차별 사용법은 [4일차 오늘의 실습](day4/index.md)의 "git clone으로 한 번에 받기"를 봅니다.
+
 !!! tip "한 번에 받기"
     [전체 실습 파일 zip 내려받기](assets/k8s-labs-files.zip){ download }
 

@@ -61,11 +61,19 @@ kubectl config use-context docker-desktop
 
 !!! info "컨텍스트와 네임스페이스"
     - **컨텍스트**: 어느 클러스터에 접속할지. 내 PC의 kubeconfig 파일에 적혀 있고, `kubectl config get-contexts`의 별표가 지금 접속 대상입니다.
-    - **네임스페이스**: 접속한 클러스터 안을 나눈 칸. `-n`을 안 쓰면 `default` 칸을 봅니다. 오늘 실습은 모두 `default`에 만들고, 클러스터 두뇌 부품은 `kube-system` 칸에 있습니다(실습 2).
+    - **네임스페이스**: 접속한 클러스터 안을 나눈 칸. `-n`을 안 쓰면 **컨텍스트에 적힌 기본 네임스페이스**를 봅니다. 따로 정하지 않았으면 `default`입니다. 이 과정은 `default`로 맞춰 두고, 오늘 실습은 모두 `default`에 만듭니다. 클러스터 두뇌 부품은 `kube-system` 칸에 있습니다(실습 2).
 
     ```bash
     kubectl get ns
     ```
+
+    기본 네임스페이스를 `default`로 맞춥니다. [Kubernetes 켜기](../setup/3-kubernetes.md)의 "연결 대상 고정하기"에서 이미 했으면 다시 해도 결과가 같습니다.
+
+    ```bash
+    kubectl config set-context --current --namespace=default
+    ```
+
+    `kubectl config get-contexts`의 NAMESPACE 칸에 `default`가 보이면 됩니다.
 
 ## STEP 3. 노드가 Ready인지
 

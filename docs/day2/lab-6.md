@@ -36,7 +36,7 @@ web    3/3     3            3           10m
 `NotFound`가 나오면 실습 5의 [deployment.yaml](../files/day2/deployment.yaml)로 `kubectl apply -f deployment.yaml`을 먼저 실행합니다.
 
 !!! tip "다른 터미널로 지켜보기"
-    터미널을 하나 더 열고 `kubectl get pods -w`를 켜 두면, 새 Pod가 하나 뜨고 옛 Pod가 하나 내려가는 롤링 업데이트 과정이 그대로 보입니다.
+    터미널을 하나 더 열고 `kubectl get pods -w`를 켜 두면, 새 Pod가 하나 뜨고 옛 Pod가 하나 내려가는 롤링 업데이트 과정이 그대로 보입니다. 새 Pod의 READY가 `1/1`이 된 것을 확인한 뒤 ++ctrl+c++로 끝냅니다.
 
 ## STEP 1. 이미지 교체
 
@@ -93,8 +93,6 @@ kubectl annotate deployment/web kubernetes.io/change-cause="nginx 1.28 업데이
 ```text
 deployment.apps/web annotated
 ```
-
-<small>교안 화면에는 명령이 두 줄로 나뉘어 있지만, 가이드에서는 한 줄로 이어서 씁니다.</small>
 
 ```bash
 kubectl rollout history deployment/web

@@ -57,10 +57,14 @@ kubectl run root-test --image=nginx:1.27
 ```
 
 ```bash
-kubectl get pod root-test
+kubectl wait --for=condition=Ready pod/root-test --timeout=120s
 ```
 
-`STATUS`가 `Running`이 되면 실행합니다.
+```text
+pod/root-test condition met
+```
+
+이미지를 받는 동안 기다렸다가 Pod가 Ready가 되면 돌아옵니다. 그다음 실행합니다.
 
 ```bash
 kubectl exec root-test -- whoami
@@ -129,14 +133,14 @@ kubectl apply -f good-pod.yaml -n secure
 ```
 
 ```bash
-kubectl get pod good-pod -n secure
+kubectl wait --for=condition=Ready pod/good-pod -n secure --timeout=120s
 ```
 
 ```text
-NAME       READY   STATUS    RESTARTS   AGE
-good-pod   1/1     Running   0          8s
+pod/good-pod condition met
 ```
-<small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
+
+Ready가 되면 STEP 5로 갑니다.
 
 ## STEP 5. 누구로 도는지
 
@@ -169,13 +173,13 @@ kubectl delete ns secure
 
 - STEP 1: `root`
 - STEP 3: `Forbidden`, `violates PodSecurity`
-- STEP 4: `Running`
+- STEP 4: `condition met`
 - STEP 5: `uid=1000` (root 아님)
 
 ## 막히면
 
 ??? failure "error: unable to upgrade connection: container not found / pod root-test does not have a host assigned"
-    Pod가 아직 생성 중입니다. `kubectl get pod root-test`로 `Running`을 확인하고 몇 초 뒤 다시 실행합니다.
+    Pod가 아직 생성 중입니다. `kubectl wait --for=condition=Ready pod/root-test --timeout=120s`로 Ready까지 기다린 뒤 다시 실행합니다. wait가 `timed out`으로 끝나면 `kubectl get pod root-test`로 STATUS를 봅니다.
 
 ??? failure "STEP 4에서도 Forbidden"
     메시지 괄호 안에 나온 필드가 good-pod.yaml에 빠졌거나 들여쓰기가 틀린 것입니다. 특히 `seccompProfile` 줄을 빠뜨리면 아래처럼 다시 거부됩니다.

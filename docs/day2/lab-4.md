@@ -41,7 +41,17 @@ web2   1/1     Running   0          3m
 
 ## STEP 1. 자세히, 로그, 안으로
 
-먼저 `describe`로 자세히 봅니다. 출력 **맨 아래 Events**를 읽습니다.
+먼저 `web`이 준비(Ready)됐는지 기다립니다. 이미 Running이면 바로 끝납니다.
+
+```bash
+kubectl wait --for=condition=Ready pod/web --timeout=120s
+```
+
+```text
+pod/web condition met
+```
+
+`describe`로 자세히 봅니다. 출력 **맨 아래 Events**를 읽습니다.
 
 ```bash
 kubectl describe pod web
@@ -174,12 +184,18 @@ NAME   READY   STATUS    RESTARTS   AGE
 web2   1/1     Running   0          8m
 ```
 
-`web`은 사라졌고, 기다려도 다시 생기지 않습니다. Pod를 직접 만들면 아무도 다시 만들어 주지 않습니다. 1일차에 `docker kill`한 컨테이너와 같습니다.
+`web`은 사라졌고, 기다려도 다시 생기지 않습니다. Pod를 직접 만들면 아무도 다시 만들어 주지 않습니다. 1일차에 `docker rm`으로 지운 컨테이너처럼 객체 자체가 없어진 것입니다. `docker kill`은 컨테이너를 멈추기만 해서 `docker ps -a`에 객체가 남고 `docker start`로 다시 켤 수 있었다는 점이 다릅니다.
 
 같은 이름, 같은 이미지로 다시 만듭니다.
 
 ```bash
 kubectl run web --image=nginx:1.27
+```
+
+새 Pod가 준비될 때까지 기다립니다. IP는 Pod가 노드에 배정된 뒤에 붙습니다.
+
+```bash
+kubectl wait --for=condition=Ready pod/web --timeout=120s
 ```
 
 ## STEP 5. UID와 IP를 다시 본다

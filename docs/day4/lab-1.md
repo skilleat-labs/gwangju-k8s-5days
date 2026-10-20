@@ -61,7 +61,7 @@ metadata:
 
 `data` 아래에 두 키가 평문 그대로 들어 있습니다. 그래서 ConfigMap에는 비밀번호를 넣지 않습니다 (실습 2의 Secret으로).
 
-## STEP 2. 앞 장 YAML로 Pod 올리기
+## STEP 2. 앞 장 YAML로 Pod 올리고 Ready 기다리기
 
 준비에서 만든 `cm-pod.yaml`을 올립니다.
 
@@ -73,7 +73,15 @@ kubectl apply -f cm-pod.yaml
 pod/cm-pod created
 ```
 
-`Running`이 될 때까지 확인합니다.
+Pod가 Ready가 될 때까지 기다립니다. 이미지를 받는 중에 exec를 하면 실패하기 때문입니다. 120초 안에 Ready가 되지 않으면 오류로 끝나니, 그때는 `kubectl get pod cm-pod`와 `kubectl describe pod cm-pod`로 상태를 봅니다.
+
+```bash
+kubectl wait --for=condition=Ready pod/cm-pod --timeout=120s
+```
+
+```text
+pod/cm-pod condition met
+```
 
 ```bash
 kubectl get pod cm-pod
@@ -173,6 +181,16 @@ kubectl delete pod cm-pod
 
 ```bash
 kubectl apply -f cm-pod.yaml
+```
+
+새 Pod가 Ready가 된 뒤 읽습니다.
+
+```bash
+kubectl wait --for=condition=Ready pod/cm-pod --timeout=120s
+```
+
+```text
+pod/cm-pod condition met
 ```
 
 ```bash

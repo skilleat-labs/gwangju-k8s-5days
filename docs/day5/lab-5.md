@@ -3,9 +3,12 @@
 !!! abstract "이번 실습에서 할 것"
     - 실습 4의 YAML 두 장으로 미니 블로그 전체를 띄우고, **Gateway를 거쳐** 브라우저로 글을 씁니다.
     - backend Pod, frontend Pod를 지우며 자가복구, 데이터 보존, 요청 연속성을 **따로따로** 확인합니다.
-    - 4일차와 오늘 배운 운영, 보안 설정(readinessProbe, requests와 limits, 토큰 끄기)을 붙인 v2를 적용합니다.
+    - (선택) 4일차와 오늘 배운 운영, 보안 설정(readinessProbe, requests와 limits, 토큰 끄기)을 붙인 v2를 적용합니다.
 
-**소요 시간** 약 23분, **교안** DAY 5 섹션 5
+**소요 시간** 약 23분 (필수 STEP 20~27 약 18분, 선택 STEP 28~29 약 5분), **교안** DAY 5 섹션 5
+
+!!! tip "필수와 선택"
+    필수는 **기본 배포, 글 보존**이고 실습 6의 **장애 진단**까지가 오늘 꼭 할 것입니다. STEP 28~29의 v2 운영 설정은 **선택**입니다. 시간이 부족하면 강사 시연으로 봅니다.
 
 ## 준비
 
@@ -37,7 +40,7 @@ mv miniblog-backend-answer.yaml miniblog-backend.yaml
 mv miniblog-frontend-answer.yaml miniblog-frontend.yaml
 ```
 
-STEP 28에서 쓸 v2 파일 두 개도 받아 둡니다.
+STEP 28(선택)에서 쓸 v2 파일 두 개도 받아 둡니다. v2는 운영 설정을 더한 YAML 버전이며 이미지 태그와는 별개입니다. 이미지는 그대로 `v3-kb5`입니다.
 
 [miniblog-backend-v2.yaml 내려받기](../files/day5/miniblog-backend-v2.yaml){ download }
 
@@ -58,7 +61,7 @@ kubectl get pods -n envoy-gateway-system
 | 한계 1 서버가 죽으면 | 노드가 여러 대면 Deployment가 다른 노드에 다시 띄운다 | 단일 노드라 말로만 |
 | 한계 2 사람이 살린다 | Deployment 자가복구 | STEP 26 |
 | 한계 3 포트를 바꿔 늘린다 | frontend replicas 2, 입구는 Service와 Gateway 하나 | STEP 27 |
-| 한계 4 배포마다 사람이 바꾼다 | 선언한 대로 자동 교체 (frontend는 롤링 업데이트, backend는 Recreate) | STEP 28 |
+| 한계 4 배포마다 사람이 바꾼다 | 선언한 대로 자동 교체 (frontend는 롤링 업데이트, backend는 Recreate) | STEP 28 (선택) |
 | 한계 5 주소가 바뀐다 | Service 이름 `backend-service` | STEP 26 |
 
 여기에 1일차에는 없던 것이 하나 더 있습니다. Pod가 바뀌어도 글이 남는 **PVC**입니다.
@@ -280,7 +283,7 @@ backend-6d9c7b8f5d-p8v4n   1/1     Running             0          3s
 ```
 <small>출력은 예시입니다. 이름, IP, 시간은 사람마다 다릅니다.</small>
 
-Deployment가 곧바로 새 backend Pod를 만듭니다. 새 Pod의 IP는 바뀌었지만 frontend는 `backend-service`라는 이름으로 찾으므로 그대로 연결됩니다 (한계 5). 다 보았으면 `Ctrl + C`로 빠져나옵니다.
+Deployment가 곧바로 새 backend Pod를 만듭니다. 새 Pod의 IP는 바뀌었지만 frontend는 `backend-service`라는 이름으로 찾으므로 그대로 연결됩니다 (한계 5). 새 backend Pod의 `READY`가 `1/1`이 된 것을 확인한 뒤 `Ctrl + C`로 빠져나옵니다.
 
 브라우저(localhost:8888)를 새로고침합니다. **아까 쓴 글이 그대로 있습니다.** 글은 Pod가 아니라 PVC(`blog-pvc`)에 저장돼 있기 때문입니다.
 
@@ -313,7 +316,12 @@ kubectl delete pod -n webapp <frontend Pod 하나>
 !!! note "frontend에 직접 port-forward 중이었다면"
     `kubectl port-forward svc/frontend-service ...`는 Service 뒤의 Pod **하나**에 붙습니다. 지운 Pod가 그 Pod였다면 port-forward 터미널에 `lost connection to pod`가 나오고 끊깁니다. Gateway 경유(8888) 쪽은 Envoy 프록시 Pod에 붙어 있어서 frontend를 지워도 끊기지 않습니다.
 
-## STEP 28. 운영, 보안 설정을 붙인 v2 적용
+## STEP 28. (선택) 운영, 보안 설정을 붙인 v2 적용
+
+!!! note "선택 단계: 시간이 부족하면 강사 시연"
+    STEP 28~29는 선택입니다. 시간이 부족하면 강사 화면으로 보고 실습 6으로 넘어갑니다.
+
+이 단계의 목표는 **데이터를 유지하며 운영 설정을 적용하는 것**입니다. 무중단은 아닙니다. v2는 운영 설정을 더한 YAML 버전이며 이미지 태그와는 별개입니다(이미지는 그대로 `v3-kb5`).
 
 기본 배포가 되었으니 배운 설정을 붙입니다. v2 파일에는 Deployment만 들어 있고, 바뀐 부분은 아래와 같습니다.
 
@@ -335,7 +343,7 @@ kubectl delete pod -n webapp <frontend Pod 하나>
 !!! info "runAsNonRoot는 왜 없나"
     `runAsNonRoot: true`는 이미지가 root 없이 돌도록 만들어졌을 때만 붙입니다. 기본 nginx 계열 이미지는 root로 시작하도록 만들어져 있어서, 이 줄만 붙이면 시작이 거부되거나 80 포트, 캐시 폴더 권한 때문에 죽을 수 있습니다. 또 `readOnlyRootFilesystem: true`는 컨테이너 기본 파일 시스템만 읽기 전용으로 만들고, `/app/data`처럼 따로 마운트한 쓰기 볼륨은 막지 않습니다. 이미지가 다른 곳(임시 폴더 등)에 쓰는지 확인한 뒤 붙입니다.
 
-적용합니다. Pod 템플릿이 바뀌었으니 Pod가 새 이름으로 교체됩니다. frontend는 2일차의 롤링 업데이트로 하나씩 바뀌고, backend는 `strategy: Recreate`라서 옛 Pod를 먼저 내린 뒤 새 Pod를 띄웁니다. 그래서 backend가 바뀌는 몇 초 동안은 글 요청이 실패할 수 있습니다.
+적용합니다. Pod 템플릿이 바뀌었으니 Pod가 새 이름으로 교체됩니다. frontend는 2일차의 롤링 업데이트로 하나씩 바뀌고, backend는 `strategy: Recreate`라서 옛 Pod를 먼저 내린 뒤 새 Pod를 띄웁니다. 그래서 frontend 화면은 계속 나오지만, backend가 바뀌는 몇 초 동안은 글 요청이 실패할 수 있습니다.
 
 ```bash
 kubectl apply -f miniblog-backend-v2.yaml
@@ -345,15 +353,24 @@ kubectl apply -f miniblog-backend-v2.yaml
 kubectl apply -f miniblog-frontend-v2.yaml
 ```
 
+글이 남았는지 보기 전에 **두 Deployment 모두** 교체가 끝날 때까지 기다립니다.
+
 ```bash
-kubectl rollout status deployment/frontend -n webapp
+kubectl rollout status deployment/backend -n webapp --timeout=180s
+```
+
+```bash
+kubectl rollout status deployment/frontend -n webapp --timeout=180s
 ```
 
 ```text
+deployment "backend" successfully rolled out
 deployment "frontend" successfully rolled out
 ```
 
-## STEP 29. 붙었는지 확인
+backend를 기다리지 않고 새로고침하면 새 backend가 아직 뜨는 중이라 글이 없는 것처럼 보일 수 있습니다.
+
+## STEP 29. (선택) 붙었는지 확인
 
 ```bash
 kubectl get pods -n webapp
@@ -385,7 +402,7 @@ command terminated with exit code 2
 - ② 글 등록 후 목록에 보인다
 - ③ backend를 지워도 새 Pod가 뜨고 글이 남는다 (몇 초 실패는 정상)
 - ④ frontend 하나를 지워도 8888 화면이 계속 나온다
-- v2 적용 후 READY `1/1`, 토큰 파일 없음, 글 그대로
+- (선택) v2 적용 후 두 rollout 완료, READY `1/1`, 토큰 파일 없음, 글 그대로
 
 ## 막히면
 

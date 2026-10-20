@@ -41,6 +41,16 @@ deployment.apps/web-probe created
 service/web-probe exposed
 ```
 
+두 Pod가 뜰 때까지 기다립니다. STEP 15의 exec가 이미지를 받는 중인 Pod에 붙지 않게 하기 위해서입니다.
+
+```bash
+kubectl rollout status deployment/web-probe --timeout=120s
+```
+
+```text
+deployment "web-probe" successfully rolled out
+```
+
 ## STEP 14. 두 Pod 모두 ready인지 (DAY 3)
 
 Pod 두 개의 이름과 IP를 봅니다. 이 출력은 STEP 15, 14, 15에서 다시 보니 창에 남겨 둡니다.

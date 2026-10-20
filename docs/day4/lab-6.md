@@ -113,6 +113,7 @@ READY가 `1/1`이 되면 `Ctrl + C`로 멈춥니다. 실습 5와 같은 readines
 
 ```bash
 kubectl get pods -l app=mysql -w
+# READY 확인 후 Ctrl+C
 ```
 
 ```text
@@ -173,6 +174,7 @@ kubectl delete pod -l app=mysql
 
 ```bash
 kubectl get pods -l app=mysql -w
+# READY 확인 후 Ctrl+C
 ```
 
 다시 접속합니다.
