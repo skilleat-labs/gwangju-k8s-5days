@@ -88,6 +88,7 @@ nav:
       - 실습 4 미니 블로그 YAML 빈칸 채우기: day5/lab-4.md
       - 실습 5 미니 블로그 종합 배포: day5/lab-5.md
       - 실습 6 고장 난 미니 블로그 고치기: day5/lab-6.md
+      - 추가 실습 PVC 더 다뤄 보기: day5/extra-pvc.md
   - 실습 파일: files.md
 
 markdown_extensions:
